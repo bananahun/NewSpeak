@@ -9,6 +9,7 @@ import java.util.List;
 
 @Getter
 @Entity
+@Builder
 @Table(name = "category")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor

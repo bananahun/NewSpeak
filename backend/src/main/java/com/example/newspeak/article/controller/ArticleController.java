@@ -22,17 +22,41 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ArticleFindResponse> findById(@PathVariable("id") Long id) {
-        ArticleFindResponse result = articleService.findById(id);
-        return ResponseEntity.status(OK).body(result);
-    }
-
     @GetMapping
     public ResponseEntity<Result> findAll() {
         List<ArticlesFindResponse> articlesFindResponses = articleService.findAll();
         int count = articlesFindResponses.size();
         Result<List<ArticlesFindResponse>> result = new Result<>(count, articlesFindResponses);
+        return ResponseEntity.status(OK).body(result);
+    }
+
+    @GetMapping("/{level}")
+    public ResponseEntity<Result> findByLevel(@PathVariable("level") String level) {
+        List<ArticlesFindResponse> articlesFindResponses = articleService.findByLevel(level);
+        int count = articlesFindResponses.size();
+        Result<List<ArticlesFindResponse>> result = new Result<>(count, articlesFindResponses);
+        return ResponseEntity.status(OK).body(result);
+    }
+
+    @GetMapping("/{title}")
+    public ResponseEntity<Result> findByTitle(@PathVariable("title") String title) {
+        List<ArticlesFindResponse> articlesFindResponses = articleService.findByTitle(title);
+        int count = articlesFindResponses.size();
+        Result<List<ArticlesFindResponse>> result = new Result<>(count, articlesFindResponses);
+        return ResponseEntity.status(OK).body(result);
+    }
+
+    @GetMapping("/{category_id}")
+    public ResponseEntity<Result> findByCategory(@PathVariable("category_id") Long category_id) {
+        List<ArticlesFindResponse> articlesFindResponses = articleService.findByCategory(category_id);
+        int count = articlesFindResponses.size();
+        Result<List<ArticlesFindResponse>> result = new Result<>(count, articlesFindResponses);
+        return ResponseEntity.status(OK).body(result);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ArticleFindResponse> findById(@PathVariable("id") Long id) {
+        ArticleFindResponse result = articleService.findById(id);
         return ResponseEntity.status(OK).body(result);
     }
 

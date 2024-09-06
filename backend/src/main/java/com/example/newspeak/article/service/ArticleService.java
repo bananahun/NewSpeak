@@ -4,6 +4,7 @@ import com.example.newspeak.article.dto.ArticleFindResponse;
 import com.example.newspeak.article.dto.ArticlesFindResponse;
 import com.example.newspeak.article.entity.Article;
 import com.example.newspeak.article.repository.ArticleRepository;
+import com.example.newspeak.category.entity.Category;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,36 @@ public class ArticleService {
         return articlesFindResponses;
     }
 
+    public List<ArticlesFindResponse> findByLevel(String level) {
+        List<Article> articles = articleRepository.findByLevel(level);
+        List<ArticlesFindResponse> articlesFindResponses = new ArrayList<>();
+        for (Article article : articles) {
+            ArticlesFindResponse articlesFindResponse = ArticlesFindResponse.from(article);
+            articlesFindResponses.add(articlesFindResponse);
+        }
+        return articlesFindResponses;
+    }
+
+    public List<ArticlesFindResponse> findByTitle(String title) {
+        List<Article> articles = articleRepository.findByTitle(title);
+        List<ArticlesFindResponse> articlesFindResponses = new ArrayList<>();
+        for (Article article : articles) {
+            ArticlesFindResponse articlesFindResponse = ArticlesFindResponse.from(article);
+            articlesFindResponses.add(articlesFindResponse);
+        }
+        return articlesFindResponses;
+    }
+
+    public List<ArticlesFindResponse> findByCategory(long id) {
+        List<Article> articles = articleRepository.findByCategory(id);
+        List<ArticlesFindResponse> articlesFindResponses = new ArrayList<>();
+        for (Article article : articles) {
+            ArticlesFindResponse articlesFindResponse = ArticlesFindResponse.from(article);
+            articlesFindResponses.add(articlesFindResponse);
+        }
+        return articlesFindResponses;
+    }
+
     public ArticleFindResponse findById(Long id) {
         Article article = articleRepository.findById(id)
                 .orElseThrow(RuntimeException::new);
@@ -36,8 +67,20 @@ public class ArticleService {
         return articleFindResponse;
     }
 
-    public void delete(Long id) {
+
+    public long delete(Long id) {
         articleRepository.findById(id)
                 .ifPresent(articleRepository::delete);
+
+        return id;
+    }
+
+    public void deleteAll() {
+        articleRepository.deleteAll();
+    }
+
+    public long save(Article article) {
+        articleRepository.save(article);
+        return article.getId();
     }
 }

@@ -4,81 +4,149 @@ import com.example.newspeak.article.dto.ArticleFindResponse;
 import com.example.newspeak.article.dto.ArticlesFindResponse;
 import com.example.newspeak.article.entity.Article;
 import com.example.newspeak.article.repository.ArticleRepository;
-import com.example.newspeak.article.service.ArticleService;
+import com.example.newspeak.category.entity.Category;
+import com.example.newspeak.category.service.CategoryService;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@ExtendWith(MockitoExtension.class)
-class ArticleServiceTest {
+@SpringBootTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Transactional
+public class ArticleServiceTest {
 
-    @InjectMocks
+    @Autowired
     private ArticleService articleService;
 
-    @Mock
-    private ArticleRepository articleRepository;
+    @Autowired
+    private CategoryService categoryService;
+
+    private Article article1;
+    private Article article2;
+
+    private Category category1;
+    private Category category2;
+
+    // 테스트 실행 전에 공통적으로 사용할 데이터를 생성
+    @BeforeEach
+    void setUp() {
+        category1 = Category.builder().categoryName("카테고리 1").build();
+        category2 = Category.builder().categoryName("카테고리 2").build();
+        categoryService.save(category1);
+        categoryService.save(category2);
+
+        article1 = Article.builder().title("제목1").content("내용1").level("E1").category(category1).build();
+        article2 = Article.builder().title("제목2").content("내용2").level("E2").category(category2).build();
+        articleService.save(article1);
+        articleService.save(article2);
+    }
+
+    // 각 테스트 실행 후에 공통적인 정리 작업
+    @AfterEach
+    void tearDown() {
+        articleService.deleteAll();
+    }
 
     @Test
     @DisplayName("전체 기사 조회")
     void findAll() {
-        // given
-        Article article1 = Article.builder().id(1L).title("제목1").content("내용1").build();
-        Article article2 = Article.builder().id(2L).title("제목2").content("내용2").build();
-        when(articleRepository.findAll()).thenReturn(Arrays.asList(article1, article2));
-
         // when
         List<ArticlesFindResponse> response = articleService.findAll();
 
         // then
-        verify(articleRepository).findAll();
-
         assertEquals(2, response.size(), "반환된 기사 수가 맞지 않습니다.");
         assertEquals("제목1", response.get(0).getTitle(), "첫 번째 기사의 제목이 맞지 않습니다.");
         assertEquals("제목2", response.get(1).getTitle(), "두 번째 기사의 제목이 맞지 않습니다.");
     }
 
     @Test
-    @DisplayName("단일 기사 조회")
-    void findById() {
-        // given
-        Long id = 1L;
-        Article article = Article.builder().id(id).title("제목").content("내용").build();
-        when(articleRepository.findById(id)).thenReturn(Optional.of(article));
-
+    @DisplayName("전체 기사 레벨로 조회")
+    void findByLevel() {
         // when
-        ArticleFindResponse response = articleService.findById(id);
+        List<ArticlesFindResponse> articles1 = articleService.findByLevel("E1");
+        List<ArticlesFindResponse> articles2 = articleService.findByLevel("E2");
+        List<ArticlesFindResponse> articles3 = articleService.findByLevel("E3");
 
         // then
-        verify(articleRepository).findById(id);
+        assertThat(articles1).hasSize(1);
+        assertThat(articles1.get(0).getTitle()).isEqualTo("제목1");
+        assertThat(articles1.get(0).getLevel()).isEqualTo("E1");
 
-        assertEquals(id, response.getId(), "기사 ID가 맞지 않습니다.");
-        assertEquals("제목", response.getTitle(), "기사 제목이 맞지 않습니다.");
+        assertThat(articles2).hasSize(1);
+        assertThat(articles2.get(0).getTitle()).isEqualTo("제목2");
+        assertThat(articles2.get(0).getLevel()).isEqualTo("E2");
+
+        assertThat(articles3).isEmpty();
+    }
+
+    @Test
+    @DisplayName("전체 기사 제목으로 조회")
+    void findByTitle() {
+        // when
+        List<ArticlesFindResponse> articles1 = articleService.findByTitle("제목");
+        List<ArticlesFindResponse> articles2 = articleService.findByTitle("제목1");
+        List<ArticlesFindResponse> articles3 = articleService.findByTitle("제목3");
+
+        // then
+        assertThat(articles1).hasSize(2);
+        assertThat(articles1.get(0).getTitle()).isEqualTo("제목1");
+        assertThat(articles1.get(1).getTitle()).isEqualTo("제목2");
+
+        assertThat(articles2).hasSize(1);
+        assertThat(articles2.get(0).getTitle()).isEqualTo("제목1");
+
+        assertThat(articles3).isEmpty();
+    }
+
+    @Test
+    @DisplayName("전체 기사 카테고리로 조회")
+    void findByCategory() {
+        // when
+        List<ArticlesFindResponse> articles1 = articleService.findByCategory(category1.getId());
+        List<ArticlesFindResponse> articles2 = articleService.findByCategory(category2.getId());
+        List<ArticlesFindResponse> articles3 = articleService.findByCategory(3L);
+
+        // then
+        assertThat(articles1).hasSize(1);
+        assertThat(articles1.get(0).getTitle()).isEqualTo("제목1");
+        assertThat(articles2).hasSize(1);
+        assertThat(articles2.get(0).getTitle()).isEqualTo("제목2");
+        assertThat(articles3).isEmpty();
+    }
+
+    @Test
+    @DisplayName("단일 기사 조회")
+    void findById() {
+        // when
+        ArticleFindResponse response = articleService.findById(article1.getId());
+
+        // then
+        assertEquals(article1.getId(), response.getId(), "기사 ID가 맞지 않습니다.");
+        assertEquals("제목1", response.getTitle(), "기사 제목이 맞지 않습니다.");
     }
 
     @Test
     @DisplayName("단일 기사 삭제")
     void delete() {
-        // given
-        Long id = 1L;
-        Article article = Article.builder().id(id).build();
-        when(articleRepository.findById(id)).thenReturn(Optional.of(article));
-
         // when
-        articleService.delete(id);
+        long deletedId = articleService.delete(article1.getId());
 
         // then
-        verify(articleRepository).findById(id);
-        verify(articleRepository).delete(article);
+        assertThatThrownBy(() -> articleService.findById(deletedId))
+                .isInstanceOf(RuntimeException.class);
     }
 }
