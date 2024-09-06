@@ -1,16 +1,32 @@
-@import '../../styles/variables';
-
 .navbar {
   position: absolute;
   top: 0;
   height: 100vh;
-  width: 8rem;
-  background-color: $background-color;
+  width: 12rem;
+  background-color: var(--background-color);
+  color: var(--font-color);
   padding: 12px;
+  border-right: 1px solid black;
+
+  .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .switcher {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+a {
+  color: var(--contrast-color);
+}
+
+button {
+  background-color: var(--background-color);
+  color: var(--font-color);
 }

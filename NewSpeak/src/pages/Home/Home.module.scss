@@ -1,5 +1,10 @@
 .home {
-  margin-left: 9rem;
+  display: flex;
+  flex-direction: column;
+  margin-left: 12rem;
   min-height: 100vh;
-  margin-top: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: var(--background-color); // 상속된 배경색 사용
+  color: var(--font-color);
 }

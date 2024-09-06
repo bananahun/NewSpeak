@@ -1,8 +1,26 @@
-// variables.scss
-$main-color: #b3b3b3;
-$contrast-color: #2c5e3a;
-$accent-color: #330f0f;
-$sub-color: #733f3f;
-$background-color: #f3f3f3;
+:root {
+  --main-color: #b3b3b3;
+  --contrast-color: #2c5e3a;
+  --accent-color: #330f0f;
+  --sub-color: #733f3f;
+  --background-color: #fdfdfd;
+  --font-color: #3c3c3c;
+}
 
-$font-size: 20px;
+.light {
+  --main-color: #b3b3b3;
+  --contrast-color: #2c5e3a;
+  --accent-color: #330f0f;
+  --sub-color: #733f3f;
+  --background-color: #fdfdfd;
+  --font-color: #3c3c3c;
+}
+
+.dark {
+  --main-color: #b3b3b3;
+  --contrast-color: #2c5e3a;
+  --accent-color: #330f0f;
+  --sub-color: #733f3f;
+  --background-color: #3c3c3c;
+  --font-color: #fdfdfd;
+}
