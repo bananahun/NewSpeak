@@ -1,0 +1,31 @@
+package com.example.newspeak.pronounce.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.security.Timestamp;
+
+@Getter
+@Builder
+@Entity
+@Table(name = "pronounce")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
+public class Pronounce {
+
+    @Id
+    @GeneratedValue
+    @Column(name = "pro_id")
+    private Long id;
+
+    @Column
+    private String script;
+
+    @Column
+    private Integer proScore;
+
+    @Column
+    @CreationTimestamp
+    private Timestamp createdAt;
+}

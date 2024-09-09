@@ -1,15 +1,14 @@
-package com.example.newspeak.sentence.dto;
+package com.example.newspeak.pronounce.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SentenceProRequest {
+public class ProRequest {
 
     @NotBlank(message = "{NotBlank}")
     private String sentence;

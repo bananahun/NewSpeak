@@ -4,6 +4,15 @@ spring:
     url: 'jdbc:h2:mem:test'
     username: test
     password: test1234
+  config:
+    import: application-secret.yml
+  cloud:
+    gcp:
+      storage:
+        bucket: 'sentence_pro'
+        project-id: 'steady-citron-435112-b2'
+        credentials:
+          location: 5e01616d4635ae3d07be55d482fad7567834f0c2.json
 
   h2:
     console:
