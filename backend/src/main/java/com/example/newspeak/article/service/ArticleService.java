@@ -67,6 +67,10 @@ public class ArticleService {
         return articleFindResponse;
     }
 
+    public long save(Article article) {
+        articleRepository.save(article);
+        return article.getId();
+    }
 
     public long delete(Long id) {
         articleRepository.findById(id)
@@ -77,10 +81,5 @@ public class ArticleService {
 
     public void deleteAll() {
         articleRepository.deleteAll();
-    }
-
-    public long save(Article article) {
-        articleRepository.save(article);
-        return article.getId();
     }
 }

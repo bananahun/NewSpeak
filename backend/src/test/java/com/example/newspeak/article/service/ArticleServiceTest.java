@@ -59,6 +59,7 @@ public class ArticleServiceTest {
     @AfterEach
     void tearDown() {
         articleService.deleteAll();
+        categoryService.deleteAll();
     }
 
     @Test

@@ -1,6 +1,7 @@
 package com.example.newspeak.article.entity;
 
 import com.example.newspeak.category.entity.Category;
+import com.example.newspeak.sentence.entity.Sentence;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -62,4 +64,7 @@ public class Article {
     @JoinColumn(name = "category_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Category category;
+
+    @OneToMany(mappedBy = "article")
+    private List<Sentence> sentences;
 }
