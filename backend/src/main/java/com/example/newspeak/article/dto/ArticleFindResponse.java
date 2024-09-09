@@ -20,7 +20,7 @@ public class ArticleFindResponse {
     private String articleUrl;
     private String publisher;
     private String writer;
-    private String level;
+    private Integer level;
     private LocalDateTime createdAt;
     private Category category;
 

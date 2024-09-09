@@ -31,7 +31,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{level}")
-    public ResponseEntity<Result> findByLevel(@PathVariable("level") String level) {
+    public ResponseEntity<Result> findByLevel(@PathVariable("level") Integer level) {
         List<ArticlesFindResponse> articlesFindResponses = articleService.findByLevel(level);
         int count = articlesFindResponses.size();
         Result<List<ArticlesFindResponse>> result = new Result<>(count, articlesFindResponses);

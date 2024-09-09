@@ -49,8 +49,8 @@ public class ArticleServiceTest {
         categoryService.save(category1);
         categoryService.save(category2);
 
-        article1 = Article.builder().title("제목1").content("내용1").level("E1").category(category1).build();
-        article2 = Article.builder().title("제목2").content("내용2").level("E2").category(category2).build();
+        article1 = Article.builder().title("제목1").content("내용1").level(0).category(category1).build();
+        article2 = Article.builder().title("제목2").content("내용2").level(1).category(category2).build();
         articleService.save(article1);
         articleService.save(article2);
     }
@@ -78,18 +78,18 @@ public class ArticleServiceTest {
     @DisplayName("전체 기사 레벨로 조회")
     void findByLevel() {
         // when
-        List<ArticlesFindResponse> articles1 = articleService.findByLevel("E1");
-        List<ArticlesFindResponse> articles2 = articleService.findByLevel("E2");
-        List<ArticlesFindResponse> articles3 = articleService.findByLevel("E3");
+        List<ArticlesFindResponse> articles1 = articleService.findByLevel(0);
+        List<ArticlesFindResponse> articles2 = articleService.findByLevel(1);
+        List<ArticlesFindResponse> articles3 = articleService.findByLevel(2);
 
         // then
         assertThat(articles1).hasSize(1);
         assertThat(articles1.get(0).getTitle()).isEqualTo("제목1");
-        assertThat(articles1.get(0).getLevel()).isEqualTo("E1");
+        assertThat(articles1.get(0).getLevel()).isEqualTo(0);
 
         assertThat(articles2).hasSize(1);
         assertThat(articles2.get(0).getTitle()).isEqualTo("제목2");
-        assertThat(articles2.get(0).getLevel()).isEqualTo("E2");
+        assertThat(articles2.get(0).getLevel()).isEqualTo(1);
 
         assertThat(articles3).isEmpty();
     }

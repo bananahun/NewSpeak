@@ -30,7 +30,7 @@ public class ArticleService {
         return articlesFindResponses;
     }
 
-    public List<ArticlesFindResponse> findByLevel(String level) {
+    public List<ArticlesFindResponse> findByLevel(Integer level) {
         List<Article> articles = articleRepository.findByLevel(level);
         List<ArticlesFindResponse> articlesFindResponses = new ArrayList<>();
         for (Article article : articles) {

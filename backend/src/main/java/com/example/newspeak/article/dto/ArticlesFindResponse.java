@@ -15,9 +15,9 @@ public class ArticlesFindResponse {
     private String content;
     private Category category;
     private String imageUrl;
-    private String level;
     private String writer;
     private String publisher;
+    private Integer level;
     private LocalDateTime publishedDate;
 
     public static ArticlesFindResponse from(Article article) {
