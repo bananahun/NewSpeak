@@ -1,8 +1,31 @@
 .home {
   display: flex;
   flex-direction: column;
-  margin-left: 12rem;
-  min-height: 100vh;
+  margin-left: 12rem; // 네비게이션 바 너비를 제외한 여백
   padding: 20px;
   box-sizing: border-box;
+  background-color: var(--background-color); // 상속된 배경색 사용
+  color: var(--font-color);
+  // width: calc(100vw - 12rem); // 네비게이션 바 너비를 제외한 전체 너비
+  // height: 200vh; // 전체 화면 높이
+  // overflow-y: scroll; // 스크롤 방지
+}
+
+.wordCloudContainer {
+  flex: 1;
+  height: 100%;
+}
+
+.articleListContainer {
+  flex: 1;
+  height: 100%;
+}
+
+.showArticle {
+  top: 0; // 스크롤 시 보이도록 설정
+}
+
+.section {
+  scroll-snap-type: t mandatory;
+  height: 100vh;
 }

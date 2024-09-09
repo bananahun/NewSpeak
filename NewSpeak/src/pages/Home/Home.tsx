@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Nav from '../../components/Nav/Nav';
 import styles from './Home.module.scss';
-import WordCloud from '../../components/WordCloud/WorldCloud';
+import WordCloud from '../../components/WordCloud/WordCloud';
+import ArticleList from '../../components/Article/ArticleList.tsx';
+import { scrollToSection, handleWheelEvent } from '../../utils/ScrollUtils.ts';
 
 const words = [
   { text: 'CJW', size: 40 },
@@ -17,12 +19,34 @@ const words = [
 ];
 
 const Home: React.FC = () => {
+  const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
+
+  useEffect(() => {
+    const handleWheel = (e: WheelEvent) =>
+      handleWheelEvent(e, setCurrentSectionIndex);
+
+    window.addEventListener('wheel', handleWheel);
+
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+    };
+  }, []);
+
+  useEffect(() => {
+    scrollToSection(currentSectionIndex);
+  }, [currentSectionIndex]);
+
   return (
     <>
       <Nav />
-      <main>
+      <main className={styles.main}>
         <div className={styles.home}>
-          <WordCloud data={words} />
+          <div className={`${styles.section} ${styles.wordCloudContainer}`}>
+            <WordCloud data={words} />
+          </div>
+          <div className={`${styles.section} ${styles.articleListContainer}`}>
+            <ArticleList />
+          </div>
         </div>
       </main>
     </>
