@@ -1,0 +1,62 @@
+@keyframes slideIn {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes slideOut {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.searchBar {
+  position: absolute;
+  top: 0;
+  left: 12rem;
+  width: 50vw;
+  max-width: 600px;
+  height: 100vh;
+  padding: 12px;
+  opacity: 85%;
+  background-color: var(--background-color);
+  color: var(--font-color);
+  transform: translateX(-100%);
+  border-right: 1px solid black;
+  animation: 0.5s ease forwards;
+
+  .inputContainer {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    .inputBar {
+      flex-grow: 1;
+      width: 80%;
+      border-radius: 10px;
+      padding: 5px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 20%;
+      padding: 5px;
+      border-radius: 10px;
+    }
+  }
+
+  &.open {
+    animation: slideIn 0.5s ease forwards;
+  }
+
+  &.close {
+    animation: slideOut 0.5s ease forwards;
+  }
+}
