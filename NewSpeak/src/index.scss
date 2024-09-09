@@ -18,12 +18,13 @@ html,
 body {
   margin: 0;
   width: 100%;
+  background-color: var(--background-color);
 }
 
 #root {
   display: flex;
   flex-direction: column;
-  background-color: var(--background-color); // 변수 사용
+  background-color: var(--background-color);
   width: 100%;
   margin: 0 auto;
   min-height: 100vh;
