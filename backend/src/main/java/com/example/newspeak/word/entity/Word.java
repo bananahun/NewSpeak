@@ -8,7 +8,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,10 +36,8 @@ public class Word {
     private Integer level;
 
     @CreationTimestamp
+    @Column(name="created_at", updatable=false)
     private LocalDateTime createdAt;
-
-    @CreationTimestamp
-    private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "word")
     private List<WordMeaning> wordMeanings;

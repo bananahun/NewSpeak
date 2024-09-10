@@ -15,7 +15,7 @@ import java.security.Timestamp;
 public class Pronounce {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pro_id")
     private Long id;
 

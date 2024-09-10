@@ -15,10 +15,12 @@ import java.util.Map;
 
 import com.example.newspeak.pronounce.dto.ProRequest;
 import com.google.gson.Gson;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ProService {
 
     private static final String OPEN_API_URL = "http://aiopen.etri.re.kr:8000/WiseASR/Pronunciation";  // 영어 발음 평가 URL
@@ -27,10 +29,6 @@ public class ProService {
     private String ACCESS_KEY;
 
     private final Gson gson;
-
-    public ProService() {
-        this.gson = new Gson();
-    }
 
     public String evaluatePronunciation(ProRequest request) throws IOException {
         String audioContents;
@@ -42,7 +40,6 @@ public class ProService {
             throw new IOException("Failed to read audio file.", e);
         }
 
-        // 요청에 필요한 데이터 설정
         Map<String, Object> input = new HashMap<>();
         Map<String, String> argument = new HashMap<>();
         argument.put("language_code", "english");
@@ -50,7 +47,6 @@ public class ProService {
         argument.put("audio", audioContents);
         input.put("argument", argument);
 
-        // API 호출
         URL url;
         HttpURLConnection con = null;
         try {
@@ -61,13 +57,11 @@ public class ProService {
             con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             con.setRequestProperty("Authorization", ACCESS_KEY);
 
-            // 요청 데이터 전송
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-            wr.write(gson.toJson(request).getBytes("UTF-8"));
+            wr.write(gson.toJson(input).getBytes("UTF-8"));
             wr.flush();
             wr.close();
 
-            // 응답 처리
             int responseCode = con.getResponseCode();
             InputStream is = con.getInputStream();
             byte[] buffer = new byte[is.available()];

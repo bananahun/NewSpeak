@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class Sentence {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sentence_id")
     private Long id;
 

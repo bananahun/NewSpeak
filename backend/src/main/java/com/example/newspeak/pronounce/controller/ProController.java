@@ -1,26 +1,33 @@
 package com.example.newspeak.pronounce.controller;
 
 import com.example.newspeak.pronounce.dto.ProRequest;
+import com.example.newspeak.pronounce.service.AudioFileUploadService;
 import com.example.newspeak.pronounce.service.ProService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.validation.Valid;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/v1/sentences")
+@RequestMapping("/api/v1/pronounce")
+@RequiredArgsConstructor
 public class ProController {
 
-    @Autowired
-    private ProService proService;
+    private final AudioFileUploadService audioFileUploadService;
 
-    @PostMapping("/speak")
-    public String evaluatePronunciation(@Valid @RequestBody ProRequest request) {
+    private final ProService proService;
+
+    @PostMapping
+    public String evaluatePronunciation(
+            @RequestParam("file") MultipartFile audioFile,
+            @RequestParam("script") String script) {
         try {
+
+            String audioFileUrl = audioFileUploadService.uploadFile(audioFile);
+
+            ProRequest request = new ProRequest("english", script, audioFileUrl);
+
             return proService.evaluatePronunciation(request);
         } catch (IOException e) {
             e.printStackTrace();

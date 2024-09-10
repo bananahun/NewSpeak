@@ -18,7 +18,7 @@ public class SentenceController {
 
     private final SentenceService sentenceService;
 
-    @GetMapping("/{sentence_id}")
+    @GetMapping("/{sentence_id}/korean")
     public ResponseEntity<SentenceKoreanResponse> findById(@PathVariable("sentence_id") long sentence_id) {
         SentenceKoreanResponse result = sentenceService.findById(sentence_id);
         return ResponseEntity.status(OK).body(result);

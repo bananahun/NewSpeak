@@ -1,7 +1,6 @@
 package com.example.newspeak.article.dto;
 
 import com.example.newspeak.article.entity.Article;
-import com.example.newspeak.category.entity.Category;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,7 +12,7 @@ public class ArticlesFindResponse {
     private Long id;
     private String title;
     private String content;
-    private Category category;
+    private String categoryName;
     private String imageUrl;
     private String writer;
     private String publisher;
@@ -25,7 +24,7 @@ public class ArticlesFindResponse {
         articlesFindResponse.id = article.getId();
         articlesFindResponse.title = article.getTitle();
         articlesFindResponse.content = article.getContent();
-        articlesFindResponse.category = article.getCategory();
+        articlesFindResponse.categoryName = article.getCategory().getCategoryName();
         articlesFindResponse.imageUrl = article.getImageUrl();
         articlesFindResponse.level = article.getLevel();
         articlesFindResponse.writer = article.getWriter();

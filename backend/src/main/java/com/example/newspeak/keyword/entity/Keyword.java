@@ -14,7 +14,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class Keyword {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "keyword_id")
     private Long id;
 
