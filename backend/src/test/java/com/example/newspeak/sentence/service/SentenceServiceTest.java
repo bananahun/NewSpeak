@@ -48,7 +48,7 @@ class SentenceServiceTest {
         categoryService.save(category);
 
         // 기사 생성 및 저장
-        article = Article.builder().title("제목1").content("내용").level("E1").category(category).build();
+        article = Article.builder().title("제목1").content("내용").level(0).category(category).build();
         articleService.save(article);
 
         // 문장 생성 및 저장

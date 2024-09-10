@@ -1,9 +1,18 @@
 spring:
   datasource:
     driver-class-name: org.h2.Driver
-    url: 'jdbc:h2:mem:test'
-    username: test
-    password: test1234
+    url: jdbc:h2:tcp://localhost/~/newSpeak
+    username: sa
+    password:
+  config:
+    import: application-secret.yml
+  cloud:
+    gcp:
+      storage:
+        bucket: 'sentence_pro'
+        project-id: 'steady-citron-435112-b2'
+        credentials:
+          location: 5e01616d4635ae3d07be55d482fad7567834f0c2.json
 
   h2:
     console:
@@ -11,7 +20,6 @@ spring:
       path: /h2-console
 
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create
     properties:
@@ -19,6 +27,12 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
         show_sql: true
+    defer-datasource-initialization: true
+    generate-ddl: true
+
+  sql:
+    init:
+      mode: always
 
 logging:
  level:

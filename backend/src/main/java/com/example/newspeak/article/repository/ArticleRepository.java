@@ -22,7 +22,7 @@ public class ArticleRepository {
                 .getResultList();
     }
 
-    public List<Article> findByLevel(String level) {
+    public List<Article> findByLevel(Integer level) {
         TypedQuery<Article> query = em.createQuery("select a from Article a where a.level = :level", Article.class);
         query.setParameter("level", level);
 

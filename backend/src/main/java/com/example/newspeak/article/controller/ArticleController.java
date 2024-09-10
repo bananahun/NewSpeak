@@ -30,15 +30,15 @@ public class ArticleController {
         return ResponseEntity.status(OK).body(result);
     }
 
-    @GetMapping("/{level}")
-    public ResponseEntity<Result> findByLevel(@PathVariable("level") String level) {
+    @GetMapping("/level/{level}")
+    public ResponseEntity<Result> findByLevel(@PathVariable("level") Integer level) {
         List<ArticlesFindResponse> articlesFindResponses = articleService.findByLevel(level);
         int count = articlesFindResponses.size();
         Result<List<ArticlesFindResponse>> result = new Result<>(count, articlesFindResponses);
         return ResponseEntity.status(OK).body(result);
     }
 
-    @GetMapping("/{title}")
+    @GetMapping("/search/{title}")
     public ResponseEntity<Result> findByTitle(@PathVariable("title") String title) {
         List<ArticlesFindResponse> articlesFindResponses = articleService.findByTitle(title);
         int count = articlesFindResponses.size();
@@ -46,7 +46,7 @@ public class ArticleController {
         return ResponseEntity.status(OK).body(result);
     }
 
-    @GetMapping("/{category_id}")
+    @GetMapping("/category/{category_id}")
     public ResponseEntity<Result> findByCategory(@PathVariable("category_id") Long category_id) {
         List<ArticlesFindResponse> articlesFindResponses = articleService.findByCategory(category_id);
         int count = articlesFindResponses.size();
