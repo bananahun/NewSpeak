@@ -1,0 +1,26 @@
+.articleContainer {
+  display: flex;
+  // height: 100vh;
+  flex-direction: column;
+  margin-left: 12rem;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: var(--background-color);
+  color: var(--font-color);
+}
+
+.articleBackground {
+  filter: brightness(83%);
+  background-color: var(--background-color);
+  height: 92vh;
+  padding: 12px;
+  border: 1px solid black;
+  border-radius: 6px;
+  overflow-y: scroll;
+}
+
+.articleTitle {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}

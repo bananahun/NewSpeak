@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useArticleStore from '../../store/ArticleStore';
 import styles from './ArticleList.module.scss';
 
 // interface NewsItem {
@@ -279,7 +281,22 @@ const categories = [
 ];
 
 const ArticleList: React.FC = () => {
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+
+  const handleClick = (
+    e: React.MouseEvent<HTMLDivElement>,
+    articleId: number,
+    articleTitle: string,
+  ) => {
+    e.preventDefault();
+    const articleMeta = {
+      id: articleId,
+      title: articleTitle,
+    };
+    useArticleStore.getState().setArticleMeta(articleMeta);
+    navigate('/article');
+  };
 
   const filteredNews =
     selectedCategory === 'All'
@@ -303,7 +320,11 @@ const ArticleList: React.FC = () => {
       </div>
       <div className={styles.newsItemContainer}>
         {filteredNews.map(item => (
-          <div key={item.id} className={styles.newsItem}>
+          <div
+            key={item.id}
+            className={styles.newsItem}
+            onClick={e => handleClick(e, item.id, item.title)}
+          >
             <img
               src={item.imageUrl}
               alt={item.title}
