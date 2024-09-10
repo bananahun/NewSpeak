@@ -20,7 +20,7 @@ import static lombok.AccessLevel.PUBLIC;
 @Table(name = "report")
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PUBLIC)
-public class ConversationReport {
+public class Report {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

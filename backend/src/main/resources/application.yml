@@ -46,3 +46,25 @@ logging:
 
 server:
   port: 8080
+
+gpt:
+  api:
+    url: https://api.openai.com/v1/chat/completions
+    assistant:
+      fiction: asst_KkESupNVbYT8X5kXhK9K3SXh
+      character: asst_W1oS2T6VsfyLEp1DTGCxNkQR
+      background: asst_i8GnoJBS0RYU2gutNa62ZZq0
+    threads: https://api.openai.com/v1/threads
+    key: sk-test-bot-VVPns4rHE7O3qjbjP7HoT3BlbkFJjJVZqS0TN0mPiZyScsMR
+  prompt:
+    fiction: 저는 {0} 세계를 배경으로 {1} 등장인물들이 등장하는 이야기를 만들고 싶습니다. 당신의 창의적인 글쓰기 기술을 사용하여 이야기를 구성하기 위한 일련의 질문을 하고, 각 질문은 이야기에서 다음에 일어날 일을 결정하는 것을 목표로 합니다. 지금까지의 이야기를 바탕으로 각 질문을 공식화하고 제가 선택할 수 있는 세 가지 옵션을 제시해 주세요. 제가 어떤 옵션을 선택하면 그 옵션을 사용하여 다음 질문을 알려주세요. 제가 원한다면 제가 직접 답변을 제공할 수도 있으며, 그에 따라 스토리를 조정할 수 있습니다. 질문은 흥미롭고 초등학생에게 적합하도록 구성하세요. 당신의 목표는 캐릭터 개발, 줄거리 반전, 흥미진진한 사건으로 매력적인 이야기를 만들 수 있도록 저를 안내하는 것입니다. 이야기를 만들어 봅시다! 첫 번째 질문을 하고 세 가지 옵션을 제시해 주세요.
+    character: 소설에 등장할 캐릭터를 만들어 줘. 내가 지금까지 만들어진 캐릭터 설명과 너의 이전 질문과 나의 답변을 함께 제공해줄게. 너는 이미 만들어진 캐릭터 설명과 겹치지 않는 새로운 질문을 해주고, 나는 답변하는 식으로 캐릭터를 만들어보자. 나에게 질문할때는 초등학생에게 말하듯이 쉽고 친절하게 말해주고, 이전 나의 답변을 다시 되짚어주면서 너가 이해했음을 보여줘.
+    background: 소설에 사용할 세계관 생성을 도와주세요. 직전에 당신이 호출한 함수와 그 결과값을 알려줄게요. 당신은 이전 함수 요청에서 사용한 summarize 값에 제가 알려드린 결과를 추가하여 세계관 정보를 줄글 설명문 형태로 작성해주어야 합니다. 그리고 추가적인 질문을 함수로 호출하여 이 정보를 더 풍성하게 만들어주세요. 제가 초등학생이라고 생각하고 질문은 쉽고 친절하게 한국어로 하세요. 만약 제가 세계관 생성과 관련없는 대답을 하면 무시하고, 이전과 같은 질문을 다시 해주세요.
+  setting:
+    model: gpt-4o-mini
+    temperature: 2
+    top-p: 0.6
+    max-tokens: 16383
+    frequency_penalty: 0
+    presence_penalty: 0
+    tool-choice: required

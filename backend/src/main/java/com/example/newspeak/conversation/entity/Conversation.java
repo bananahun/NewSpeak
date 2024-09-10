@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.security.Timestamp;
-import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
 import static lombok.AccessLevel.PUBLIC;
@@ -26,7 +25,7 @@ public class Conversation {
     private Long id;
 
     @Column
-    private String dialogContent;
+    private String content;
 
     @CreationTimestamp
     @Column
@@ -34,5 +33,5 @@ public class Conversation {
 
     @ManyToOne
     @JoinColumn(name = "report_id")
-    private ConversationReport conversationReport;
+    private Report report;
 }

@@ -1,8 +1,7 @@
 package com.example.newspeak.article.entity;
 
 import com.example.newspeak.category.entity.Category;
-import com.example.newspeak.conversation.entity.ConversationReport;
-import com.example.newspeak.keyword.entity.Keyword;
+import com.example.newspeak.conversation.entity.Report;
 import com.example.newspeak.sentence.entity.Sentence;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
@@ -78,5 +77,5 @@ public class Article {
     @ManyToOne
     @JoinColumn(name = "report_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private ConversationReport conversationReport;
+    private Report report;
 }
