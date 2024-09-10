@@ -1,17 +1,18 @@
 package com.example.newspeak.pronounce.service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.example.newspeak.pronounce.dto.ProRequest;
 import com.google.gson.Gson;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ProService {
 
+    private static final Logger LOGGER = Logger.getLogger(ProService.class.getName());
     private static final String OPEN_API_URL = "http://aiopen.etri.re.kr:8000/WiseASR/Pronunciation";  // 영어 발음 평가 URL
 
     @Value("${etri.api-key}")
@@ -30,54 +32,81 @@ public class ProService {
 
     private final Gson gson;
 
-    public String evaluatePronunciation(ProRequest request) throws IOException {
+    public String evaluatePronunciation(ProRequest request) {
         String audioContents;
+
+        // URL에서 오디오 파일 다운로드
         try {
-            Path path = Paths.get(request.getSoundFilePath());
-            byte[] audioBytes = Files.readAllBytes(path);
-            audioContents = Base64.getEncoder().encodeToString(audioBytes);
+            URL audioUrl = new URL(request.getSoundFilePath());
+            HttpURLConnection connection = (HttpURLConnection) audioUrl.openConnection();
+            connection.setRequestMethod("GET");
+
+            try (InputStream inputStream = connection.getInputStream();
+                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    byteArrayOutputStream.write(buffer, 0, bytesRead);
+                }
+
+                byte[] audioBytes = byteArrayOutputStream.toByteArray();
+                audioContents = Base64.getEncoder().encodeToString(audioBytes);
+                LOGGER.info("Audio file downloaded and encoded successfully.");
+
+            } catch (IOException e) {
+                LOGGER.log(Level.SEVERE, "Failed to download audio file.", e);
+                throw new RuntimeException("Failed to download audio file.", e);
+            }
+
+        } catch (MalformedURLException e) {
+            LOGGER.log(Level.SEVERE, "Invalid URL: " + request.getSoundFilePath(), e);
+            throw new RuntimeException("Invalid URL: " + request.getSoundFilePath(), e);
         } catch (IOException e) {
-            throw new IOException("Failed to read audio file.", e);
+            LOGGER.log(Level.SEVERE, "Failed to open connection.", e);
+            throw new RuntimeException("Failed to open connection.", e);
         }
 
+        // API 요청을 위한 데이터 준비
         Map<String, Object> input = new HashMap<>();
         Map<String, String> argument = new HashMap<>();
+
         argument.put("language_code", "english");
-        argument.put("script", request.getSentence());
         argument.put("audio", audioContents);
+
         input.put("argument", argument);
 
-        URL url;
+        System.out.println("argument = " + argument);
+        // API에 요청 보내기
         HttpURLConnection con = null;
         try {
-            url = new URL(OPEN_API_URL);
+            URL url = new URL(OPEN_API_URL);
             con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
             con.setDoOutput(true);
             con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             con.setRequestProperty("Authorization", ACCESS_KEY);
 
-            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-            wr.write(gson.toJson(input).getBytes("UTF-8"));
-            wr.flush();
-            wr.close();
+            // JSON 요청 바디 작성
+            try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
+                wr.write(gson.toJson(input).getBytes(StandardCharsets.UTF_8));
+                wr.flush();
+            }
 
+            // 응답 처리
             int responseCode = con.getResponseCode();
-            InputStream is = con.getInputStream();
-            byte[] buffer = new byte[is.available()];
-            int byteRead = is.read(buffer);
-            String responBody = new String(buffer);
+            LOGGER.info("Response code: " + responseCode);
+            try (InputStream is = con.getInputStream()) {
+                byte[] buffer = is.readAllBytes();
+                String responseBody = new String(buffer);
 
-            System.out.println("[responseCode] " + responseCode);
-            System.out.println("[responBody]");
-            System.out.println(responBody);
+                LOGGER.info("Response body: " + responseBody);
+                return responseBody;
+            }
 
-            return responBody;
-
-        } catch (MalformedURLException e) {
-            throw new MalformedURLException("Invalid URL.");
         } catch (IOException e) {
-            throw new IOException("Failed to connect to API.", e);
+            LOGGER.log(Level.SEVERE, "Failed to connect to API.", e);
+            throw new RuntimeException("Failed to connect to API.", e);
         } finally {
             if (con != null) {
                 con.disconnect();

@@ -1,6 +1,7 @@
 package com.example.newspeak.article.entity;
 
 import com.example.newspeak.category.entity.Category;
+import com.example.newspeak.conversation.entity.ConversationReport;
 import com.example.newspeak.keyword.entity.Keyword;
 import com.example.newspeak.sentence.entity.Sentence;
 import jakarta.persistence.*;
@@ -74,6 +75,8 @@ public class Article {
     @OneToMany(mappedBy = "article")
     private List<Sentence> sentences;
 
-    @OneToMany(mappedBy = "article")
-    private List<Keyword> keywords;
+    @ManyToOne
+    @JoinColumn(name = "report_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private ConversationReport conversationReport;
 }

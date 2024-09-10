@@ -34,6 +34,11 @@ spring:
     init:
       mode: always
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
 logging:
  level:
     org.hibernate.SQL : debug

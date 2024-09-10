@@ -11,11 +11,11 @@ import org.hibernate.annotations.ColumnDefault;
 @AllArgsConstructor
 public class ProRequest {
 
-    @NotBlank(message = "{NotBlank}")
+    @NotBlank(message = "english")
     private String languageCode;
 
-    @ColumnDefault("english")
-    private String sentence;
+    @NotBlank(message = "{NotBlank}")
+    private String script;
 
     @NotBlank(message = "{NotBlank}")
     private String soundFilePath;

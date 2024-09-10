@@ -23,13 +23,19 @@ public class AudioFileUploadService {
 
     public String uploadFile(MultipartFile file) throws IOException {
         try {
+
             String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+
             BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, fileName).build();
 
             storage.create(blobInfo, file.getInputStream());
 
             URL signedUrl = storage.signUrl(blobInfo, 15, TimeUnit.MINUTES);
-            return signedUrl.toString();
+            
+            System.out.println("signedUrl = " + signedUrl);
+            System.out.println("signedUrl.toString() = " + signedUrl.toString());
+
+            return signedUrl.toString();  // 파일 시스템 경로가 아닌 URL을 그대로 반환
         } catch (IOException e) {
             throw new IOException("Failed to upload file to Google Cloud Storage", e);
         }

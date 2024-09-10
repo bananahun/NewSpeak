@@ -25,6 +25,9 @@ public class Pronounce {
     @Column
     private Integer proScore;
 
+    @Column(name = "audio_path")
+    private String audioPath;
+
     @Column
     @CreationTimestamp
     private Timestamp createdAt;
