@@ -1,10 +1,14 @@
 package com.ssafy.newspeak.security.oauth2;
 
 import com.ssafy.newspeak.user.entity.Role;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 
+import java.security.Principal;
 import java.util.Collection;
 import java.util.Map;
 

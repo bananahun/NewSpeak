@@ -2,6 +2,7 @@ package com.ssafy.newspeak.security.jwt.filter;
 
 
 import com.ssafy.newspeak.security.jwt.service.JwtService;
+import com.ssafy.newspeak.security.jwt.util.PasswordUtil;
 import com.ssafy.newspeak.user.entity.User;
 import com.ssafy.newspeak.user.repository.UserRepository;
 import jakarta.servlet.FilterChain;
@@ -9,7 +10,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import login.oauthtest4.global.jwt.util.PasswordUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -54,8 +54,9 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+        String requestURI=request.getRequestURI();
         // "/login" 요청이 들어오면, 다음 필터로 넘기고 현재 필터의 나머지 부분을 실행하지 않음
-        if (request.getRequestURI().equals(NO_CHECK_URL)) {
+        if (requestURI.equals(NO_CHECK_URL)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -67,7 +68,8 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
         // AccessToken 검사 및 인증 처리
         if (accessToken != null) {
-            checkAccessTokenAndAuthenticationOnly(request, response, filterChain);
+            checkAccessTokenAndAuthentication(request, response);
+            filterChain.doFilter(request, response);
             return;
         }
 
@@ -132,16 +134,14 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
      * 인증 허가 처리된 객체를 SecurityContextHolder에 담기
      * 그 후 다음 인증 필터로 진행
      */
-    public void checkAccessTokenAndAuthenticationOnly(HttpServletRequest request, HttpServletResponse response,
-                                                  FilterChain filterChain) throws ServletException, IOException {
-        log.info("checkAccessTokenAndAuthentication() 호출");
+    public void checkAccessTokenAndAuthenticationOnly(HttpServletRequest request, HttpServletResponse response
+                                                  ) throws ServletException, IOException {
+        log.info("checkAccessTokenAndAuthenticationOnly() 호출");
         jwtService.extractAccessToken(request.getCookies())
                 .filter(jwtService::isTokenValid)
                 .ifPresent(accessToken -> jwtService.extractEmail(accessToken)
                         .ifPresent(email -> userRepository.findByEmail(email)
                                 .ifPresent(this::saveAuthentication)));
-
-        filterChain.doFilter(request, response);
     }
 
 

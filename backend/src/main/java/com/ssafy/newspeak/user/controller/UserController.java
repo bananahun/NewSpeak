@@ -41,8 +41,9 @@ public class UserController {
     }
 
     @GetMapping("/jwt-test")
-    public String jwtTest() {
-        return "jwtTest 요청 성공";
+    public String jwtTest(Principal principal) {
+        String email=principal.getName();
+        return "jwtTest 요청 성공 "+email;
     }
 
     @GetMapping("/email")

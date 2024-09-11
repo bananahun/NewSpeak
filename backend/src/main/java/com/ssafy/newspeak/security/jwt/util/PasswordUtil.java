@@ -1,4 +1,4 @@
-package login.oauthtest4.global.jwt.util;
+package com.ssafy.newspeak.security.jwt.util;
 
 import java.util.Random;
 
