@@ -34,7 +34,9 @@ const Nav: React.FC = () => {
       return (
         <>
           <div className={styles.buttonContainer}>
-            <IoPersonCircleOutline size={'40'} />
+            <Link to="/mypage">
+              <IoPersonCircleOutline size={'40'} />
+            </Link>
             <IoLogOutOutline size={'40'} />
           </div>
           <button
