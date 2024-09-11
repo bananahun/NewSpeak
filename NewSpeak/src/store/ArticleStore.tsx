@@ -4,6 +4,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 interface ArticleMeta {
   id: number;
   title: string;
+  imageUrl: string;
 }
 
 interface ArticleState {

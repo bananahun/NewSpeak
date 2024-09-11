@@ -10,17 +10,46 @@
 }
 
 .articleBackground {
-  filter: brightness(83%);
+  filter: brightness(85%);
   background-color: var(--background-color);
-  height: 92vh;
+  height: 88vh;
   padding: 12px;
   border: 1px solid black;
   border-radius: 6px;
   overflow-y: scroll;
+
+  > img {
+    width: 100%;
+  }
 }
 
 .articleTitle {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
+}
+
+.buttonContainer {
+  margin-right: 24px;
+  display: flex;
+  justify-content: end;
+  gap: 12px;
+  align-items: center;
+
+  span {
+    background-color: var(--background-color);
+    filter: brightness(70%);
+    border: 1px solid var(--font-color);
+    border-radius: 12px;
+    color: var(--font-color);
+    padding: 7px;
+    cursor: pointer;
+  }
+
+  button {
+    background-color: inherit;
+    width: fit-content;
+    border: none;
+    cursor: pointer;
+  }
 }

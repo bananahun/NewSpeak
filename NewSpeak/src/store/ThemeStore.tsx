@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import logoWhite from '../assets/NewSpeakWhite.png';
+import logoBlack from '../assets/NewSpeak.png';
 
 export enum Theme {
   Light = 'light',
@@ -25,5 +27,10 @@ const useThemeStore = create<ThemeState>(set => ({
     localStorage.setItem('theme', theme);
   },
 }));
+
+export const getLogo = (): string => {
+  const theme = useThemeStore.getState().theme;
+  return theme === Theme.Dark ? logoWhite : logoBlack;
+};
 
 export default useThemeStore;

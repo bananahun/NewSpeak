@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import styles from './ArticleDetail.module.scss';
-import translateIconBlack from '../../assets/translate.png';
-import translateIconWhite from '../../assets/translate-white.png';
+import styles from './ArticleTranslation.module.scss';
 
 const article = {
   sentence: [
     {
       id: 1,
       content:
-        'As demand for pure electric vehicles (BEVs) is expected to fall short of the existing market forecast, a national research institute suggested that large-scale investments by domestic secondary battery companies based on this need to be adjusted',
+        'As demand for pure electric vehicles (BEVs) is expected to fall short of the existing market forecast, a national research institute suggested that large-scale investments by domestic secondary battery companies based on this need to be adjusted.',
       translation:
         '순수 전기차(BEV) 수요가 기존 시장 전망에 미치지 못할 것으로 예상되는 만큼 이를 기반으로 추진된 국내 이차전지 업체들의 대규모 투자가 조정될 필요가 있다는 국책 연구 기관의 제언이 나왔다.',
     },
@@ -46,26 +44,7 @@ const article = {
 const ArticleDetail: React.FC = () => {
   const [articleId, setArticleId] = useState(0);
   const [articleDetail, setArticleDetail] = useState(article.sentence);
-  const [translateIcon, setTranslateIcon] = useState(translateIconWhite);
-  const [visibleTranslations, setVisibleTranslations] = useState<boolean[]>(
-    new Array(article.sentence.length).fill(false),
-  );
-
-  const toggleOpenTranslation = (index: number) => {
-    setVisibleTranslations(prev => {
-      const newVisibleTranslations = [...prev];
-      newVisibleTranslations[index] = !newVisibleTranslations[index];
-      return newVisibleTranslations;
-    });
-  };
-
-  useEffect(() => {
-    if (localStorage.getItem('theme') === 'dark') {
-      setTranslateIcon(translateIconBlack);
-    } else {
-      setTranslateIcon(translateIconWhite);
-    }
-  }, [localStorage.getItem('theme')]);
+  const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   useEffect(() => {
     const articleStorage = localStorage.getItem('articleStorage');
@@ -82,26 +61,44 @@ const ArticleDetail: React.FC = () => {
     }
   }, [articleId]);
 
+  const handleMouseEnter = (id: number) => {
+    setHoveredId(id);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredId(null);
+  };
   return (
-    <div className={styles.articleContent}>
-      {articleDetail.map((sentence, index) => (
-        <div key={sentence.id} className={styles.tooltipContainer}>
-          <p className={styles.sentence}>{sentence.content}</p>
-          <img
-            src={translateIcon}
-            alt="translate"
-            style={{ width: '25px' }}
-            className={styles.translateButton}
-            onClick={() => {
-              toggleOpenTranslation(index);
-            }}
-          />
-          {visibleTranslations[index] && (
-            <span className={styles.translation}>{sentence.translation}</span>
-          )}
+    <>
+      <div className={styles.articleContent}>
+        <div className={styles.articleOriginal}>
+          {articleDetail.map(sentence => (
+            <div
+              key={sentence.id}
+              className={`${styles.sentenceContainer} ${
+                hoveredId === sentence.id ? styles.accent : ''
+              }`}
+              onMouseEnter={() => handleMouseEnter(sentence.id)}
+              onMouseLeave={handleMouseLeave}
+            >
+              <p className={styles.sentence}>{sentence.content}</p>
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
+        <div className={styles.articleTranslation}>
+          {articleDetail.map(sentence => (
+            <div
+              key={sentence.id}
+              className={`${styles.sentenceContainer} ${
+                hoveredId === sentence.id ? styles.highlight : ''
+              }`}
+            >
+              <p className={styles.sentence}>{sentence.translation}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 };
 

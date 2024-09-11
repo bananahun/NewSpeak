@@ -288,11 +288,13 @@ const ArticleList: React.FC = () => {
     e: React.MouseEvent<HTMLDivElement>,
     articleId: number,
     articleTitle: string,
+    articleImageUrl: string,
   ) => {
     e.preventDefault();
     const articleMeta = {
       id: articleId,
       title: articleTitle,
+      imageUrl: articleImageUrl,
     };
     useArticleStore.getState().setArticleMeta(articleMeta);
     navigate('/article');
@@ -323,7 +325,7 @@ const ArticleList: React.FC = () => {
           <div
             key={item.id}
             className={styles.newsItem}
-            onClick={e => handleClick(e, item.id, item.title)}
+            onClick={e => handleClick(e, item.id, item.title, item.imageUrl)}
           >
             <img
               src={item.imageUrl}
