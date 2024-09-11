@@ -20,6 +20,7 @@ spring:
       path: /h2-console
 
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create
     properties:
@@ -38,6 +39,10 @@ spring:
     redis:
       host: localhost
       port: 6379
+  profiles:
+    group:
+      "local": "local, jwt, oauth"
+    active: local
 
 logging:
  level:
