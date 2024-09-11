@@ -1,0 +1,29 @@
+/* Category.module.scss */
+
+.categoryContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3개의 열로 구성된 그리드 */
+  gap: 10px; /* 카테고리 박스 간의 간격 */
+  margin-top: 20px; /* 그리드 상단 여백 */
+}
+
+.categoryBox {
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px; /* 카테고리 박스 안쪽 여백 */
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease; /* 호버 효과를 위한 트랜지션 */
+}
+
+.categoryBox:hover {
+  background-color: #e9ecef;
+  transform: scale(1.05); /* 마우스 호버 시 약간 확대 */
+}
+
+.selected {
+  background-color: #007bff; /* 선택된 카테고리 배경 색상 */
+  color: white; /* 선택된 카테고리 텍스트 색상 */
+  border-color: #007bff; /* 선택된 카테고리 테두리 색상 */
+}
