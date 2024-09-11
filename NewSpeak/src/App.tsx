@@ -5,6 +5,7 @@ import Register from './pages/Register/Register';
 import Login from './pages/Login/Login';
 import MyPage from './pages/MyPage/MyPage';
 import Article from './pages/Artricle/Article';
+import Conversation from './pages/Conversation/Conversation';
 
 import useThemeStore from './store/ThemeStore';
 import './App.scss';
@@ -20,6 +21,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/article" element={<Article />} />
+        <Route path="/conversation" element={<Conversation />} />
       </Routes>
     </div>
   );
