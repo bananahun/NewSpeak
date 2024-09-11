@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './ArticleOriginal.module.scss';
 import translateIconBlack from '../../assets/translate.png';
 import translateIconWhite from '../../assets/translate-white.png';
-import { FaRegCircleQuestion, FaRegBookmark } from 'react-icons/fa6';
+
 import { IoMicSharp, IoVolumeMedium } from 'react-icons/io5';
 
 const article = {
@@ -108,20 +108,6 @@ const ArticleDetail: React.FC = () => {
             )}
           </div>
         ))}
-      </div>
-      <div className={styles.buttonContainer}>
-        <span>
-          <p>전문 번역</p>
-        </span>
-        <span>
-          <p>회화 시작</p>
-        </span>
-        <button>
-          <FaRegBookmark />
-        </button>
-        <button>
-          <FaRegCircleQuestion />
-        </button>
       </div>
     </>
   );
