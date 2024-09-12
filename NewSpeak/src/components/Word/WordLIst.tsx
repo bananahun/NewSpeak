@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
-import Nav from '../../components/Nav/Nav';
+import { Link } from 'react-router-dom';
+import Nav from '../Nav/Nav';
 import styles from './WordList.module.scss';
 
 const WordList = () => {
-  const words = [
+  interface Word {
+    content: string;
+    meanings: {
+      meaning: string;
+      example: string;
+      exampleKorean: string;
+    }[];
+  }
+
+  const words: Word[] = [
     {
       content: 'get',
       meanings: [
@@ -167,7 +177,9 @@ const WordList = () => {
       <div className={styles.wordlistContainer}>
         <div className={styles.header}>
           <h1>나만의 단어장</h1>
-          <button className={styles.testButton}>테스트</button>
+          <Link to="/wordlist/test">
+            <button className={styles.testButton}>테스트</button>
+          </Link>
         </div>
         <div className={styles.wordlist}>
           {words.map((word, index) => (
