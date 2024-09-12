@@ -1,0 +1,39 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  margin-left: 12rem;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: var(--background-color);
+  color: var(--font-color);
+  width: calc(100vw - 12rem);
+  overflow-y: scroll;
+  height: 92vh;
+}
+
+.articleTitle {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.conversationContainer {
+  background-color: var(--background-color);
+  filter: brightness(85%);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-y: scroll;
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  button {
+    background-color: var(--font-color);
+    color: var(--background-color);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+}

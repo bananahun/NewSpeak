@@ -1,20 +1,45 @@
 .articleContainer {
   display: flex;
-  // height: 100vh;
+  height: 92vh;
   flex-direction: column;
   margin-left: 12rem;
   padding: 20px;
   box-sizing: border-box;
   background-color: var(--background-color);
   color: var(--font-color);
+  position: relative;
+}
+
+.articleHeader {
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  position: relative;
+
+  button {
+    width: fit-content;
+    background-color: inherit;
+    border: none;
+    cursor: pointer;
+    padding-top: 4px;
+  }
+
+  span {
+    display: flex;
+    gap: 12px;
+    svg {
+      cursor: pointer;
+      align-items: center;
+    }
+  }
 }
 
 .articleBackground {
   filter: brightness(85%);
+  margin-top: 20px;
   background-color: var(--background-color);
-  height: 88vh;
+  height: 92vh;
   padding: 12px;
-  border: 1px solid black;
   border-radius: 6px;
   overflow-y: scroll;
 
@@ -26,30 +51,18 @@
 .articleTitle {
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 20px;
 }
 
 .buttonContainer {
-  margin-right: 24px;
   display: flex;
-  justify-content: end;
   gap: 12px;
-  align-items: center;
-
-  span {
-    background-color: var(--background-color);
-    filter: brightness(70%);
-    border: 1px solid var(--font-color);
-    border-radius: 12px;
-    color: var(--font-color);
-    padding: 7px;
-    cursor: pointer;
-  }
+  margin-top: 12px;
 
   button {
-    background-color: inherit;
-    width: fit-content;
-    border: none;
+    background-color: var(--font-color);
+    color: var(--background-color);
+    padding: 8px 16px;
+    border-radius: 6px;
     cursor: pointer;
   }
 }
