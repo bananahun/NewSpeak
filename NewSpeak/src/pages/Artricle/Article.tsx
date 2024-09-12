@@ -53,25 +53,29 @@ const Article = () => {
       <Nav />
       <main className={styles.main}>
         <div className={styles.articleContainer}>
+          <div className={styles.articleHeader}>
+            <span>
+              <h1 className={styles.articleTitle}>{articleTitle}</h1>
+              <button onClick={e => toggleScrap(e)}>
+                <FaRegBookmark />
+              </button>
+            </span>
+            <button>
+              <FaRegCircleQuestion />
+            </button>
+          </div>
           <div className={styles.articleBackground}>
-            <h1 className={styles.articleTitle}>{articleTitle}</h1>
             <img src={articleImageUrl || logo} />
             {isTranslateOpen ? <ArticleTranslation /> : <ArticleOriginal />}
           </div>
-        </div>
-        <div className={styles.buttonContainer}>
-          <span>
-            <p onClick={toggleTranslate}>{activeTranslateMessage}</p>
-          </span>
-          <span onClick={goToConversation}>
-            <p>회화 시작</p>
-          </span>
-          <button onClick={e => toggleScrap(e)}>
-            <FaRegBookmark />
-          </button>
-          <button>
-            <FaRegCircleQuestion />
-          </button>
+          <div className={styles.buttonContainer}>
+            <button>
+              <p onClick={toggleTranslate}>{activeTranslateMessage}</p>
+            </button>
+            <button onClick={goToConversation}>
+              <p>회화 시작</p>
+            </button>
+          </div>
         </div>
       </main>
     </>
