@@ -1,5 +1,5 @@
-import React from 'react';
-import useRegisterStore from '../../store/RegisterStore';
+import React from "react";
+import useRegisterStore from "../../store/RegisterStore";
 
 const Step2 = () => {
   const { formData, setFormData } = useRegisterStore();
@@ -11,7 +11,7 @@ const Step2 = () => {
         <input
           type="text"
           value={formData.nickname}
-          onChange={e => setFormData('nickname', e.target.value)}
+          onChange={(e) => setFormData("nickname", e.target.value)}
         />
       </article>
       <article>
@@ -19,7 +19,7 @@ const Step2 = () => {
         <input
           type="password"
           value={formData.password}
-          onChange={e => setFormData('password', e.target.value)}
+          onChange={(e) => setFormData("password", e.target.value)}
         />
       </article>
       <article>
@@ -27,7 +27,7 @@ const Step2 = () => {
         <input
           type="password"
           value={formData.passwordConfirm}
-          onChange={e => setFormData('passwordConfirm', e.target.value)}
+          onChange={(e) => setFormData("passwordConfirm", e.target.value)}
         />
       </article>
     </>

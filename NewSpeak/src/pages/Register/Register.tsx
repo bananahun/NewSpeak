@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import Step1 from './Step1';
-import Step2 from './Step2';
-import Step3 from './Step3';
-import useRegisterStore from '../../store/RegisterStore';
-import styles from './Register.module.scss';
-import logo from '../../assets/NewSpeak.png';
-import logoWhite from '../../assets/NewSpeakWhite.png';
-import googleLogo from '../../assets/google_login.png';
-import kakaoLogo from '../../assets/kakao_login_medium_narrow.png';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Step1 from "./Step1";
+import Step2 from "./Step2";
+import Step3 from "./Step3";
+import useRegisterStore from "../../store/RegisterStore";
+import styles from "./Register.module.scss";
+import logo from "../../assets/NewSpeak.png";
+import logoWhite from "../../assets/NewSpeakWhite.png";
+import googleLogo from "../../assets/google_login.png";
+import kakaoLogo from "../../assets/kakao_login_medium_narrow.png";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [mainLogo, setMainLogo] = useState(logo);
   const [selectedTheme, setSelectedTheme] = useState(
-    localStorage.getItem('theme') || 'light',
+    localStorage.getItem("theme") || "light"
   );
   const [step, setStep] = useState(1);
   const { formData, resetFormData } = useRegisterStore();
@@ -23,22 +24,23 @@ const Register = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedTheme === 'dark') {
+    if (selectedTheme === "dark") {
       setMainLogo(logoWhite);
     } else {
       setMainLogo(logo);
     }
   }, [selectedTheme, setSelectedTheme]);
 
-  const nextStep = () => setStep(prevStep => Math.min(prevStep + 1, 3));
-  const prevStep = () => setStep(prevStep => Math.max(prevStep - 1, 1));
+  const nextStep = () => setStep((prevStep) => Math.min(prevStep + 1, 3));
+  const prevStep = () => setStep((prevStep) => Math.max(prevStep - 1, 1));
 
   const handleSubmit = async () => {
     try {
       // 회원가입 api
       resetFormData();
+      navigate("/");
     } catch (error) {
-      console.error('회원가입 중 오류 발생:', error);
+      console.error("회원가입 중 오류 발생:", error);
     }
   };
 
@@ -80,8 +82,17 @@ const Register = () => {
     <div className={styles.register}>
       <div className={styles.logo}>
         <Link to="/">
-          <img src={mainLogo} alt="메인로고" />
+          <img src={mainLogo} alt="메인로고" style={{ height: "20vh" }} />
         </Link>
+      </div>
+      <div className={styles.oAuthContainer}>
+        <button className={styles.google}>
+          <img src={googleLogo} alt="구글" />
+          <p>구글 로그인</p>
+        </button>
+        <div className={styles.kakao}>
+          <img src={kakaoLogo} alt="카카오" />
+        </div>
       </div>
       <div className={styles.registerFormContainer}>
         <div className={styles.step}>
@@ -90,15 +101,6 @@ const Register = () => {
         <div className={styles.buttonGroup}>
           {actionButtonPrev()}
           {actionButtonNext()}
-        </div>
-      </div>
-      <div className={styles.oAuthLogin}>
-        <button className={styles.google}>
-          <img src={googleLogo} alt="구글" />
-          구글 로그인
-        </button>
-        <div className={styles.kakao}>
-          <img src={kakaoLogo} alt="카카오" />
         </div>
       </div>
     </div>

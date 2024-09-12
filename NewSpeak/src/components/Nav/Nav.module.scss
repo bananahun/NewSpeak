@@ -36,6 +36,9 @@
     border-bottom: 1px solid var(--font-color);
     margin-bottom: 24px;
     background-color: var(--background-color);
+    color: var(--font-color);
+    font-size: 20px;
+    width: 100%;
   }
 }
 
@@ -43,11 +46,10 @@ a {
   color: var(--contrast-color);
 }
 
-button {
+.navbar button {
   background-color: var(--background-color);
   color: var(--font-color);
   font-size: 20px;
-  font-weight: bold;
   width: 100%;
 }
 
