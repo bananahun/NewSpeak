@@ -3,7 +3,7 @@ import Switch from '@mui/material/Switch';
 import { CiLight, CiDark } from 'react-icons/ci';
 import useThemeStore, { Theme } from '../../store/ThemeStore';
 
-const ThemeSwitcher: React.FC = () => {
+const ThemeSwitcher = () => {
   const { theme, setTheme } = useThemeStore();
 
   const handleToggle = (event: React.ChangeEvent<HTMLInputElement>) => {

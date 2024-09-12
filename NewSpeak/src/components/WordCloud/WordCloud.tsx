@@ -25,7 +25,7 @@ interface WordCloudProps {
   data: WordData[];
 }
 
-const WordCloud: React.FC<WordCloudProps> = ({ data }) => {
+const WordCloud = ({ data }: WordCloudProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

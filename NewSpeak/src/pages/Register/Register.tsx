@@ -10,7 +10,7 @@ import logoWhite from '../../assets/NewSpeakWhite.png';
 import googleLogo from '../../assets/google_login.png';
 import kakaoLogo from '../../assets/kakao_login_medium_narrow.png';
 
-const Register: React.FC = () => {
+const Register = () => {
   const [mainLogo, setMainLogo] = useState(logo);
   const [selectedTheme, setSelectedTheme] = useState(
     localStorage.getItem('theme') || 'light',

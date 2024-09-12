@@ -7,7 +7,7 @@ interface WordSearchProps {
   isFirstRender: boolean;
 }
 
-const WordSearch: React.FC<WordSearchProps> = ({ isOpen, isFirstRender }) => {
+const WordSearch = ({ isOpen, isFirstRender }: WordSearchProps) => {
   const animationClass = isFirstRender
     ? ''
     : isOpen

@@ -7,10 +7,7 @@ interface ArticleSearchProps {
   isFirstRender: boolean;
 }
 
-const ArticleSearch: React.FC<ArticleSearchProps> = ({
-  isOpen,
-  isFirstRender,
-}) => {
+const ArticleSearch = ({ isOpen, isFirstRender }: ArticleSearchProps) => {
   const animationClass = isFirstRender
     ? ''
     : isOpen

@@ -3,7 +3,7 @@ import useRegisterStore from '../../store/RegisterStore';
 
 const categories = ['기술', '건강', '경제', '교육', '연예'];
 
-const Step3: React.FC = () => {
+const Step3 = () => {
   const { formData, setFormData } = useRegisterStore();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 

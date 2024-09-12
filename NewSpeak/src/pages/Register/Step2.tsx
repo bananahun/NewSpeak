@@ -1,7 +1,7 @@
 import React from 'react';
 import useRegisterStore from '../../store/RegisterStore';
 
-const Step2: React.FC = () => {
+const Step2 = () => {
   const { formData, setFormData } = useRegisterStore();
 
   return (

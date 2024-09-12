@@ -18,7 +18,7 @@ const words = [
   { text: 'PigBoy', size: 35 },
 ];
 
-const Home: React.FC = () => {
+const Home = () => {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
 
   useEffect(() => {

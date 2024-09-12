@@ -45,9 +45,9 @@ const article = {
   ],
 };
 
-const ArticleDetail: React.FC = () => {
+const ArticleOriginal = () => {
   const [articleId, setArticleId] = useState(0);
-  const [articleDetail, setArticleDetail] = useState(article.sentence);
+  const [articleOriginal, setArticleOriginal] = useState(article.sentence);
   const [translateIcon, setTranslateIcon] = useState(translateIconWhite);
   const [visibleTranslations, setVisibleTranslations] = useState<boolean[]>(
     new Array(article.sentence.length).fill(false),
@@ -87,7 +87,7 @@ const ArticleDetail: React.FC = () => {
   return (
     <>
       <div className={styles.articleContent}>
-        {articleDetail.map((sentence, index) => (
+        {articleOriginal.map((sentence, index) => (
           <div key={sentence.id} className={styles.sentenceContainer}>
             <p className={styles.sentence}>{sentence.content}</p>
             <span className={styles.sentenceButtonContainer}>
@@ -113,4 +113,4 @@ const ArticleDetail: React.FC = () => {
   );
 };
 
-export default ArticleDetail;
+export default ArticleOriginal;
