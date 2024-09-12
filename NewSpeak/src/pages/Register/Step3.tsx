@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import useRegisterStore from '../../store/RegisterStore';
+import React, { useState } from "react";
+import useRegisterStore from "../../store/RegisterStore";
 
-const categories = ['기술', '건강', '경제', '교육', '연예'];
+const categories = ["기술", "건강", "경제", "교육", "연예"];
 
 const Step3 = () => {
   const { formData, setFormData } = useRegisterStore();
@@ -12,11 +12,11 @@ const Step3 = () => {
 
     if (isSelected) {
       setFormData(
-        'category',
-        formData.category.filter(item => item !== category),
+        "category",
+        formData.category.filter((item) => item !== category)
       );
     } else {
-      setFormData('category', [...formData.category, category]);
+      setFormData("category", [...formData.category, category]);
     }
   };
 
@@ -31,7 +31,7 @@ const Step3 = () => {
         <div>
           <p>선택된 카테고리:</p>
           <ul>
-            {formData.category.map(category => (
+            {formData.category.map((category) => (
               <li key={category}>{category}</li>
             ))}
           </ul>
@@ -40,24 +40,24 @@ const Step3 = () => {
         {dropdownOpen && (
           <div
             style={{
-              border: '1px solid #ccc',
-              padding: '10px',
-              position: 'absolute',
-              backgroundColor: 'white',
+              border: "1px solid #ccc",
+              padding: "10px",
+              position: "absolute",
+              backgroundColor: "white",
               zIndex: 1,
             }}
           >
-            {categories.map(category => (
+            {categories.map((category) => (
               <div key={category}>
                 <button
                   onClick={() => {
                     toggleCategory(category);
                   }}
                   style={{
-                    display: 'block',
+                    display: "block",
                     backgroundColor: formData.category.includes(category)
-                      ? 'green'
-                      : 'lightgray',
+                      ? "green"
+                      : "lightgray",
                   }}
                 >
                   {category}

@@ -1,15 +1,5 @@
 /* MyPage.module.scss */
 
-/* 전체 페이지 컨테이너 */
-.pageContainer {
-  display: flex; /* 네브바와 콘텐츠를 나란히 배치 */
-}
-
-/* 네브바 스타일 */
-.navbar {
-  width: 200px; /* 네브바의 너비 조정 */
-}
-
 /* 콘텐츠 영역 스타일 */
 .content {
   flex: 1; /* 콘텐츠가 남은 공간을 차지하도록 설정 */
@@ -86,9 +76,17 @@
 
 /* 스트릭 섹션 스타일 */
 .streakSection {
-  margin-top: 30px; /* 상단 여백 추가 */
+  // margin-top: 30px; /* 상단 여백 추가 */
   width: 100%; /* 전체 너비 설정 */
   max-width: 900px; /* 최대 너비 설정 */
+  overflow-x: auto;
+
+  ::-webkit-scrollbar {
+    display: block;
+    width: 12px;
+    height: 8px;
+    background-color: white;
+  }
 }
 
 /* 스트릭 제목 스타일 */

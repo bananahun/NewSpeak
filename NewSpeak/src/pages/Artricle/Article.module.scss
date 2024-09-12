@@ -1,27 +1,16 @@
-.articleContainer {
-  display: flex;
-  height: 92vh;
-  flex-direction: column;
-  margin-left: 12rem;
-  padding: 20px;
-  box-sizing: border-box;
-  background-color: var(--background-color);
-  color: var(--font-color);
-  position: relative;
-}
-
 .articleHeader {
   display: flex;
   align-content: center;
   justify-content: space-between;
   position: relative;
+  padding-bottom: 20px;
 
   button {
     width: fit-content;
     background-color: inherit;
     border: none;
     cursor: pointer;
-    padding-top: 4px;
+    padding-top: 8px;
   }
 
   span {
@@ -34,13 +23,21 @@
   }
 }
 
-.articleBackground {
+.articleTitle {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.articleContainer {
   filter: brightness(85%);
-  margin-top: 20px;
   background-color: var(--background-color);
-  height: 92vh;
-  padding: 12px;
   border-radius: 6px;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: scroll;
+}
+
+.articleBackground {
   overflow-y: scroll;
 
   > img {
@@ -48,21 +45,18 @@
   }
 }
 
-.articleTitle {
-  font-size: 24px;
-  font-weight: bold;
-}
-
 .buttonContainer {
   display: flex;
+  justify-content: flex-end;
   gap: 12px;
   margin-top: 12px;
 
   button {
+    cursor: pointer;
     background-color: var(--font-color);
     color: var(--background-color);
-    padding: 8px 16px;
+    padding: 8px 12px;
     border-radius: 6px;
-    cursor: pointer;
+    width: 30%;
   }
 }
