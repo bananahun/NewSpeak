@@ -16,6 +16,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -57,6 +58,10 @@ public class SecurityConfig {
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
+
+    @Value("${frontUrl}")
+    private String frontUrl;
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
         return web -> web.ignoring()
@@ -70,7 +75,7 @@ public class SecurityConfig {
                 .cors(cors -> cors
                         .configurationSource(request -> {
                             CorsConfiguration config = new CorsConfiguration();
-                            config.addAllowedOrigin("http://localhost:5500");
+                            config.addAllowedOrigin(frontUrl);
                             config.addAllowedMethod("*");
                             config.addAllowedHeader("*");
                             config.setAllowCredentials(true);
@@ -82,8 +87,9 @@ public class SecurityConfig {
                         ))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeRequests(authorize -> authorize
-                        .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
+                .authorizeHttpRequests(authorizeHttpRequests ->
+                        authorizeHttpRequests
+                                .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
 //                        .requestMatchers("/signUp").permitAll()
 //                        .requestMatchers("/email").permitAll()
                         .anyRequest().authenticated())
@@ -161,19 +167,19 @@ public class SecurityConfig {
     }
 
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5500") // 허용할 도메인
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메서드
-                        .allowedHeaders("*") // 허용할 헤더
-                        .allowCredentials(true); // 자격 증명 허용
-            }
-        };
-    }
+//    @Bean
+//    public WebMvcConfigurer corsConfigurer() {
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry.addMapping("/**")
+//                        .allowedOrigins(frontUrl) // 허용할 도메인
+//                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메서드
+//                        .allowedHeaders("*") // 허용할 헤더
+//                        .allowCredentials(true); // 자격 증명 허용
+//            }
+//        };
+//    }
 
     @Bean
     public AuthenticationEntryPoint customAuthenticationEntryPoint() {
@@ -187,6 +193,7 @@ public class SecurityConfig {
                              AuthenticationException authException) throws IOException, ServletException {
             // 인증되지 않은 사용자가 접근할 때 처리하는 로직
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+            //http요청은 redirect해줄 수 있지만 fetch,axios 비동기 요청은 불가
 //            response.sendRedirect("http://localhost:5500/login.html");
         }
     }

@@ -140,8 +140,8 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         log.info("checkAccessTokenAndAuthenticationOnly() 호출");
         jwtService.extractAccessToken(request.getCookies())
                 .filter(jwtService::isTokenValid)
-                .ifPresent(accessToken -> jwtService.extractEmail(accessToken)
-                        .ifPresent(email -> userRepository.findByEmail(email)
+                .ifPresent(accessToken -> jwtService.extractUserId(accessToken)
+                        .ifPresent(userId -> userRepository.findById(userId)
                                 .ifPresent(this::saveAuthentication)));
     }
 
@@ -153,8 +153,10 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                         .map(Cookie::getValue)
                         .findFirst())
                 .filter(jwtService::isTokenValid) // 토큰 유효성 검사
-                .flatMap(accessToken -> jwtService.extractEmail(accessToken)) // 이메일 추출
-                .flatMap(email -> userRepository.findByEmail(email)) // 이메일로 사용자 조회
+                .flatMap(accessToken -> jwtService.extractUserId(accessToken)) // 이메일 추출
+                .flatMap(
+                        userId
+                                -> userRepository.findById(userId)) // 이메일로 사용자 조회
                 .map(user -> {
                     // 사용자가 존재하면 true 반환
                     saveAuthentication(user);

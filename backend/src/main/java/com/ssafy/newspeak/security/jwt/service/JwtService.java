@@ -2,6 +2,7 @@ package com.ssafy.newspeak.security.jwt.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Claim;
 import com.ssafy.newspeak.user.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,6 +45,7 @@ public class JwtService {
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
     private static final String EMAIL_CLAIM = "email";
+    private static final String USER_ID = "userId";
     private static final String BEARER = "Bearer ";
 
     private final UserRepository userRepository;
@@ -149,12 +151,26 @@ public class JwtService {
      */
     public Optional<String> extractEmail(String accessToken) {
         try {
-            // 토큰 유효성 검사하는 데에 사용할 알고리즘이 있는 JWT verifier builder 반환
-            return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
+            Optional<Claim> emailClaim=Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
                     .build() // 반환된 빌더로 JWT verifier 생성
                     .verify(accessToken) // accessToken을 검증하고 유효하지 않다면 예외 발생
-                    .getClaim(EMAIL_CLAIM) // claim(Emial) 가져오기
-                    .asString());
+                    .getClaim(EMAIL_CLAIM));
+            String email=emailClaim.get().asString();
+            return Optional.of(email);
+        } catch (Exception e) {
+            log.error("액세스 토큰이 유효하지 않습니다.");
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Long> extractUserId(String accessToken) {
+        try {
+            Optional<Claim> emailClaim=Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
+                    .build() // 반환된 빌더로 JWT verifier 생성
+                    .verify(accessToken) // accessToken을 검증하고 유효하지 않다면 예외 발생
+                    .getClaim(USER_ID));
+            String userId=emailClaim.get().asString();
+            return Optional.of(Long.valueOf(userId));
         } catch (Exception e) {
             log.error("액세스 토큰이 유효하지 않습니다.");
             return Optional.empty();
@@ -198,8 +214,8 @@ public class JwtService {
     /**
      * RefreshToken DB 저장(업데이트)
      */
-    public void updateRefreshToken(String email, String refreshToken) {
-        userRepository.findByEmail(email)
+    public void updateRefreshToken(Long userId, String refreshToken) {
+        userRepository.findById(userId)
                 .ifPresentOrElse(
                         user -> user.updateRefreshToken(refreshToken),
                         () -> new Exception("일치하는 회원이 없습니다.")
