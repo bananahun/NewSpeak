@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styles from './MyPage.module.scss';
 import Nav from '../../components/Nav/Nav';
 import ProfileImage from '../../components/Profile/ProfileImage';
@@ -22,6 +23,14 @@ const MyPage = () => {
     '2024-08-15': 1,
     '2024-08-10': 2,
     '2024-08-01': 3,
+    '2024-07-13': 1,
+    '2024-07-11': 2,
+    '2024-07-10': 1,
+    '2024-07-01': 1,
+    '2024-06-11': 2,
+    '2024-06-10': 4,
+    '2024-06-13': 1,
+    '2024-06-01': 1,
   };
 
   return (
@@ -44,7 +53,9 @@ const MyPage = () => {
             <Streak streaks={streaks} />
           </div>
           <div className={styles.buttonRow}>
-            <button>Button 1</button>
+            <Link to="/wordlist" className={styles.buttonRow}>
+              <button>나만의 단어장</button>
+            </Link>
             <button>Button 2</button>
             <button>Button 3</button>
           </div>
