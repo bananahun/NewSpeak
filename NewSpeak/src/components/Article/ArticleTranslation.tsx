@@ -41,7 +41,7 @@ const article = {
   ],
 };
 
-const ArticleDetail: React.FC = () => {
+const ArticleDetail = () => {
   const [articleId, setArticleId] = useState(0);
   const [articleDetail, setArticleDetail] = useState(article.sentence);
   const [hoveredId, setHoveredId] = useState<number | null>(null);

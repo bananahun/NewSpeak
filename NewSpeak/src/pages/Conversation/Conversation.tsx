@@ -1,7 +1,7 @@
 import React from 'react';
 import Nav from '../../components/Nav/Nav';
 
-const Conversation: React.FC = () => {
+const Conversation = () => {
   return (
     <>
       <Nav />

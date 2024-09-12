@@ -8,7 +8,7 @@ import { getLogo } from '../../store/ThemeStore';
 import { FaRegCircleQuestion, FaRegBookmark } from 'react-icons/fa6';
 import styles from './Article.module.scss';
 
-const Article: React.FC = () => {
+const Article = () => {
   const navigate = useNavigate();
   const articleMeta = useArticleStore.getState().articleMeta;
   const logo = getLogo();

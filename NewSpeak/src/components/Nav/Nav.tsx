@@ -9,7 +9,7 @@ import ArticleSearch from './ArticleSearch';
 import WordSearch from './WordSearch';
 import styles from './Nav.module.scss';
 
-const Nav: React.FC = () => {
+const Nav = () => {
   const [mainLogo, setMainLogo] = useState(logo);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isOpenedArticleSearchBar, setIsOpenedArticleSearchBar] =

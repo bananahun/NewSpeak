@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useAuthStore from '../../store/AuthStore';
 import styles from './Login.module.scss';
 import logo from '../../assets/NewSpeak.png';
 import logoWhite from '../../assets/NewSpeakWhite.png';
 
-const Login: React.FC = () => {
+const Login = () => {
   const { login } = useAuthStore();
   const navigate = useNavigate();
   const [mainLogo, setMainLogo] = useState(logo);

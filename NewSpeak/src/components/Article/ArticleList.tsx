@@ -280,7 +280,7 @@ const categories = [
   '비즈니스',
 ];
 
-const ArticleList: React.FC = () => {
+const ArticleList = () => {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
