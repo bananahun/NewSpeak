@@ -56,12 +56,14 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 //                response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
 ////                response.setHeader("Referrer Policy", "STRICT_ORIGIN_WHEN_CROSS_ORIGIN");
 //                response.addCookie(cookie);
-                String redirectUrl = "http://localhost:5500/signUp.html";
+                String signUpUrl = "http://localhost:5500/signUp.html";
                 jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
                 jwtService.updateRefreshToken(oAuth2User.getAttribute("email"), refreshToken);
-                response.sendRedirect(redirectUrl);
+                response.sendRedirect(signUpUrl);
             } else {
                 loginSuccess(response, oAuth2User); // 로그인에 성공한 경우 access, refresh 토큰 생성
+                String mainUrl = "http://localhost:5500/main.html";
+                response.sendRedirect(mainUrl);
             }
         } catch (Exception e) {
             throw e;

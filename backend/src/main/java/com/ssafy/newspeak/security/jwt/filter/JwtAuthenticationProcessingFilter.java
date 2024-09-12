@@ -73,15 +73,16 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             return;
         }
 
-        // AccessToken이 유효하지 않은 경우, RefreshToken을 검사하여 새 AccessToken 발급 시도
+        // AccessToken이 유효하지 않은 경우, RefreshToken을 검사
         String refreshToken = extractTokenFromCookies(request, "refreshToken")
                 .filter(jwtService::isTokenValid)
                 .orElse(null);
 
-        // 리프레시 토큰이 요청 쿠키에 존재했다면, AccessToken 재발급
+        // 리프레시 토큰이 유효하면, AccessToken 재발급
         if (refreshToken != null) {
             checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
 //            checkAccessTokenAndAuthenticationOnly(request, response, filterChain);
+            filterChain.doFilter(request, response);
             return;
         }
 
