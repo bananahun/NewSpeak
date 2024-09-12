@@ -6,7 +6,8 @@ import Login from './pages/Login/Login';
 import MyPage from './pages/MyPage/MyPage';
 import Article from './pages/Artricle/Article';
 import Conversation from './pages/Conversation/Conversation';
-import WordList from './pages/Word/WordLIst';
+import WordList from './components/Word/WordLIst';
+import WordTest from './components/Word/WordTest';
 
 import useThemeStore from './store/ThemeStore';
 import './App.scss';
@@ -24,6 +25,7 @@ function App() {
         <Route path="/article" element={<Article />} />
         <Route path="/conversation" element={<Conversation />} />
         <Route path="/wordlist" element={<WordList />} />
+        <Route path="/wordlist/test" element={<WordTest />} />
       </Routes>
     </div>
   );
