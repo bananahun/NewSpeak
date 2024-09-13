@@ -3,6 +3,7 @@ package com.ssafy.newspeak.user.entity;
 
 import com.ssafy.newspeak.expLog.entity.ExpLog;
 import com.ssafy.newspeak.tier.Tier;
+import com.ssafy.newspeak.voca.entity.Voca;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
@@ -47,6 +48,11 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @BatchSize(size = 365)
     private List<ExpLog> expLogs=new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @BatchSize(size = 5)
+    private List<Voca> vocas=new ArrayList<>();
+
 
     private String refreshToken; // 리프레시 토큰
 
