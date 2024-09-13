@@ -11,8 +11,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.NoSuchElementException;
 
@@ -50,9 +52,12 @@ public class UserService {
     public void OAuthSignUp(HttpServletRequest request,UserSignUpDto userSignUpDto) throws Exception {
         Cookie[] cookies=request.getCookies();
         String accessToken=jwtService.extractAccessToken(cookies).orElse(null);
-        String email=jwtService.extractEmail(accessToken).orElseThrow(IllegalArgumentException::new);
+        Long userId=jwtService.extractUserId(accessToken).orElseThrow(IllegalArgumentException::new);
+        userRepository.findByNickname(userSignUpDto.getNickname()).ifPresent(user -> {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Nickname already exists");
+        });
         //oAuth 로그인으로 저장한 email은 임시 키
-        User user=userRepository.findByEmail(email).orElseThrow(NoSuchElementException::new);
+        User user=userRepository.findById(userId).orElseThrow(NoSuchElementException::new);
         if(user.getRole().equals(Role.USER)) {
             throw new IllegalAccessException();
         }

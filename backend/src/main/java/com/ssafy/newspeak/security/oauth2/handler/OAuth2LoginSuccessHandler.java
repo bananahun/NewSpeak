@@ -54,7 +54,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             // User의 Role이 GUEST일 경우 처음 요청한 회원이므로 회원가입 페이지로 리다이렉트
             if(oAuth2User.getRole() == Role.GUEST) {
 
-                String accessToken = jwtService.createAccessToken(oAuth2User.getAttribute("email"));
+                String accessToken = jwtService.createAccessToken(oAuth2User.getEmail(), oAuth2User.getUserId());
                 Cookie cookie=setCookie(ACCESS_TOKEN,accessToken);
                 String refreshToken = jwtService.createRefreshToken();
 //                response.addCookie(setCookie(REFRESH_TOKEN,refreshToken));
@@ -62,7 +62,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 ////                response.setHeader("Referrer Policy", "STRICT_ORIGIN_WHEN_CROSS_ORIGIN");
 //                response.addCookie(cookie);
                 jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
-                jwtService.updateRefreshToken(oAuth2User.getAttribute("email"), refreshToken);
+                jwtService.updateRefreshToken(oAuth2User.getUserId(), refreshToken);
                 response.sendRedirect(signUpUrl);
             } else {
                 loginSuccess(response, oAuth2User); // 로그인에 성공한 경우 access, refresh 토큰 생성
@@ -75,12 +75,12 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     // TODO : 소셜 로그인 시에도 무조건 토큰 생성하지 말고 JWT 인증 필터처럼 RefreshToken 유/무에 따라 다르게 처리해보기
     private void loginSuccess(HttpServletResponse response, CustomOAuth2User oAuth2User) throws IOException {
-        String accessToken = jwtService.createAccessToken(oAuth2User.getEmail());
+        String accessToken = jwtService.createAccessToken(oAuth2User.getEmail(),oAuth2User.getUserId());
         String refreshToken = jwtService.createRefreshToken();
         response.addCookie(setCookie(ACCESS_TOKEN,accessToken));
         response.addCookie(setCookie(REFRESH_TOKEN,refreshToken));
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
-        jwtService.updateRefreshToken(oAuth2User.getAttribute("email"), refreshToken);
+        jwtService.updateRefreshToken(oAuth2User.getUserId(), refreshToken);
     }
 }

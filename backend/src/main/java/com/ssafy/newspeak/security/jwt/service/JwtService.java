@@ -53,7 +53,7 @@ public class JwtService {
     /**
      * AccessToken 생성 메소드
      */
-    public String createAccessToken(String email) {
+    public String createAccessToken(String email,Long userId) {
         Date now = new Date();
         return JWT.create() // JWT 토큰을 생성하는 빌더 반환
                 .withSubject(ACCESS_TOKEN_SUBJECT) // JWT의 Subject 지정 -> AccessToken이므로 AccessToken
@@ -63,6 +63,7 @@ public class JwtService {
                 //추가적으로 식별자나, 이름 등의 정보를 더 추가하셔도 됩니다.
                 //추가하실 경우 .withClaim(클래임 이름, 클래임 값) 으로 설정해주시면 됩니다
                 .withClaim(EMAIL_CLAIM, email)
+                .withClaim(USER_ID,userId)
                 .sign(Algorithm.HMAC512(secretKey)); // HMAC512 알고리즘 사용, application-jwt.yml에서 지정한 secret 키로 암호화
     }
 
@@ -165,12 +166,12 @@ public class JwtService {
 
     public Optional<Long> extractUserId(String accessToken) {
         try {
-            Optional<Claim> emailClaim=Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
+            Optional<Claim> userIdClaim=Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
                     .build() // 반환된 빌더로 JWT verifier 생성
                     .verify(accessToken) // accessToken을 검증하고 유효하지 않다면 예외 발생
                     .getClaim(USER_ID));
-            String userId=emailClaim.get().asString();
-            return Optional.of(Long.valueOf(userId));
+            Long userId=userIdClaim.get().asLong();
+            return Optional.of(userId);
         } catch (Exception e) {
             log.error("액세스 토큰이 유효하지 않습니다.");
             return Optional.empty();
@@ -190,6 +191,26 @@ public class JwtService {
 //        cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
         cookie.setPath("/");      // 쿠키의 유효 경로 설정
         cookie.setMaxAge(7 * 24 * 60 * 60); // 7일 유효 기간 설정
+//        cookie.setSameSite("Strict"); // CSRF 방지
+        response.addCookie(cookie);
+    }
+
+    public void setAccessTokenExpired(HttpServletResponse response) {
+        Cookie cookie = new Cookie("accessToken", " ");
+        cookie.setHttpOnly(true); // XSS 공격 방지
+//        cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
+        cookie.setPath("/");      // 쿠키의 유효 경로 설정
+        cookie.setMaxAge(0); // 7일 유효 기간 설정
+//        cookie.setSameSite("Strict"); // CSRF 방지
+        response.addCookie(cookie);
+    }
+
+    public void setRefreshTokenExpired(HttpServletResponse response) {
+        Cookie cookie = new Cookie("refreshToken", " ");
+        cookie.setHttpOnly(true); // XSS 공격 방지
+//        cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
+        cookie.setPath("/");      // 쿠키의 유효 경로 설정
+        cookie.setMaxAge(0); // 7일 유효 기간 설정
 //        cookie.setSameSite("Strict"); // CSRF 방지
         response.addCookie(cookie);
     }

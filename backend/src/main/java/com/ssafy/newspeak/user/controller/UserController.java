@@ -7,20 +7,19 @@ import com.ssafy.newspeak.user.controller.dto.UserSignUpDto;
 import com.ssafy.newspeak.user.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/auth")
 public class UserController {
 
     private final UserService userService;
@@ -53,6 +52,13 @@ public class UserController {
             String email = jwtService.extractEmail(token).orElseThrow(NoSuchElementException::new);
             return ResponseEntity.ok(email);
         }
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletResponse response) {
+        jwtService.setAccessTokenExpired(response);
+        jwtService.setRefreshTokenExpired(response);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
