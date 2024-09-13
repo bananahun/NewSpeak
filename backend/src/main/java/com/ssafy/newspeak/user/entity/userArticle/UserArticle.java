@@ -5,17 +5,10 @@ import com.ssafy.newspeak.user.entity.User;
 import jakarta.persistence.*;
 
 @Entity
-@IdClass(UserArticleId.class)
 @Table(name="user_article")
 public class UserArticle {
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
-    private User user;
 
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="article_id")
-    private Article article;
+    @EmbeddedId
+    private UserArticleId userArticleId;
 
 }

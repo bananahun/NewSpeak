@@ -84,7 +84,7 @@ class JwtAuthenticationProcessingFilterTest {
     @BeforeEach
     public void init() {
         userRepo.save(User.builder().email(EMAIL).password(delegatingPasswordEncoder.encode(PASSWORD))
-                .nickname("KSH1").role(Role.USER).age(25).city("busan").build());
+                .nickname("KSH1").role(Role.USER).build());
         clear();
     }
 
