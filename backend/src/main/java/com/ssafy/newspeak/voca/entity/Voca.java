@@ -2,7 +2,9 @@ package com.ssafy.newspeak.voca.entity;
 
 import com.ssafy.newspeak.user.entity.User;
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name="voca")
 public class Voca {
@@ -14,5 +16,7 @@ public class Voca {
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
+
+    private int quizSuccessCount;
 
 }

@@ -4,7 +4,7 @@ package com.ssafy.newspeak.security.jwt.filter;
 import com.ssafy.newspeak.security.jwt.service.JwtService;
 import com.ssafy.newspeak.security.jwt.util.PasswordUtil;
 import com.ssafy.newspeak.user.entity.User;
-import com.ssafy.newspeak.user.repository.UserRepository;
+import com.ssafy.newspeak.user.repository.UserRepo;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -45,7 +45,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private static final String NO_CHECK_URL = "/login"; // "/login"으로 들어오는 요청은 Filter 작동 X
 
     private final JwtService jwtService;
-    private final UserRepository userRepository;
+    private final UserRepo userRepo;
 
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
@@ -107,7 +107,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
      *  그 후 JwtService.sendAccessTokenAndRefreshToken()으로 응답 헤더에 보내기
      */
     public void checkRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String refreshToken) {
-        userRepository.findByRefreshToken(refreshToken)
+        userRepo.findByRefreshToken(refreshToken)
                 .ifPresent(user -> {
                     String reIssuedRefreshToken = reIssueRefreshToken(user);
                     jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(user.getEmail(), user.getId()),
@@ -123,7 +123,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private String reIssueRefreshToken(User user) {
         String reIssuedRefreshToken = jwtService.createRefreshToken();
         user.updateRefreshToken(reIssuedRefreshToken);
-        userRepository.saveAndFlush(user);
+        userRepo.saveAndFlush(user);
         return reIssuedRefreshToken;
     }
 
@@ -141,7 +141,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         jwtService.extractAccessToken(request.getCookies())
                 .filter(jwtService::isTokenValid)
                 .ifPresent(accessToken -> jwtService.extractUserId(accessToken)
-                        .ifPresent(userId -> userRepository.findById(userId)
+                        .ifPresent(userId -> userRepo.findById(userId)
                                 .ifPresent(this::saveAuthentication)));
     }
 
@@ -156,7 +156,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                 .flatMap(accessToken -> jwtService.extractUserId(accessToken)) // 이메일 추출
                 .flatMap(
                         userId
-                                -> userRepository.findById(userId)) // 이메일로 사용자 조회
+                                -> userRepo.findById(userId)) // 이메일로 사용자 조회
                 .map(user -> {
                     // 사용자가 존재하면 true 반환
                     saveAuthentication(user);

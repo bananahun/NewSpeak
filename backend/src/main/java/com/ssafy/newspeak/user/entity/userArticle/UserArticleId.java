@@ -1,4 +1,4 @@
-package com.ssafy.newspeak.user.entity;
+package com.ssafy.newspeak.user.entity.userArticle;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -11,7 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class UserCategoryId implements Serializable {
+public class UserArticleId implements Serializable {
     private Long userId;
-    private Long categoryId;
+    private Long articleId;
 }

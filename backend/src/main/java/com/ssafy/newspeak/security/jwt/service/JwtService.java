@@ -3,7 +3,7 @@ package com.ssafy.newspeak.security.jwt.service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
-import com.ssafy.newspeak.user.repository.UserRepository;
+import com.ssafy.newspeak.user.repository.UserRepo;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -48,7 +48,7 @@ public class JwtService {
     private static final String USER_ID = "userId";
     private static final String BEARER = "Bearer ";
 
-    private final UserRepository userRepository;
+    private final UserRepo userRepo;
 
     /**
      * AccessToken 생성 메소드
@@ -236,7 +236,7 @@ public class JwtService {
      * RefreshToken DB 저장(업데이트)
      */
     public void updateRefreshToken(Long userId, String refreshToken) {
-        userRepository.findById(userId)
+        userRepo.findById(userId)
                 .ifPresentOrElse(
                         user -> user.updateRefreshToken(refreshToken),
                         () -> new Exception("일치하는 회원이 없습니다.")

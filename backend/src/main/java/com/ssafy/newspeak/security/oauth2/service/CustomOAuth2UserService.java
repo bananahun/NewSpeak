@@ -5,7 +5,7 @@ import com.ssafy.newspeak.security.oauth2.CustomOAuth2User;
 import com.ssafy.newspeak.security.oauth2.OAuthAttributes;
 import com.ssafy.newspeak.user.entity.SocialType;
 import com.ssafy.newspeak.user.entity.User;
-import com.ssafy.newspeak.user.repository.UserRepository;
+import com.ssafy.newspeak.user.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,7 +24,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
-    private final UserRepository userRepository;
+    private final UserRepo userRepo;
 
     private static final String NAVER = "naver";
     private static final String KAKAO = "kakao";
@@ -84,7 +84,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
      * 만약 찾은 회원이 있다면, 그대로 반환하고 없다면 saveUser()를 호출하여 회원을 저장한다.
      */
     private User getUser(OAuthAttributes attributes, SocialType socialType) {
-        User findUser = userRepository.findBySocialTypeAndSocialId(socialType,
+        User findUser = userRepo.findBySocialTypeAndSocialId(socialType,
                 attributes.getOauth2UserInfo().getId()).orElse(null);
 
         if(findUser == null) {
@@ -99,6 +99,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
      */
     private User saveUser(OAuthAttributes attributes, SocialType socialType) {
         User createdUser = attributes.toEntity(socialType, attributes.getOauth2UserInfo());
-        return userRepository.save(createdUser);
+        return userRepo.save(createdUser);
     }
 }

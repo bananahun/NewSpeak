@@ -2,7 +2,7 @@ package com.ssafy.newspeak.security.login.handler;
 
 
 import com.ssafy.newspeak.security.jwt.service.JwtService;
-import com.ssafy.newspeak.user.repository.UserRepository;
+import com.ssafy.newspeak.user.repository.UserRepo;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtService jwtService;
-    private final UserRepository userRepository;
+    private final UserRepo userRepo;
 
     @Value("${jwt.access.expiration}")
     private String accessTokenExpiration;
@@ -33,10 +33,10 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken); // 응답 헤더에 AccessToken, RefreshToken 실어서 응답
 
-        userRepository.findByEmail(email)
+        userRepo.findByEmail(email)
                 .ifPresent(user -> {
                     user.updateRefreshToken(refreshToken);
-                    userRepository.saveAndFlush(user);
+                    userRepo.saveAndFlush(user);
                 });
         log.info("로그인에 성공하였습니다. 이메일 : {}", email);
         log.info("로그인에 성공하였습니다. AccessToken : {}", accessToken);

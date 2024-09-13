@@ -11,7 +11,7 @@ import com.ssafy.newspeak.security.login.service.LoginService;
 import com.ssafy.newspeak.security.oauth2.handler.OAuth2LoginFailureHandler;
 import com.ssafy.newspeak.security.oauth2.handler.OAuth2LoginSuccessHandler;
 import com.ssafy.newspeak.security.oauth2.service.CustomOAuth2UserService;
-import com.ssafy.newspeak.user.repository.UserRepository;
+import com.ssafy.newspeak.user.repository.UserRepo;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,12 +33,8 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.IOException;
 
@@ -53,7 +49,7 @@ public class SecurityConfig {
 
     private final LoginService loginService;
     private final JwtService jwtService;
-    private final UserRepository userRepository;
+    private final UserRepo userRepo;
     private final ObjectMapper objectMapper;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
@@ -133,7 +129,7 @@ public class SecurityConfig {
      */
     @Bean
     public LoginSuccessHandler loginSuccessHandler() {
-        return new LoginSuccessHandler(jwtService, userRepository);
+        return new LoginSuccessHandler(jwtService, userRepo);
     }
 
     /**
@@ -162,7 +158,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
-        JwtAuthenticationProcessingFilter jwtAuthenticationFilter = new JwtAuthenticationProcessingFilter(jwtService, userRepository);
+        JwtAuthenticationProcessingFilter jwtAuthenticationFilter = new JwtAuthenticationProcessingFilter(jwtService, userRepo);
         return jwtAuthenticationFilter;
     }
 
