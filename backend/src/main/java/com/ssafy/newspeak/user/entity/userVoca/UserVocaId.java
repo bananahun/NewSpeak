@@ -1,6 +1,5 @@
-package com.ssafy.newspeak.user.entity.userCategory;
+package com.ssafy.newspeak.user.entity.userVoca;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -14,9 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Embeddable
-public class UserCategoryId implements Serializable {
-
+public class UserVocaId implements Serializable {
     private Long userId;
-
-    private Long categoryId;
+    private Long vocaId;
 }

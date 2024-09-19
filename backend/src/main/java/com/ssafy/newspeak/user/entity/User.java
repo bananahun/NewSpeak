@@ -3,6 +3,7 @@ package com.ssafy.newspeak.user.entity;
 
 import com.ssafy.newspeak.expLog.entity.ExpLog;
 import com.ssafy.newspeak.tier.Tier;
+import com.ssafy.newspeak.user.entity.userArticle.UserArticle;
 import com.ssafy.newspeak.voca.entity.Voca;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,14 +12,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Builder
 @Table(name = "users")
 @AllArgsConstructor
+@Builder
 public class User {
 
     @Id
@@ -53,8 +55,11 @@ public class User {
     @BatchSize(size = 5)
     private List<Voca> vocas=new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private Set<UserArticle> userArticles;
 
     private String refreshToken; // 리프레시 토큰
+
 
     // 유저 권한 설정 메소드
     public void authorizeUser() {

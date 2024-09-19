@@ -1,6 +1,7 @@
 package com.ssafy.newspeak.security.jwt.filter;
 
 
+import com.ssafy.newspeak.security.jwt.MyUserDetails;
 import com.ssafy.newspeak.security.jwt.service.JwtService;
 import com.ssafy.newspeak.security.jwt.util.PasswordUtil;
 import com.ssafy.newspeak.user.entity.User;
@@ -68,7 +69,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
         // AccessToken 검사 및 인증 처리
         if (accessToken != null) {
-            checkAccessTokenAndAuthentication(request, response);
+            checkAccessTokenAndAuthenticationOnly(request, response);
             filterChain.doFilter(request, response);
             return;
         }
@@ -153,10 +154,10 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                         .map(Cookie::getValue)
                         .findFirst())
                 .filter(jwtService::isTokenValid) // 토큰 유효성 검사
-                .flatMap(accessToken -> jwtService.extractUserId(accessToken)) // 이메일 추출
+                .flatMap(accessToken -> jwtService.extractUserId(accessToken)) // Id 추출
                 .flatMap(
                         userId
-                                -> userRepo.findById(userId)) // 이메일로 사용자 조회
+                                -> userRepo.findById(userId)) // ID로 사용자 조회
                 .map(user -> {
                     // 사용자가 존재하면 true 반환
                     saveAuthentication(user);
@@ -191,6 +192,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                 .password(password)
                 .roles(myUser.getRole().name())
                 .build();
+//        MyUserDetails userDetailsUser=new MyUserDetails(myUser,myUser.getRole().name());
 
         Authentication authentication =
                 new UsernamePasswordAuthenticationToken(userDetailsUser, null,

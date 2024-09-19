@@ -1,5 +1,6 @@
 package com.ssafy.newspeak.config;
 
+
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;

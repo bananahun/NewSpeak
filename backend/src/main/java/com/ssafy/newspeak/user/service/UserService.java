@@ -25,6 +25,7 @@ public class UserService {
     }
 
     public List<UserArticle> findUserArticleAll(Long userId) {
-        return userArticleRepo.findAllByUserId(userId);
+//        return userArticleRepo.findAllByUserId(userId);
+        return null;
     }
 }

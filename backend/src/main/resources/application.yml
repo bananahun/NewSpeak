@@ -9,18 +9,6 @@ spring:
         credentials:
           location: 5e01616d4635ae3d07be55d482fad7567834f0c2.json
 
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
-        format_sql: true
-        show_sql: true
-    defer-datasource-initialization: true
-    generate-ddl: true
-
   sql:
     init:
       mode: always
@@ -34,7 +22,7 @@ spring:
     active: dev
 
 logging:
- level:
+  level:
     org.hibernate.SQL : debug
     org.hibernate.type: trace
 
