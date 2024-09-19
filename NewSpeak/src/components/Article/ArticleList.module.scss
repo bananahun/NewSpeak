@@ -1,104 +1,19 @@
-// .articleList {
-//   display: flex;
-//   flex-direction: column;
-//   width: 100%;
-// }
-
-// .categoryNav {
-//   display: flex;
-//   justify-content: center;
-//   position: sticky;
-//   top: 0;
-//   background-color: #fff;
-//   z-index: 1000;
-//   padding: 10px 0;
-
-//   .categoryButton {
-//     margin: 0 10px;
-//     padding: 10px 20px;
-//     font-size: 16px;
-//     cursor: pointer;
-//     border: none;
-//     background: none;
-
-//     &.active {
-//       color: #007bff;
-//       font-weight: bold;
-//     }
-//   }
-// }
-
-// .newsItem {
-//   text-align: center;
-//   padding: 20px;
-//   overflow: hidden;
-
-//   .image {
-//     width: 100%;
-//     height: 200px; // Adjust height as needed
-//     object-fit: cover;
-//   }
-
-//   .content {
-//     margin-top: 10px;
-//   }
-
-//   .title {
-//     font-size: 1.5em;
-//   }
-
-//   .text {
-//     font-size: 1em;
-//   }
-// }
-
-// .slick-slide {
-//   padding: 0 10px; // Adds space between slides
-//   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Optional: Adds shadow for better visibility
-
-//   &:focus {
-//     outline: none; // Removes the focus outline on click
-//   }
-// }
-
 .articleList {
   width: 100%;
 }
 
-.slick-dots {
-  display: flex !important;
-  justify-content: center;
-  padding: 10px 0;
-  list-style: none;
-
-  .slick-thumb {
-    button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 5px 10px;
-      margin: 0 5px;
-      color: #333;
-      font-size: 1em;
-
-      &.active {
-        font-weight: bold;
-        color: #007bff;
-      }
-    }
-  }
-}
-
 .articleListContent {
   display: flex;
-  flex-direction: column;
+  padding: 0 20px;
+  height: calc(100vh - 88px);
+  overflow-y: auto;
 }
 
 .article {
   margin-bottom: 20px;
   padding: 15px;
-  border: 1px solid #ddd;
-  background-color: #fff;
+  border: 1px solid var(--font-color);
+  background-color: var(--background-color);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -109,4 +24,45 @@
 
 .content {
   font-size: 1em;
+}
+
+.categoryContainer {
+  display: flex;
+  justify-content: center;
+  .scrollButton {
+    cursor: pointer;
+  }
+}
+
+.categoryButtons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  overflow-x: hidden;
+  white-space: nowrap;
+
+  .categoryButton {
+    background-color: var(--background-color);
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-right: 10px;
+    border-radius: 4px;
+  }
+}
+
+.categoryButton.active {
+  font-weight: bold;
+  color: var(--main-color);
+  border-bottom: var(--main-color) 2px solid;
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    cursor: pointer;
+  }
 }
