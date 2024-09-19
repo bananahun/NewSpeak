@@ -1,6 +1,8 @@
 package com.ssafy.newspeak.article.entity;
 
 import com.ssafy.newspeak.category.entity.Category;
+import com.ssafy.newspeak.sentence.entity.Sentence;
+import com.ssafy.newspeak.category.entity.Category;
 import com.ssafy.newspeak.conversation.entity.Report;
 import com.ssafy.newspeak.sentence.entity.Sentence;
 import jakarta.persistence.*;
@@ -25,7 +27,7 @@ import static lombok.AccessLevel.PUBLIC;
 @Entity
 @Table(name = "article")
 @NoArgsConstructor(access = PROTECTED)
-@AllArgsConstructor(access = PUBLIC)
+@AllArgsConstructor(access = PROTECTED)
 public class Article {
 
     @Id
