@@ -45,7 +45,7 @@ const WordCloud = ({ data }: WordCloudProps) => {
             size: d.size,
           })),
         )
-        .padding(10)
+        .padding(40)
         .rotate(() => 0)
         .font('Impact')
         .fontSize(d => d.size)
@@ -59,9 +59,10 @@ const WordCloud = ({ data }: WordCloudProps) => {
         const newSvg = d3
           .select(container)
           .append('svg')
-          .attr('width', '100%') // 부모 div의 너비를 채움
-          .attr('height', '100%') // 부모 div의 높이를 채움
+          .attr('width', '90%') // 부모 div의 너비를 채움
+          .attr('height', '90%') // 부모 div의 높이를 채움
           .style('border', '1px solid black')
+          .style('border-radius', '12px')
           .style('overflow', 'hidden') // 스크롤 방지
           .append('g')
           .attr('transform', `translate(${width / 2}, ${height / 2})`); // 중앙에 위치
@@ -107,9 +108,12 @@ const WordCloud = ({ data }: WordCloudProps) => {
       ref={containerRef}
       id="word-cloud"
       style={{
-        width: 'calc(100vw - 16rem)', // 네비게이션 바 너비를 제외한 전체 너비
+        width: 'calc(100vw - 12rem)', // 네비게이션 바 너비를 제외한 전체 너비
         height: '90vh', // 전체 화면 높이
         overflow: 'hidden', // 스크롤 방지
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
     ></div>
   );
