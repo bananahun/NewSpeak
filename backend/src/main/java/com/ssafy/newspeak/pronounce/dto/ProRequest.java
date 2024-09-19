@@ -14,9 +14,5 @@ public class ProRequest {
     private String languageCode;
 
     @NotBlank(message = "{NotBlank}")
-    private String script;
-
-    @NotBlank(message = "{NotBlank}")
     private String soundFilePath;
-
 }

@@ -2,10 +2,12 @@ package com.ssafy.newspeak.conversation.dto.assistant;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.ssafy.newspeak.exception.UnexpectedGptException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.rmi.UnexpectedException;
 import java.util.List;
 
 @Getter
@@ -21,11 +23,12 @@ public class ThreadMessageListResponse {
 
     public String getLast() {
         if (data == null || data.isEmpty()) {
-            return null;
+            throw new UnexpectedGptException();
         }
         if (data.get(0).getContent() == null || data.get(0).getContent().length == 0) {
-            return null;
+            throw new UnexpectedGptException();
         }
+
         return data.get(0).getContent()[0].text();
     }
 }

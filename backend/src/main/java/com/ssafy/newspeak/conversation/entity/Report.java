@@ -35,7 +35,13 @@ public class Report {
     @CreationTimestamp
     private Timestamp createdAt;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "conversation_id")
-    private Conversation conversation;
+//    @OneToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "conversation_id")
+//    private Conversation conversation;
+
+    public static Report of(String content) {
+        Report report = new Report();
+        report.content = content;
+        return report;
+    }
 }

@@ -36,7 +36,7 @@ public class Conversation {
     @JoinColumn(name = "article_id")
     private Article article;
 
-    @OneToOne
-    @JoinColumn(name = "report_id")
-    private Report report;
+//    @OneToOne
+//    @JoinColumn(name = "report_id")
+//    private Report report;
 }
