@@ -1,7 +1,7 @@
 .streakWrapper {
   display: grid;
   grid-template-columns: auto 1fr; /* 요일과 날짜를 나란히 배치 */
-  gap: 10px;
+  gap: 30px;
 }
 
 .weekdayColumn {
