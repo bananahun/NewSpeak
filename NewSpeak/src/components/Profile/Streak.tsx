@@ -50,7 +50,9 @@ function Streak({ streaks }: StreakProps) {
                 }`}
                 style={{
                   backgroundColor:
-                    streaks[date] !== undefined ? 'pink' : 'lightgray', // 색상 통일
+                    streaks[date] !== undefined
+                      ? 'rgb(255, 172, 90)'
+                      : 'lightgray', // 색상 통일
                 }}
               >
                 <div className={styles.tooltip}>{date}</div>
