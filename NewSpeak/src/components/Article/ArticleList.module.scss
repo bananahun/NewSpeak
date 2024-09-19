@@ -1,95 +1,112 @@
+// .articleList {
+//   display: flex;
+//   flex-direction: column;
+//   width: 100%;
+// }
+
+// .categoryNav {
+//   display: flex;
+//   justify-content: center;
+//   position: sticky;
+//   top: 0;
+//   background-color: #fff;
+//   z-index: 1000;
+//   padding: 10px 0;
+
+//   .categoryButton {
+//     margin: 0 10px;
+//     padding: 10px 20px;
+//     font-size: 16px;
+//     cursor: pointer;
+//     border: none;
+//     background: none;
+
+//     &.active {
+//       color: #007bff;
+//       font-weight: bold;
+//     }
+//   }
+// }
+
+// .newsItem {
+//   text-align: center;
+//   padding: 20px;
+//   overflow: hidden;
+
+//   .image {
+//     width: 100%;
+//     height: 200px; // Adjust height as needed
+//     object-fit: cover;
+//   }
+
+//   .content {
+//     margin-top: 10px;
+//   }
+
+//   .title {
+//     font-size: 1.5em;
+//   }
+
+//   .text {
+//     font-size: 1em;
+//   }
+// }
+
+// .slick-slide {
+//   padding: 0 10px; // Adds space between slides
+//   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Optional: Adds shadow for better visibility
+
+//   &:focus {
+//     outline: none; // Removes the focus outline on click
+//   }
+// }
+
 .articleList {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%; /* Ensure the container takes full width */
+  width: 100%;
 }
 
-.header {
-  text-align: center;
-  margin-bottom: 16px;
-}
+.slick-dots {
+  display: flex !important;
+  justify-content: center;
+  padding: 10px 0;
+  list-style: none;
 
-.header h1 {
-  margin: 0;
-  font-size: 2em;
-}
+  .slick-thumb {
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 5px 10px;
+      margin: 0 5px;
+      color: #333;
+      font-size: 1em;
 
-.categoryButtons {
-  display: flex;
-  overflow-x: auto; /* Enable horizontal scrolling */
-  gap: 8px;
-  margin-top: 16px;
-  padding: 8px 0; /* Add some padding for better appearance */
-  white-space: nowrap; /* Prevent buttons from wrapping to the next line */
-}
-
-.categoryButtons button {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 8px 16px;
-  cursor: pointer;
-  transition: background 0.3s, color 0.3s;
-  white-space: nowrap; /* Ensure button text does not wrap */
-}
-
-.categoryButtons button:hover {
-  background: #f0f0f0;
-}
-
-.categoryButtons button.active {
-  background: #007bff;
-  color: #fff;
-}
-
-.newsItemContainer {
-  display: flex;
-  flex-direction: row; /* Arrange items in a row */
-  flex-wrap: wrap; /* Allow items to wrap if they exceed container width */
-  gap: 16px;
-  overflow-x: auto; /* Enable horizontal scrolling */
-  width: 100%; /* Ensure the container takes full width */
-  padding-bottom: 16px; /* Add padding to ensure items are not cut off */
-}
-
-.newsItem {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  width: 300px; /* Fixed width for items */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    transform: scale(1.03);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      &.active {
+        font-weight: bold;
+        color: #007bff;
+      }
+    }
   }
 }
 
-.image {
-  width: 100%;
-  height: 150px; /* Adjust height as needed */
-  object-fit: cover;
+.articleListContent {
+  display: flex;
+  flex-direction: column;
 }
 
-.content {
-  padding: 16px;
+.article {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .title {
-  font-size: 1.2em; /* Adjust size as needed */
-  margin-bottom: 8px;
+  font-size: 1.5em;
+  margin-bottom: 10px;
 }
 
-.text {
-  font-size: 0.9em; /* Adjust size as needed */
-  margin-bottom: 16px;
-}
-
-.details {
-  font-size: 0.8em; /* Adjust size as needed */
-  color: #555;
-  margin-bottom: 4px;
+.content {
+  font-size: 1em;
 }
