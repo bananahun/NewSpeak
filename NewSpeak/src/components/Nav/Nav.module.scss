@@ -6,8 +6,6 @@
   background-color: var(--background-color);
   color: var(--font-color);
   padding: 12px;
-  border-right: 1px solid black;
-  z-index: 500;
 
   .logo {
     display: flex;
@@ -26,55 +24,36 @@
     margin-top: 20px;
     display: flex;
     flex-direction: column;
+
+    li {
+      border-radius: 12px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--font-color);
+      background-color: var(--background-color);
+      color: var(--font-color);
+      font-size: 20px;
+    }
+
+    li > a {
+      border-radius: 12px;
+      border: none;
+
+      span {
+        display: flex;
+        justify-content: center;
+      }
+    }
+    li > a:hover {
+      background-color: var(--main-color);
+    }
   }
-
-  .links button {
-    border: none;
-    border-radius: 12px;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-bottom: 1px solid var(--font-color);
-    margin-bottom: 24px;
-    background-color: var(--background-color);
-    color: var(--font-color);
-    font-size: 20px;
-    width: 100%;
-  }
 }
 
-a {
-  color: var(--contrast-color);
+.searchBar {
+  position: fixed;
+  z-index: 1;
 }
 
-.navbar button {
-  background-color: var(--background-color);
-  color: var(--font-color);
-  font-size: 20px;
-  width: 100%;
-}
-
-.buttonContainer {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  padding: 10px 20px;
-  width: 100%;
-  margin-bottom: 24px;
-  border-radius: 12px;
-  border-bottom: 1px solid var(--font-color);
-  color: var(--font-color);
-  background-color: var(--background-color);
-  cursor: pointer;
-}
-
-.articleSearch {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-}
-
-.wordSearch {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
+.lastButton {
+  border-bottom: none !important;
 }
