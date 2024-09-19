@@ -46,7 +46,12 @@
 
     li > a:hover {
       background-color: var(--main-color);
+      font-weight: bold;
     }
+  }
+
+  a {
+    text-decoration: none;
   }
 }
 

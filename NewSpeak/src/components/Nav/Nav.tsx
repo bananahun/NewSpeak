@@ -55,8 +55,32 @@ const Nav = () => {
     if (isLoggedIn) {
       return (
         <>
-          <MenuItem component={<Link to="/mypage" />}>MyPage</MenuItem>
-          <MenuItem component={<Link to="/about" />}>About</MenuItem>
+          <MenuItem
+            component={
+              <NavLink
+                to="/mypage"
+                style={({ isActive }: { isActive: boolean }) => ({
+                  backgroundColor: isActive ? '#ff8b5a' : 'inherit',
+                  fontWeight: isActive ? 'bold' : '',
+                })}
+              />
+            }
+          >
+            MyPage
+          </MenuItem>
+          <MenuItem
+            component={
+              <NavLink
+                to="/about"
+                style={({ isActive }: { isActive: boolean }) => ({
+                  backgroundColor: isActive ? '#ff8b5a' : 'inherit',
+                  fontWeight: isActive ? 'bold' : '',
+                })}
+              />
+            }
+          >
+            About
+          </MenuItem>
           <SubMenu active label="Search" icon={<FaSearch size={'25'} />}>
             <MenuItem
               style={{
@@ -132,7 +156,19 @@ const Nav = () => {
             </div>
             <button onClick={handleLogin}>dev {displayLoggedIn}</button>
             <div className={styles.links}>
-              <MenuItem component={<Link to="/" />}>Home</MenuItem>
+              <MenuItem
+                component={
+                  <NavLink
+                    to="/"
+                    style={({ isActive }: { isActive: boolean }) => ({
+                      backgroundColor: isActive ? '#ff8b5a' : 'inherit',
+                      fontWeight: isActive ? 'bold' : '',
+                    })}
+                  />
+                }
+              >
+                Home
+              </MenuItem>
               {renderLinks()}
             </div>
           </nav>
