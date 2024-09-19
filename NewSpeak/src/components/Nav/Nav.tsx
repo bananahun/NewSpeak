@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
+import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { FaSearch } from 'react-icons/fa';
-import { IoPersonCircleOutline, IoLogOutOutline } from 'react-icons/io5';
 import logo from '../../assets/NewSpeak.png';
 import logoWhite from '../../assets/NewSpeakWhite.png';
 import ThemeSwitcher from '../ThemeSwitcher/ThemeSwitcher';
@@ -22,29 +22,31 @@ const Nav = () => {
   const [isFirstArticleRender, setIsFirstArticleRender] = useState(true);
   const [isFirstWordRender, setIsFirstWordRender] = useState(true);
 
-  const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleLogin = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsLoggedIn(!isLoggedIn);
   };
 
-  const toggleArticleSearchBar = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const toggleArticleSearchBar = (e: React.MouseEvent) => {
     e.preventDefault();
     if (isOpenedArticleSearchBar) {
       setIsOpenedArticleSearchBar(false);
     } else {
       setIsOpenedArticleSearchBar(true);
-      setIsOpenedWordSearchBar(false); // Close WordSearch
+      setIsOpenedWordSearchBar(false);
       setIsFirstArticleRender(false);
     }
   };
 
-  const toggleWordSearchBar = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const toggleWordSearchBar = (e: React.MouseEvent) => {
     e.preventDefault();
+    console.log(1);
+    console.log(isOpenedWordSearchBar);
     if (isOpenedWordSearchBar) {
       setIsOpenedWordSearchBar(false);
     } else {
       setIsOpenedWordSearchBar(true);
-      setIsOpenedArticleSearchBar(false); // Close ArticleSearch
+      setIsOpenedArticleSearchBar(false);
       setIsFirstWordRender(false);
     }
   };
@@ -53,40 +55,31 @@ const Nav = () => {
     if (isLoggedIn) {
       return (
         <>
-          <div className={styles.buttonContainer}>
-            <Link to="/mypage">
-              <IoPersonCircleOutline size={'40'} />
-            </Link>
-            <IoLogOutOutline size={'40'} />
-          </div>
-          <button
-            onClick={e => toggleArticleSearchBar(e)}
-            className={styles.articleSearch}
-          >
-            <FaSearch size={'25'} />
-            Article
-          </button>
-          <button
-            onClick={e => toggleWordSearchBar(e)}
-            className={styles.wordSearch}
-          >
-            <FaSearch size={'25'} />
-            Word
-          </button>
-          <Link to="/about">
-            <button className={styles.vocaButton}>About</button>
-          </Link>
+          <MenuItem component={<Link to="/mypage" />}>MyPage</MenuItem>
+          <MenuItem component={<Link to="/about" />}>About</MenuItem>
+          <SubMenu active label="Search" icon={<FaSearch size={'25'} />}>
+            <MenuItem
+              style={{
+                padding: '0',
+              }}
+              onClick={e => toggleArticleSearchBar(e)}
+            >
+              ArticleSearch
+            </MenuItem>
+            <MenuItem
+              className={styles.lastButton}
+              onClick={e => toggleWordSearchBar(e)}
+            >
+              Word
+            </MenuItem>
+          </SubMenu>
         </>
       );
     } else {
       return (
         <>
-          <Link to="/login">
-            <button className={styles.loginButton}>Login</button>
-          </Link>
-          <Link to="/register">
-            <button className={styles.registerButton}>Register</button>
-          </Link>
+          <MenuItem component={<Link to="/login" />}>Login</MenuItem>
+          <MenuItem component={<Link to="/register" />}>Register</MenuItem>
         </>
       );
     }
@@ -114,28 +107,47 @@ const Nav = () => {
 
   return (
     <>
-      <nav className={styles.navbar}>
-        <Link to="/">
-          <div className={styles.logo}>
-            <img src={mainLogo} width={'160px'} />
-          </div>
-        </Link>
-        <div className={styles.switcher}>
-          <ThemeSwitcher />
-        </div>
-        <button onClick={handleLogin}>dev {displayLoggedIn}</button>
-        <div className={styles.links}>
-          <div className={styles.links}>{renderLinks()}</div>
-        </div>
-      </nav>
-      <ArticleSearch
-        isOpen={isOpenedArticleSearchBar}
-        isFirstRender={isFirstArticleRender}
-      />
-      <WordSearch
-        isOpen={isOpenedWordSearchBar}
-        isFirstRender={isFirstWordRender}
-      />
+      <Sidebar>
+        <Menu
+          menuItemStyles={{
+            root: {
+              padding: '0',
+            },
+            button: {
+              '&:hover': {
+                backgroundColor: 'transparent',
+              },
+            },
+            subMenuContent: {
+              backgroundColor: 'transparent',
+            },
+          }}
+        >
+          <nav className={styles.navbar}>
+            <div className={styles.logo}>
+              <img src={mainLogo} width={'160px'} />
+            </div>
+            <div className={styles.switcher}>
+              <ThemeSwitcher />
+            </div>
+            <button onClick={handleLogin}>dev {displayLoggedIn}</button>
+            <div className={styles.links}>
+              <MenuItem component={<Link to="/" />}>Home</MenuItem>
+              {renderLinks()}
+            </div>
+          </nav>
+        </Menu>
+      </Sidebar>
+      <div className={styles.searchBar}>
+        <ArticleSearch
+          isOpen={isOpenedArticleSearchBar}
+          isFirstRender={isFirstArticleRender}
+        />
+        <WordSearch
+          isOpen={isOpenedWordSearchBar}
+          isFirstRender={isFirstWordRender}
+        />
+      </div>
     </>
   );
 };
