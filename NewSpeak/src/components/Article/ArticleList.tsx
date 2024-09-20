@@ -1,5 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
+import useArticleStore from '../../store/ArticleStore';
 import styles from './ArticleList.module.scss';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -8,13 +10,35 @@ import {
   MdKeyboardArrowRight,
   MdOutlineAddBox,
 } from 'react-icons/md';
+import axios from 'axios';
 
 const ArticleList = () => {
+  const { articleMeta, setArticleMeta } = useArticleStore();
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('전체');
+  const [articleList, setArticleList] = useState([]);
   const sliderRef = useRef(null);
   const categoryRef = useRef(null);
 
-  // 더미 데이터
+  useEffect(() => {
+    const fetchArticleList = async () => {
+      try {
+        const response = await axios.get(
+          'http://j11e103.p.ssafy.io:8081/api/v1/articles',
+        );
+        setArticleList(response.data.data);
+      } catch (error) {
+        console.error('Error fetching article list:', error);
+      }
+    };
+
+    fetchArticleList();
+  }, []);
+
+  useEffect(() => {
+    console.log(articleList);
+  }, [articleList]);
+
   const categories = [
     '전체',
     '기술',
@@ -307,7 +331,22 @@ const ArticleList = () => {
     }
   };
 
-  const fetchMoreArticle = (index: number) => {
+  const loadArticleDetail = (
+    event: React.MouseEvent<HTMLDivElement>,
+    article: JSON,
+  ) => {
+    console.log(event);
+    console.log(article);
+    setArticleMeta({
+      id: article.id,
+      title: article.title,
+      imageUrl: article.imageUrl,
+    });
+    console.log(articleMeta);
+    navigate('/article');
+  };
+
+  const fetchMoreArticleList = (index: number) => {
     // 기사 더 불러오는 api
     console.log(index);
   };
@@ -337,7 +376,7 @@ const ArticleList = () => {
       </div>
       <Slider ref={sliderRef} {...sliderSettings}>
         {categories.map((category, index) => {
-          const categoryArticles = newsData.data
+          const categoryArticles = articleList
             .filter(
               article => category === '전체' || article.category === category,
             )
@@ -345,16 +384,22 @@ const ArticleList = () => {
           return (
             <div key={index} className={styles.articleListContent}>
               {categoryArticles.map((article, idx) => (
-                <div key={idx} className={styles.article}>
-                  <h3 className={styles.title}>{article.title}</h3>
-                  <p className={styles.content}>{article.content}</p>
+                <div
+                  key={idx}
+                  className={styles.article}
+                  onClick={e => loadArticleDetail(e, article)}
+                >
+                  <p className={styles.title}>{article.title}</p>
+                  <p className={styles.level}>{article.level}</p>
+                  <p className={styles.content}>{article.publisher}</p>
+                  <p className={styles.content}>{article.publishedDate}</p>
                 </div>
               ))}
               <div className={styles.loadMore}>
                 <MdOutlineAddBox
                   size={'50'}
                   className={styles.loadButton}
-                  onClick={() => fetchMoreArticle(index)}
+                  onClick={() => fetchMoreArticleList(index)}
                 />
               </div>
             </div>

@@ -1,24 +1,22 @@
 .articleHeader {
   display: flex;
+  flex-wrap: wrap;
   align-content: center;
   justify-content: space-between;
+  align-items: center;
   position: relative;
   padding-bottom: 20px;
 
   button {
-    width: fit-content;
+    margin: 0;
     background-color: inherit;
-    border: none;
-    cursor: pointer;
-    padding-top: 8px;
   }
 
   span {
     display: flex;
     gap: 12px;
-    svg {
-      cursor: pointer;
-      align-items: center;
+    .bookmark {
+      color: var(--font-color);
     }
   }
 }
