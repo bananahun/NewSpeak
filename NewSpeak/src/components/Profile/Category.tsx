@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import styles from './Category.module.scss';
 
 const Category = () => {
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([
+    'Category 1',
+    'Category 2',
+    'Category 3',
+  ]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const categories = [
