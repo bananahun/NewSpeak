@@ -15,5 +15,4 @@ public interface UserArticleRepo extends JpaRepository<UserArticle, UserArticleI
             "FROM UserArticle ua JOIN ua.article a WHERE ua.user.id = :userId")
     Page<ArticleInfoDto> findArticleInfoDtoByUserId(@Param("userId") Long userId, Pageable pageable);
 
-
 }

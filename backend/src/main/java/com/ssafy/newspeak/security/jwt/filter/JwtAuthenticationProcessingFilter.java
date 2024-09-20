@@ -18,7 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 
@@ -82,7 +81,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         // 리프레시 토큰이 유효하면, AccessToken 재발급
         if (refreshToken != null) {
             checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
-//            checkAccessTokenAndAuthenticationOnly(request, response, filterChain);
             filterChain.doFilter(request, response);
             return;
         }
@@ -113,6 +111,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                     String reIssuedRefreshToken = reIssueRefreshToken(user);
                     jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(user.getEmail(), user.getId()),
                             reIssuedRefreshToken);
+                    saveAuthentication(user);
                 });
     }
 

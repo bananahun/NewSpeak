@@ -1,4 +1,4 @@
-package com.ssafy.newspeak.voca.controller;
+package com.ssafy.newspeak.user.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

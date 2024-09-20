@@ -1,7 +1,6 @@
 package com.ssafy.newspeak.user.service;
 
-import com.ssafy.newspeak.user.entity.userVoca.UserVoca;
-import com.ssafy.newspeak.user.repository.UserVocaRepo;
+import com.ssafy.newspeak.voca.VocaRepo;
 import com.ssafy.newspeak.voca.entity.Voca;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,10 +12,14 @@ import java.util.List;
 @Service
 @Transactional
 public class UserVocaService {
-    private final UserVocaRepo userVocaRepo;
+    private final VocaRepo vocaRepo;
 
     public List<Voca> getVocaByUserId(Long userId) {
-        return userVocaRepo.findVocaByUserId(userId);
+        return vocaRepo.findVocaByUserId(userId);
+    }
+
+    public void addWord(){
+
     }
 
 }

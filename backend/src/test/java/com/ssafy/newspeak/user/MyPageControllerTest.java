@@ -5,7 +5,6 @@ import com.ssafy.newspeak.security.jwt.service.JwtService;
 import com.ssafy.newspeak.user.entity.Role;
 import com.ssafy.newspeak.user.entity.User;
 import com.ssafy.newspeak.user.repository.UserRepo;
-import com.ssafy.newspeak.user.repository.UserVocaRepo;
 import com.ssafy.newspeak.user.service.UserArticleService;
 import com.ssafy.newspeak.voca.VocaRepo;
 import com.ssafy.newspeak.voca.controller.VocaPostDto;
@@ -37,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class UserControllerTest {
+public class MyPageControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -51,8 +50,8 @@ public class UserControllerTest {
     @Autowired
     JwtService jwtService;
 
-    @Autowired
-    UserVocaRepo userVocaRepo;
+//    @Autowired
+//    UserVocaRepo userVocaRepo;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 

@@ -3,9 +3,14 @@ package com.ssafy.newspeak.article.controller;
 import com.ssafy.newspeak.article.dto.ArticleFindResponse;
 import com.ssafy.newspeak.article.dto.ArticlesFindResponse;
 import com.ssafy.newspeak.article.service.ArticleService;
+import com.ssafy.newspeak.security.jwt.MyUserDetails;
+import com.ssafy.newspeak.security.util.AuthUtil;
+import com.ssafy.newspeak.user.entity.userArticle.UserArticleId;
+import com.ssafy.newspeak.user.service.UserArticleService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +24,18 @@ import static org.springframework.http.HttpStatus.*;
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final UserArticleService userArticleService;
+
+    @PostMapping("/scrap/{articleId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void scrapArticle(@PathVariable Long articleId) {
+        MyUserDetails userDetails= AuthUtil.getUserDetails();
+        UserArticleId userArticleId=UserArticleId.builder()
+                .articleId(articleId)
+                .userId(userDetails.getUserId())
+                .build();
+        userArticleService.scrapArticle(userArticleId);
+    }
 
     @GetMapping
     public ResponseEntity<Result> findAll() {
