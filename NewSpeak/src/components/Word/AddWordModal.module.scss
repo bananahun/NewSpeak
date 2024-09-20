@@ -1,0 +1,18 @@
+.modalContent {
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  background-color: var(--font-color); // 모달 배경색
+  color: var(--background-color);
+  box-shadow: 0 4px 10px var(--contrast-color); // 그림자 효과
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  background-color: var(--background-color);
+  color: var(--font-color);
+  border-radius: 4px;
+  cursor: pointer;
+}

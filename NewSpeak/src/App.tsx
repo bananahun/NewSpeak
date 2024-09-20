@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Register from './pages/Register/Register';
@@ -13,6 +13,9 @@ import ArticleListDetail from './pages/Artricle/ArticleListDetail';
 
 import useThemeStore from './store/ThemeStore';
 import './App.scss';
+import { handleContextMenu } from './utils/AddWord'; // 유틸 함수 임포트
+import { useModalStore } from './store/ModalStore';
+import AddWordModal from './components/Word/AddWordModal'; // 모달 컴포넌트 임포트
 
 function App() {
   const { theme } = useThemeStore();
@@ -20,6 +23,21 @@ function App() {
 
   const isAuthPage =
     location.pathname === '/register' || location.pathname === '/login';
+
+  const { isOpen, selectedWord, openModal, closeModal } = useModalStore();
+
+  useEffect(() => {
+    const contextMenuHandler = (event: MouseEvent) =>
+      handleContextMenu(event, openModal);
+
+    // 우클릭 이벤트를 전역적으로 등록
+    document.addEventListener('contextmenu', contextMenuHandler);
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      document.removeEventListener('contextmenu', contextMenuHandler);
+    };
+  }, [openModal]);
 
   return (
     <div className={`theme ${theme}`}>
@@ -37,6 +55,15 @@ function App() {
           <Route path="/scrap" element={<ArticleListDetail />} />
           <Route path="/log" element={<WordTest />} />
         </Routes>
+
+        <div className="modal">
+          {' '}
+          <AddWordModal
+            word={selectedWord}
+            isOpen={isOpen}
+            onClose={closeModal}
+          />
+        </div>
       </main>
     </div>
   );

@@ -26,3 +26,11 @@
   height: 100vh; // 전체 화면 높이
   overflow-y: hidden; // 스크롤 방지
 }
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-40%, -50%);
+  z-index: 1000;
+}
