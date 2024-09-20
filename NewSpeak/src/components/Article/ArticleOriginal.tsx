@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import styles from './ArticleOriginal.module.scss';
 import translateIconBlack from '../../assets/translate.png';
 import translateIconWhite from '../../assets/translate-white.png';
-
 import { IoMicSharp, IoVolumeMedium } from 'react-icons/io5';
 
 const article = {
@@ -54,11 +53,10 @@ const ArticleOriginal = () => {
   );
 
   const toggleOpenSentenceDetail = (index: number) => {
-    setVisibleTranslations(prev => {
-      const newVisibleTranslations = [...prev];
-      newVisibleTranslations[index] = !newVisibleTranslations[index];
-      return newVisibleTranslations;
-    });
+    setVisibleTranslations(prev => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
   };
 
   useEffect(() => {
@@ -80,10 +78,13 @@ const ArticleOriginal = () => {
 
   useEffect(() => {
     if (articleId !== 0) {
-      // 기사 상세정보 api 호출
+      const fetchArticleDetail = async (articleId: number) => {
+        // api 호출
+      };
+
+      fetchArticleDetail(articleId);
     }
   }, [articleId]);
-
   return (
     <>
       <div className={styles.articleContent}>
