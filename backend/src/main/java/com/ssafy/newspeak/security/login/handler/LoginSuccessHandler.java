@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
@@ -32,10 +33,10 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) {
-        Principal principal = (Principal) authentication.getPrincipal();
+        User userDetails = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
 
 
-        String email = principal.getName(); // 인증 정보에서 Username(email) 추출
+        String email = userDetails.getUsername(); // 인증 정보에서 Username(email) 추출
         String accessToken = jwtService.createAccessToken(email,1L); // JwtService의 createAccessToken을 사용하여 AccessToken 발급
         String refreshToken = jwtService.createRefreshToken(); // JwtService의 createRefreshToken을 사용하여 RefreshToken 발급
 

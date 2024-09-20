@@ -150,6 +150,5 @@ public class UserControllerTest {
         mockMvc.perform(get("/api/v1/user/voca")
                         .cookie(cookie))
                 .andExpect(status().isOk());
-
     }
 }

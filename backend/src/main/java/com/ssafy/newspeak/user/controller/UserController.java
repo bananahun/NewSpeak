@@ -1,5 +1,6 @@
 package com.ssafy.newspeak.user.controller;
 
+import com.ssafy.newspeak.security.jwt.MyUserDetails;
 import com.ssafy.newspeak.security.jwt.service.JwtService;
 import com.ssafy.newspeak.security.util.AuthUtil;
 import com.ssafy.newspeak.security.util.UserAuthDto;
@@ -17,13 +18,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/api/v1/user")
+@RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/user")
 public class UserController {
 
     private final UserArticleService userArticleService;
     private final UserVocaService userVocaService;
     private final JwtService jwtService;
+
+    @GetMapping("/test")
+    public ResponseEntity<Object> getVocaList() {
+        return ResponseEntity.ok(null);
+    }
+
     @GetMapping("/article")
     public ResponseEntity<Page<ArticleInfoDto>> getArticle(@CookieValue(value = "accessToken") String myCookie
             , Pageable pageable) {
@@ -31,17 +39,23 @@ public class UserController {
         return ResponseEntity.ok().body(userArticleService.getAllUserArticles(userId,pageable));
     }
 
+    @GetMapping("/article/v2")
+    public ResponseEntity<Page<ArticleInfoDto>> getArticlev2(Pageable pageable) {
+        MyUserDetails userDetails=AuthUtil.getUserDetails();
+        return ResponseEntity.ok().body(userArticleService.getAllUserArticles(userDetails.getUserId(),pageable));
+    }
+
     @GetMapping("/voca")
     public ResponseEntity<VocaListDto> getVocaAll() {
-        UserAuthDto userAuthDto=AuthUtil.getUserAuthDto();
-        List<Voca> vocas=userVocaService.getVocaByUserId(userAuthDto.getUserId());
+        MyUserDetails userDetails=AuthUtil.getUserDetails();
+        List<Voca> vocas=userVocaService.getVocaByUserId(userDetails.getUserId());
         return ResponseEntity.ok().body(new VocaListDto(vocas,vocas.size()));
     }
 
     @PostMapping("/voca")
     public ResponseEntity<VocaListDto> postVoca() {
-        UserAuthDto userAuthDto=AuthUtil.getUserAuthDto();
-        List<Voca> vocas=userVocaService.getVocaByUserId(userAuthDto.getUserId());
+        MyUserDetails userDetails=AuthUtil.getUserDetails();
+        List<Voca> vocas=userVocaService.getVocaByUserId(userDetails.getUserId());
         return ResponseEntity.ok().body(new VocaListDto(vocas,vocas.size()));
     }
 
