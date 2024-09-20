@@ -43,6 +43,7 @@ public class MyUserDetails implements UserDetails {
         this.password=user.getPassword();
 
         List<GrantedAuthority> authorities = new ArrayList(roles.length);
+        
         String[] var3 = roles;
         int var4 = roles.length;
 
