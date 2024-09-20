@@ -1,5 +1,5 @@
 import React from 'react';
-import WordList from '../../components/Word/WordLIst';
+import WordList from '../../components/Word/WordList';
 
 const Word = () => {
   return (
