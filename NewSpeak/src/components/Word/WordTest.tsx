@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './WordTest.module.scss';
+import TimeWatch from './TimeWatch';
 
 interface Word {
   content: string;
@@ -163,12 +164,12 @@ const words: Word[] = [
   },
 ];
 
-const WordTest: React.FC = () => {
+const WordTest = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswer, setUserAnswer] = useState('');
   const [score, setScore] = useState(0);
   const [isTestComplete, setIsTestComplete] = useState(false);
-  const [timer, setTimer] = useState(60);
+  const [timer, setTimer] = useState(6); // 각 문제당 6초
 
   const currentWord = words[currentQuestionIndex];
 
@@ -178,23 +179,35 @@ const WordTest: React.FC = () => {
       setScore(prevScore => prevScore + 1);
     }
 
-    if (currentQuestionIndex < words.length - 1) {
-      setCurrentQuestionIndex(prevIndex => prevIndex + 1);
-      setUserAnswer(''); // Reset answer field
-    } else {
-      setIsTestComplete(true);
-    }
+    setUserAnswer(''); // Reset answer field
+    setTimer(0); // 타이머를 0으로 설정하여 다음 문제로 넘김
   };
 
   // Timer logic
   useEffect(() => {
-    if (timer > 0 && !isTestComplete) {
-      const countdown = setInterval(() => setTimer(prev => prev - 1), 1000);
-      return () => clearInterval(countdown);
-    } else {
-      setIsTestComplete(true);
+    const countdown = setInterval(() => {
+      setTimer(prev => {
+        if (prev === 1) {
+          handleSubmit(); // 시간이 다 지나면 자동으로 문제 제출
+          return 0; // 타이머를 0으로 설정
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(countdown);
+  }, []); // 처음 렌더링 시 1회만 실행
+
+  useEffect(() => {
+    if (timer === 0 && !isTestComplete) {
+      if (currentQuestionIndex < words.length - 1) {
+        setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+        setTimer(6); // 다음 문제로 넘어갈 때 타이머를 6초로 리셋
+      } else {
+        setIsTestComplete(true);
+      }
     }
-  }, [timer, isTestComplete]);
+  }, [timer, isTestComplete, currentQuestionIndex]);
 
   if (isTestComplete) {
     return (
@@ -209,21 +222,27 @@ const WordTest: React.FC = () => {
 
   return (
     <div className={styles.wordTestContainer}>
-      <h1>단어 시험</h1>
-      <div className={styles.timer}>남은 시간: {timer}초</div>
-      <div className={styles.question}>
-        <p>{currentWord.meanings[0].meaning}</p>
+      <div className={styles.testContent}>
+        <h1>단어 시험</h1>
+        <h2>{currentWord.meanings[0].meaning}</h2>
+        <p>
+          문제 {currentQuestionIndex + 1} / {words.length}
+        </p>
+        <input
+          type="text"
+          value={userAnswer}
+          onChange={e => setUserAnswer(e.target.value)}
+          className={styles.answerInput}
+          placeholder="영어 단어를 입력하세요"
+        />
+        <button onClick={handleSubmit} className={styles.submitButton}>
+          제출
+        </button>
       </div>
-      <input
-        type="text"
-        value={userAnswer}
-        onChange={e => setUserAnswer(e.target.value)}
-        className={styles.answerInput}
-        placeholder="영어 단어를 입력하세요"
-      />
-      <button onClick={handleSubmit} className={styles.submitButton}>
-        제출
-      </button>
+      <div className={styles.timeWatchContainer}>
+        <TimeWatch timer={timer} />
+        <p className={styles.timer}>남은 시간: {timer}초</p>
+      </div>
     </div>
   );
 };
