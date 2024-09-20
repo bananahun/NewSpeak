@@ -1,10 +1,11 @@
 package com.ssafy.newspeak.security.jwt.filter;
 
 
+import com.ssafy.newspeak.security.jwt.MyUserDetails;
 import com.ssafy.newspeak.security.jwt.service.JwtService;
 import com.ssafy.newspeak.security.jwt.util.PasswordUtil;
 import com.ssafy.newspeak.user.entity.User;
-import com.ssafy.newspeak.user.repository.UserRepository;
+import com.ssafy.newspeak.user.repository.UserRepo;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -17,7 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 
@@ -45,7 +45,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private static final String NO_CHECK_URL = "/login"; // "/login"으로 들어오는 요청은 Filter 작동 X
 
     private final JwtService jwtService;
-    private final UserRepository userRepository;
+    private final UserRepo userRepo;
 
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
@@ -68,7 +68,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
         // AccessToken 검사 및 인증 처리
         if (accessToken != null) {
-            checkAccessTokenAndAuthentication(request, response);
+            checkAccessTokenAndAuthenticationOnly(request, response);
             filterChain.doFilter(request, response);
             return;
         }
@@ -81,7 +81,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         // 리프레시 토큰이 유효하면, AccessToken 재발급
         if (refreshToken != null) {
             checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
-//            checkAccessTokenAndAuthenticationOnly(request, response, filterChain);
             filterChain.doFilter(request, response);
             return;
         }
@@ -107,11 +106,12 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
      *  그 후 JwtService.sendAccessTokenAndRefreshToken()으로 응답 헤더에 보내기
      */
     public void checkRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String refreshToken) {
-        userRepository.findByRefreshToken(refreshToken)
+        userRepo.findByRefreshToken(refreshToken)
                 .ifPresent(user -> {
                     String reIssuedRefreshToken = reIssueRefreshToken(user);
-                    jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(user.getEmail()),
+                    jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(user.getEmail(), user.getId()),
                             reIssuedRefreshToken);
+                    saveAuthentication(user);
                 });
     }
 
@@ -123,7 +123,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private String reIssueRefreshToken(User user) {
         String reIssuedRefreshToken = jwtService.createRefreshToken();
         user.updateRefreshToken(reIssuedRefreshToken);
-        userRepository.saveAndFlush(user);
+        userRepo.saveAndFlush(user);
         return reIssuedRefreshToken;
     }
 
@@ -140,8 +140,8 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         log.info("checkAccessTokenAndAuthenticationOnly() 호출");
         jwtService.extractAccessToken(request.getCookies())
                 .filter(jwtService::isTokenValid)
-                .ifPresent(accessToken -> jwtService.extractEmail(accessToken)
-                        .ifPresent(email -> userRepository.findByEmail(email)
+                .ifPresent(accessToken -> jwtService.extractUserId(accessToken)
+                        .ifPresent(userId -> userRepo.findById(userId)
                                 .ifPresent(this::saveAuthentication)));
     }
 
@@ -153,8 +153,10 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                         .map(Cookie::getValue)
                         .findFirst())
                 .filter(jwtService::isTokenValid) // 토큰 유효성 검사
-                .flatMap(accessToken -> jwtService.extractEmail(accessToken)) // 이메일 추출
-                .flatMap(email -> userRepository.findByEmail(email)) // 이메일로 사용자 조회
+                .flatMap(accessToken -> jwtService.extractUserId(accessToken)) // Id 추출
+                .flatMap(
+                        userId
+                                -> userRepo.findById(userId)) // ID로 사용자 조회
                 .map(user -> {
                     // 사용자가 존재하면 true 반환
                     saveAuthentication(user);
@@ -184,11 +186,12 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             password = PasswordUtil.generateRandomPassword();
         }
 
-        UserDetails userDetailsUser = org.springframework.security.core.userdetails.User.builder()
-                .username(myUser.getEmail())
-                .password(password)
-                .roles(myUser.getRole().name())
-                .build();
+//        UserDetails userDetailsUser = org.springframework.security.core.userdetails.User.builder()
+//                .username(myUser.getEmail())
+//                .password(password)
+//                .roles(myUser.getRole().name())
+//                .build();
+        MyUserDetails userDetailsUser=new MyUserDetails(myUser,myUser.getRole().name());
 
         Authentication authentication =
                 new UsernamePasswordAuthenticationToken(userDetailsUser, null,

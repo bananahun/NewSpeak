@@ -11,11 +11,12 @@ import com.ssafy.newspeak.security.login.service.LoginService;
 import com.ssafy.newspeak.security.oauth2.handler.OAuth2LoginFailureHandler;
 import com.ssafy.newspeak.security.oauth2.handler.OAuth2LoginSuccessHandler;
 import com.ssafy.newspeak.security.oauth2.service.CustomOAuth2UserService;
-import com.ssafy.newspeak.user.repository.UserRepository;
+import com.ssafy.newspeak.user.repository.UserRepo;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -52,11 +53,15 @@ public class SecurityConfig {
 
     private final LoginService loginService;
     private final JwtService jwtService;
-    private final UserRepository userRepository;
+    private final UserRepo userRepo;
     private final ObjectMapper objectMapper;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
+
+    @Value("${frontUrl}")
+    private String frontUrl;
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
         return web -> web.ignoring()
@@ -71,6 +76,7 @@ public class SecurityConfig {
                         .configurationSource(request -> {
                             CorsConfiguration config = new CorsConfiguration();
                             config.addAllowedOrigin("http://localhost:5500");
+                            config.addAllowedOrigin("https://j11e103.p.ssafy.io");
                             config.addAllowedMethod("*");
                             config.addAllowedHeader("*");
                             config.setAllowCredentials(true);
@@ -85,7 +91,7 @@ public class SecurityConfig {
                 .authorizeRequests(authorize -> authorize
                         .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
 //                        .requestMatchers("/signUp").permitAll()
-//                        .requestMatchers("/email").permitAll()
+//                        .requestMatchers("/api/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oAuth2LoginSuccessHandler)
@@ -127,7 +133,7 @@ public class SecurityConfig {
      */
     @Bean
     public LoginSuccessHandler loginSuccessHandler() {
-        return new LoginSuccessHandler(jwtService, userRepository);
+        return new LoginSuccessHandler(jwtService, userRepo);
     }
 
     /**
@@ -156,24 +162,24 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
-        JwtAuthenticationProcessingFilter jwtAuthenticationFilter = new JwtAuthenticationProcessingFilter(jwtService, userRepository);
+        JwtAuthenticationProcessingFilter jwtAuthenticationFilter = new JwtAuthenticationProcessingFilter(jwtService, userRepo);
         return jwtAuthenticationFilter;
     }
 
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5500") // 허용할 도메인
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메서드
-                        .allowedHeaders("*") // 허용할 헤더
-                        .allowCredentials(true); // 자격 증명 허용
-            }
-        };
-    }
+//    @Bean
+//    public WebMvcConfigurer corsConfigurer() {
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry.addMapping("/**")
+//                        .allowedOrigins(frontUrl) // 허용할 도메인
+//                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메서드
+//                        .allowedHeaders("*") // 허용할 헤더
+//                        .allowCredentials(true); // 자격 증명 허용
+//            }
+//        };
+//    }
 
     @Bean
     public AuthenticationEntryPoint customAuthenticationEntryPoint() {
@@ -187,6 +193,7 @@ public class SecurityConfig {
                              AuthenticationException authException) throws IOException, ServletException {
             // 인증되지 않은 사용자가 접근할 때 처리하는 로직
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+            //http요청은 redirect해줄 수 있지만 fetch,axios 비동기 요청은 불가
 //            response.sendRedirect("http://localhost:5500/login.html");
         }
     }
