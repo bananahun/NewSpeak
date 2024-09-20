@@ -6,8 +6,8 @@ import Login from './pages/Login/Login';
 import MyPage from './pages/MyPage/MyPage';
 import Article from './pages/Artricle/Article';
 import Conversation from './pages/Conversation/Conversation';
-import WordList from './components/Word/WordLIst';
-import WordTest from './components/Word/WordTest';
+import WordList from './components/Word/WordList';
+import Test from './pages/Word/Test';
 import Nav from './components/Nav/Nav';
 import ArticleListDetail from './pages/Artricle/ArticleListDetail';
 
@@ -51,9 +51,9 @@ function App() {
           <Route path="/article" element={<Article />} />
           <Route path="/conversation" element={<Conversation />} />
           <Route path="/wordlist" element={<WordList />} />
-          <Route path="/wordlist/test" element={<WordTest />} />
+          <Route path="/wordlist/test" element={<Test />} />
           <Route path="/scrap" element={<ArticleListDetail />} />
-          <Route path="/log" element={<WordTest />} />
+          <Route path="/log" element={<Test />} />
         </Routes>
 
         <div className="modal">
