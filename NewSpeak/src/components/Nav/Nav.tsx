@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
+import useThemeStore from '../../store/ThemeStore';
 import { FaSearch } from 'react-icons/fa';
 import logo from '../../assets/NewSpeak.png';
 import logoWhite from '../../assets/NewSpeakWhite.png';
@@ -10,15 +11,13 @@ import WordSearch from './WordSearch';
 import styles from './Nav.module.scss';
 
 const Nav = () => {
+  const { theme } = useThemeStore();
   const [mainLogo, setMainLogo] = useState(logo);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isOpenedArticleSearchBar, setIsOpenedArticleSearchBar] =
     useState(false);
   const [isOpenedWordSearchBar, setIsOpenedWordSearchBar] = useState(false);
   const [displayLoggedIn, setDisplayLoggedIn] = useState('Login');
-  const [selectedTheme, setSelectedTheme] = useState(
-    localStorage.getItem('theme') || 'light',
-  );
   const [isFirstArticleRender, setIsFirstArticleRender] = useState(true);
   const [isFirstWordRender, setIsFirstWordRender] = useState(true);
 
@@ -118,16 +117,12 @@ const Nav = () => {
   }, [isLoggedIn]);
 
   useEffect(() => {
-    setSelectedTheme(localStorage.getItem('theme') || 'light');
-  }, [localStorage.getItem('theme')]);
-
-  useEffect(() => {
-    if (selectedTheme === 'light') {
+    if (theme === 'light') {
       setMainLogo(logo);
     } else {
       setMainLogo(logoWhite);
     }
-  }, [selectedTheme]);
+  }, [theme]);
 
   return (
     <>
@@ -148,9 +143,9 @@ const Nav = () => {
           }}
         >
           <nav className={styles.navbar}>
-            <div className={styles.logo}>
+            <Link className={styles.logo} to="/">
               <img src={mainLogo} width={'160px'} />
-            </div>
+            </Link>
             <div className={styles.switcher}>
               <ThemeSwitcher />
             </div>

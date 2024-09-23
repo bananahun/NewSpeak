@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import useThemeStore from '../../store/ThemeStore';
+import useArticleStore from '../../store/ArticleStore';
 import styles from './ArticleOriginal.module.scss';
 import translateIconBlack from '../../assets/translate.png';
 import translateIconWhite from '../../assets/translate-white.png';
@@ -45,6 +47,8 @@ const article = {
 };
 
 const ArticleOriginal = () => {
+  const { theme } = useThemeStore();
+  const { articleMeta } = useArticleStore();
   const [articleId, setArticleId] = useState(0);
   const [articleOriginal, setArticleOriginal] = useState(article.sentence);
   const [translateIcon, setTranslateIcon] = useState(translateIconWhite);
@@ -60,19 +64,16 @@ const ArticleOriginal = () => {
   };
 
   useEffect(() => {
-    if (localStorage.getItem('theme') === 'dark') {
+    if (theme === 'dark') {
       setTranslateIcon(translateIconWhite);
     } else {
       setTranslateIcon(translateIconBlack);
     }
-  }, [localStorage.getItem('theme')]);
+  }, [theme]);
 
   useEffect(() => {
-    const articleStorage = localStorage.getItem('articleStorage');
-
-    if (articleStorage) {
-      const parsedArticle = JSON.parse(articleStorage);
-      setArticleId(parsedArticle.state.articleMeta.id);
+    if (articleMeta) {
+      setArticleId(articleMeta.id);
     }
   }, []);
 
@@ -85,6 +86,7 @@ const ArticleOriginal = () => {
       fetchArticleDetail(articleId);
     }
   }, [articleId]);
+
   return (
     <>
       <div className={styles.articleContent}>

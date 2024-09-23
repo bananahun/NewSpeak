@@ -1,0 +1,13 @@
+.categoryButton {
+  background-color: inherit;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 10px 20px;
+
+  &.active {
+    font-weight: bold;
+    color: var(--main-color);
+    border-bottom: var(--main-color) 2px solid;
+  }
+}
