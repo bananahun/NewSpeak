@@ -76,6 +76,7 @@ public class SecurityConfig {
                         .configurationSource(request -> {
                             CorsConfiguration config = new CorsConfiguration();
                             config.addAllowedOrigin("http://localhost:5500");
+                            config.addAllowedOrigin("http://localhost:5173");
                             config.addAllowedOrigin("https://j11e103.p.ssafy.io");
                             config.addAllowedMethod("*");
                             config.addAllowedHeader("*");
