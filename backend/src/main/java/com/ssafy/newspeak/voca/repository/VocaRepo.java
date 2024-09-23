@@ -1,4 +1,4 @@
-package com.ssafy.newspeak.voca;
+package com.ssafy.newspeak.voca.repository;
 
 import com.ssafy.newspeak.user.repository.dto.VocaInfoDto;
 import com.ssafy.newspeak.voca.entity.Voca;
