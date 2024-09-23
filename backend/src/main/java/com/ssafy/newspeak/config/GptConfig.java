@@ -49,5 +49,4 @@ public class GptConfig {
         System.out.println("assistantTemplate = " + assistantTemplate);
         return assistantTemplate;
     }
-
 }

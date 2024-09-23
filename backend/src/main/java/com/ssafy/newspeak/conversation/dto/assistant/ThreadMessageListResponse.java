@@ -28,7 +28,7 @@ public class ThreadMessageListResponse {
         if (data.get(0).getContent() == null || data.get(0).getContent().length == 0) {
             throw new UnexpectedGptException();
         }
-
+        System.out.println("object = " + object);
         return data.get(0).getContent()[0].text();
     }
 }

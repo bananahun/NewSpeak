@@ -27,17 +27,10 @@ public class Report {
     private Long id;
 
     @Column
-    private String title;
-
-    @Column
     private String content;
 
     @CreationTimestamp
     private Timestamp createdAt;
-
-//    @OneToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "conversation_id")
-//    private Conversation conversation;
 
     public static Report of(String content) {
         Report report = new Report();

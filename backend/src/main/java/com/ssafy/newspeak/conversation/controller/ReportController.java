@@ -2,11 +2,7 @@ package com.ssafy.newspeak.conversation.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ssafy.newspeak.article.service.ArticleService;
-import com.ssafy.newspeak.conversation.dto.assistant.AssistantRequest;
-import com.ssafy.newspeak.conversation.dto.assistant.AssistantResponse;
-import com.ssafy.newspeak.conversation.dto.assistant.CreateThreadRequest;
-import com.ssafy.newspeak.conversation.dto.assistant.ThreadResult;
-import com.ssafy.newspeak.conversation.dto.report.ReportCreateRequest;
+import com.ssafy.newspeak.conversation.dto.assistant.*;
 import com.ssafy.newspeak.conversation.dto.report.ReportCreateResponse;
 import com.ssafy.newspeak.conversation.dto.report.ReportDto;
 import com.ssafy.newspeak.conversation.exception.NoSuchReportException;
@@ -14,9 +10,11 @@ import com.ssafy.newspeak.conversation.service.ReportService;
 import com.ssafy.newspeak.conversation.service.gpt.GptAssistantService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.convert.ConversionService;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -28,7 +26,6 @@ public class ReportController {
     private final ReportService reportService;
     private final ArticleService articleService;
     private final GptAssistantService gptAssistantService;
-    private final ConversionService conversionService;
 
     @PostMapping
     public ResponseEntity<ReportCreateResponse> createReport(@Valid
@@ -66,7 +63,7 @@ public class ReportController {
             @PathVariable("reportId") Long reportId,
             @PathVariable("threadId") String threadId,
             @PathVariable("runId") String runId
-    ) throws JsonProcessingException {
+    ) throws IOException {
         ThreadResult response = gptAssistantService.response(threadId, runId);
         return ResponseEntity.status(OK).body(response);
     }
