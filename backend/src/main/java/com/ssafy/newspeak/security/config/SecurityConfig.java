@@ -90,8 +90,8 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(authorize -> authorize
                         .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
-//                        .requestMatchers("/signUp").permitAll()
-//                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/api/v1/auth/signUp","/api/v1/auth/email").hasRole("GUEST")
+                        .requestMatchers("/api/**").hasRole("USER")
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oAuth2LoginSuccessHandler)
