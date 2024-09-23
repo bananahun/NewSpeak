@@ -3,16 +3,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import Step1 from './Step1';
 import Step2 from './Step2';
 import useRegisterStore from '../../store/RegisterStore';
+import useThemeStore from '../../store/ThemeStore';
 import styles from './Register.module.scss';
 import logo from '../../assets/NewSpeak.png';
 import logoWhite from '../../assets/NewSpeakWhite.png';
 
 const Register = () => {
+  const { theme } = useThemeStore();
   const navigate = useNavigate();
   const [mainLogo, setMainLogo] = useState(logo);
-  const [selectedTheme, setSelectedTheme] = useState(
-    localStorage.getItem('theme') || 'light',
-  );
   const [step, setStep] = useState(1);
   const { formData, resetFormData } = useRegisterStore();
 
@@ -21,12 +20,12 @@ const Register = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedTheme === 'dark') {
+    if (theme === 'dark') {
       setMainLogo(logoWhite);
     } else {
       setMainLogo(logo);
     }
-  }, [selectedTheme, setSelectedTheme]);
+  }, [theme]);
 
   const nextStep = () => setStep(prevStep => Math.min(prevStep + 1, 2));
 

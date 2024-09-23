@@ -1,68 +1,47 @@
 .articleList {
+  height: 100%;
   width: 100%;
-}
-
-.articleListContent {
   display: flex;
-  padding: 0 20px;
-  height: calc(100vh - 88px);
-  overflow-y: auto;
-}
-
-.article {
-  margin-bottom: 20px;
-  padding: 15px;
-  border: 1px solid var(--font-color);
-  background-color: var(--background-color);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.title {
-  font-size: 1.5em;
-  margin-bottom: 10px;
-}
-
-.content {
-  font-size: 1em;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
 }
 
 .categoryContainer {
   display: flex;
+  align-items: center;
   justify-content: center;
+  height: 44px;
+  width: 100%;
+  position: relative;
+  top: 0;
+  padding: 0 40px;
+
   .scrollButton {
     cursor: pointer;
   }
 }
 
-.categoryButtons {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 12px;
-  overflow-x: hidden;
-  white-space: nowrap;
+.articleContainer {
+  flex: 1;
+}
 
-  .categoryButton {
-    background-color: var(--background-color);
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    margin-right: 10px;
-    border-radius: 4px;
+.categorySlider {
+  width: 100%;
+  overflow: hidden;
+}
+
+.scrollButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+
+  &:first-child {
+    left: 0;
   }
-}
 
-.categoryButton.active {
-  font-weight: bold;
-  color: var(--main-color);
-  border-bottom: var(--main-color) 2px solid;
-}
-
-.loadMore {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  svg {
-    cursor: pointer;
+  &:last-child {
+    right: 0;
   }
 }

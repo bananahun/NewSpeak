@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import useArticleStore from '../../store/ArticleStore';
 import styles from './ArticleTranslation.module.scss';
 
 const article = {
@@ -42,16 +43,14 @@ const article = {
 };
 
 const ArticleDetail = () => {
+  const { articleMeta } = useArticleStore();
   const [articleId, setArticleId] = useState(0);
   const [articleDetail, setArticleDetail] = useState(article.sentence);
   const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   useEffect(() => {
-    const articleStorage = localStorage.getItem('articleStorage');
-
-    if (articleStorage) {
-      const parsedArticle = JSON.parse(articleStorage);
-      setArticleId(parsedArticle.state.articleMeta.id);
+    if (articleMeta) {
+      setArticleId(articleMeta.id);
     }
   }, []);
 
@@ -68,6 +67,7 @@ const ArticleDetail = () => {
   const handleMouseLeave = () => {
     setHoveredId(null);
   };
+
   return (
     <>
       <div className={styles.articleContent}>

@@ -1,0 +1,33 @@
+.articleListContent {
+  display: flex;
+  padding: 20px;
+  height: calc(100vh - 88px);
+  overflow-y: auto;
+}
+
+.articleCard {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid var(--font-color);
+  background-color: var(--background-color);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.content {
+  font-size: 1em;
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    cursor: pointer;
+  }
+}

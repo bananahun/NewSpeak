@@ -24,10 +24,10 @@ const Home = () => {
 
   return (
     <div className={styles.home}>
-      <div className={`${styles.section} ${styles.A}`}>
+      <div className={styles.section}>
         <WordCloud data={words} />
       </div>
-      <div className={`${styles.section} ${styles.B}`}>
+      <div className={styles.section}>
         <ArticleList />
       </div>
     </div>
