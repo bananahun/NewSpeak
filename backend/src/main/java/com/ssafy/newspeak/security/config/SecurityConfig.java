@@ -81,7 +81,7 @@ public class SecurityConfig {
                                 "http://localhost:5173",
                                 "https://j11e103.p.ssafy.io"
                             ));
-                            config.addAllowedMethod("*");
+                            config.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"));
                             config.addAllowedHeader("*");
                             config.setAllowCredentials(true);
                             return config;
