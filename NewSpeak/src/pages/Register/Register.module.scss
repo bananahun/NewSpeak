@@ -43,16 +43,15 @@
   border-radius: 20px;
   position: relative;
 
-  article {
-    display: flex;
-    flex-direction: column;
+  input {
+    border-radius: 8px;
+    font-size: 16px;
+    padding: 6px 12px;
+    background-color: var(--font-color);
+    color: var(--background-color);
 
-    input {
-      border-radius: 8px;
-      font-size: 16px;
-      padding: 6px 12px;
-      background-color: var(--font-color);
-      color: var(--background-color);
+    &:disabled {
+      background-color: black;
     }
   }
 

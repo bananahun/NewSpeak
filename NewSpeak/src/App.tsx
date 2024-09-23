@@ -16,6 +16,7 @@ import './App.scss';
 import { handleContextMenu } from './utils/AddWord'; // 유틸 함수 임포트
 import { useModalStore } from './store/ModalStore';
 import AddWordModal from './components/Word/AddWordModal'; // 모달 컴포넌트 임포트
+import OAuthCallback from './utils/OAuthCallback';
 
 function App() {
   const { theme } = useThemeStore();
@@ -47,6 +48,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/login/oauth2/code/kakao" element={<OAuthCallback />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/article" element={<Article />} />
           <Route path="/conversation" element={<Conversation />} />
