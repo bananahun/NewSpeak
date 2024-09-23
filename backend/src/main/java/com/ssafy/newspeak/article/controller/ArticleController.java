@@ -37,6 +37,8 @@ public class ArticleController {
         userArticleService.scrapArticle(userArticleId);
     }
 
+    @PostMapping("/{articleId}/voca")
+
     @GetMapping
     public ResponseEntity<Result> findAll() {
         List<ArticlesFindResponse> articlesFindResponses = articleService.findAll();

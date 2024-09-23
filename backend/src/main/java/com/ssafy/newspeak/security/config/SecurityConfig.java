@@ -41,6 +41,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * 인증은 CustomJsonUsernamePasswordAuthenticationFilter에서 authenticate()로 인증된 사용자로 처리
@@ -75,8 +76,11 @@ public class SecurityConfig {
                 .cors(cors -> cors
                         .configurationSource(request -> {
                             CorsConfiguration config = new CorsConfiguration();
-                            config.addAllowedOrigin("http://localhost:5500");
-                            config.addAllowedOrigin("https://j11e103.p.ssafy.io");
+                            config.setAllowedOrigins(Arrays.asList(
+                                    "http://localhost:5500",
+                                    "http://localhost:5173",
+                                    "https://j11e103.p.ssafy.io"
+                            ));
                             config.addAllowedMethod("*");
                             config.addAllowedHeader("*");
                             config.setAllowCredentials(true);

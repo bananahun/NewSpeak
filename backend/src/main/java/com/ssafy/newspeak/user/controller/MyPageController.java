@@ -6,6 +6,7 @@ import com.ssafy.newspeak.security.util.AuthUtil;
 import com.ssafy.newspeak.user.controller.dto.VocaListDto;
 import com.ssafy.newspeak.user.entity.userCategory.UserCategory;
 import com.ssafy.newspeak.user.repository.dto.ArticleInfoDto;
+import com.ssafy.newspeak.user.repository.dto.VocaInfoDto;
 import com.ssafy.newspeak.user.service.UserArticleService;
 import com.ssafy.newspeak.user.service.UserVocaService;
 import com.ssafy.newspeak.voca.entity.Voca;
@@ -47,7 +48,7 @@ public class MyPageController {
     @GetMapping("/vocas")
     public ResponseEntity<VocaListDto> getVocaAll() {
         MyUserDetails userDetails=AuthUtil.getUserDetails();
-        List<Voca> vocas=userVocaService.getVocaByUserId(userDetails.getUserId());
+        List<VocaInfoDto> vocas=userVocaService.getVocaByUserId(userDetails.getUserId());
         return ResponseEntity.ok().body(new VocaListDto(vocas,vocas.size()));
     }
 

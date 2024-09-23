@@ -2,6 +2,7 @@ package com.ssafy.newspeak.voca.controller;
 
 import com.ssafy.newspeak.security.jwt.MyUserDetails;
 import com.ssafy.newspeak.security.util.AuthUtil;
+import com.ssafy.newspeak.user.repository.dto.VocaInfoDto;
 import com.ssafy.newspeak.voca.VocaRepo;
 import com.ssafy.newspeak.voca.entity.Voca;
 import com.ssafy.newspeak.voca.service.VocaService;
@@ -10,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.rmi.AccessException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,16 +26,16 @@ public class VocaController {
         vocaService.makeVoca(vocaPostDto,userDetails.getUserId());
     }
     @GetMapping("")
-    public VocasDto getVocas(){
+    public ResponseEntity<VocasDto> getVocas(){
         MyUserDetails userDetails=AuthUtil.getUserDetails();
-        List<Voca> vocas= vocaService.getVocasByUserId(userDetails.getUserId());
-        return new VocasDto(vocas);
+        List<VocaInfoDto> vocas= vocaService.getVocasByUserId(userDetails.getUserId());
+        return ResponseEntity.ok(new VocasDto(vocas));
     }
 
     @GetMapping("/{vocaId}")
-    public VocaDto getVoca(@PathVariable Long vocaId){
+    public VocaDto getVoca(@PathVariable Long vocaId) {
         MyUserDetails userDetails=AuthUtil.getUserDetails();
-        Voca voca= vocaService.getVocaById(vocaId);
+        Voca voca= vocaService.getVocaById(vocaId,userDetails.getUserId());
         return new VocaDto(voca);
     }
 

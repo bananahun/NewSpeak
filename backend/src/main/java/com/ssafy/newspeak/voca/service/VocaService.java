@@ -2,12 +2,16 @@ package com.ssafy.newspeak.voca.service;
 
 import com.ssafy.newspeak.user.entity.User;
 import com.ssafy.newspeak.user.repository.UserRepo;
+import com.ssafy.newspeak.user.repository.dto.VocaInfoDto;
 import com.ssafy.newspeak.voca.VocaRepo;
 import com.ssafy.newspeak.voca.controller.VocaPostDto;
 import com.ssafy.newspeak.voca.entity.Voca;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.expression.AccessException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -26,12 +30,16 @@ public class VocaService {
         vocaRepo.save(voca);
     }
 
-    public List<Voca>  getVocasByUserId(Long userId){
+    public List<VocaInfoDto>  getVocasByUserId(Long userId){
         return vocaRepo.findVocaByUserId(userId);
     }
 
-    public Voca getVocaById(Long vocaId){
-        return vocaRepo.findById(vocaId).orElseThrow(NoSuchElementException::new);
+    public Voca getVocaById(Long vocaId,Long userId) {
+        Voca voca=vocaRepo.findById(vocaId).orElseThrow(NoSuchElementException::new);
+        if(!voca.getUser().getId().equals(userId)){
+            throw new AccessDeniedException("not your voca");
+        }
+        return voca;
     }
 
     public void deleteVocaById(Long userId, Long vocaId){

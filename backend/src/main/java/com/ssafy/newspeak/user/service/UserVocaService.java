@@ -1,5 +1,6 @@
 package com.ssafy.newspeak.user.service;
 
+import com.ssafy.newspeak.user.repository.dto.VocaInfoDto;
 import com.ssafy.newspeak.voca.VocaRepo;
 import com.ssafy.newspeak.voca.entity.Voca;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.List;
 public class UserVocaService {
     private final VocaRepo vocaRepo;
 
-    public List<Voca> getVocaByUserId(Long userId) {
+    public List<VocaInfoDto> getVocaByUserId(Long userId) {
         return vocaRepo.findVocaByUserId(userId);
     }
 
