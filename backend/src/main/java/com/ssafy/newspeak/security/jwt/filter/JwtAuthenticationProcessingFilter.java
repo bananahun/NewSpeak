@@ -71,6 +71,8 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             checkAccessTokenAndAuthenticationOnly(request, response);
             filterChain.doFilter(request, response);
             return;
+        }else{
+            log.info("accessToken is null");
         }
 
         // AccessToken이 유효하지 않은 경우, RefreshToken을 검사
