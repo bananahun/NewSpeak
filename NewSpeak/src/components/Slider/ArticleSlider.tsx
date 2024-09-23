@@ -1,5 +1,5 @@
-import React, { SetStateAction, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import useArticleStore from '../../store/ArticleStore';
 import { categories } from '../../utils/Categories';
 import Slider from 'react-slick';
@@ -334,11 +334,13 @@ const ArticleSlider: React.FC<ArticleSliderProps> = ({
                   </div>
                 ))}
             <div className={styles.loadMore}>
-              <MdOutlineAddBox
-                size={'50'}
-                className={styles.loadButton}
-                onClick={() => fetchMoreArticleList(index)}
-              />
+              <Link to="/articlelist">
+                <MdOutlineAddBox
+                  size={'50'}
+                  className={styles.loadButton}
+                  onClick={() => fetchMoreArticleList(index)}
+                />
+              </Link>
             </div>
           </div>
         );

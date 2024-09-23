@@ -52,7 +52,7 @@ function App() {
           <Route path="/conversation" element={<Conversation />} />
           <Route path="/wordlist" element={<WordList />} />
           <Route path="/wordlist/test" element={<Test />} />
-          <Route path="/scrap" element={<ArticleListDetail />} />
+          <Route path="/articlelist" element={<ArticleListDetail />} />
           <Route path="/log" element={<Test />} />
         </Routes>
 
