@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -23,5 +24,18 @@ public class VocaService {
         User user =userRepo.findById(userId).orElseThrow(NoSuchElementException::new);
         Voca voca = new Voca(vocaPostDto,user);
         vocaRepo.save(voca);
+    }
+
+    public List<Voca>  getVocasByUserId(Long userId){
+        return vocaRepo.findVocaByUserId(userId);
+    }
+
+    public Voca getVocaById(Long vocaId){
+        return vocaRepo.findById(vocaId).orElseThrow(NoSuchElementException::new);
+    }
+
+    public void deleteVocaById(Long userId, Long vocaId){
+//        if(){}
+//        return vocaRepo.deleteById(vocaId);
     }
 }

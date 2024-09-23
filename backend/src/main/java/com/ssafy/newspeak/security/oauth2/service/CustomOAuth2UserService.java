@@ -88,6 +88,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 attributes.getOauth2UserInfo().getId()).orElse(null);
 
         if(findUser == null) {
+            log.info("Oauth saveUser, Oauth email:{}",attributes.getOauth2UserInfo().getEmail());
             return saveUser(attributes, socialType);
         }
         return findUser;
