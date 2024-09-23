@@ -47,8 +47,24 @@ body * {
 }
 
 button {
-  background-color: var(--main-color);
-  color: var(--font-color);
+  /* 고스트 버튼 스타일 */
+  background: transparent;
+  color: rgb(249, 110, 50);
+  border: 2px solid rgb(249, 110, 50);
+  border-radius: 3ch;
+  position: relative;
+  overflow: hidden;
+  transition: 0.3s;
+  cursor: pointer;
+  padding: 10px 20px; /* 버튼의 패딩을 조절하여 크기를 늘림 */
+  font-size: 16px; /* 버튼 텍스트 크기 조절 */
+  width: 100%;
+  max-width: 200px; /* 버튼의 최대 너비 설정 */
+
+  &:hover {
+    box-shadow: inset 0 0 0 36px rgb(249, 110, 50);
+    color: rgb(255, 255, 255);
+  }
 }
 
 strong {
