@@ -15,7 +15,7 @@ import useThemeStore from './store/ThemeStore';
 import './App.scss';
 import { handleContextMenu } from './utils/AddWord'; // 유틸 함수 임포트
 import { useModalStore } from './store/ModalStore';
-import AddWordModal from './components/Word/AddWordModal'; // 모달 컴포넌트 임포트
+import AddWordModal from './components/Modal/AddWordModal';
 import OAuthCallback from './utils/OAuthCallback';
 
 function App() {
