@@ -5,6 +5,7 @@ import styles from './ArticleOriginal.module.scss';
 import translateIconBlack from '../../assets/translate.png';
 import translateIconWhite from '../../assets/translate-white.png';
 import { IoMicSharp, IoVolumeMedium } from 'react-icons/io5';
+import PronounceModal from '../Modal/PronounceModal';
 
 const article = {
   sentence: [
@@ -55,12 +56,23 @@ const ArticleOriginal = () => {
   const [visibleTranslations, setVisibleTranslations] = useState<boolean[]>(
     new Array(article.sentence.length).fill(false),
   );
+  const [isPronounceModalOpen, setPronounceModalOpen] = useState(false);
+  const [selectedSentence, setSelectedSentence] = useState<string>('');
 
   const toggleOpenSentenceDetail = (index: number) => {
     setVisibleTranslations(prev => ({
       ...prev,
       [index]: !prev[index],
     }));
+  };
+
+  const openPronounceModal = (text: string) => {
+    setSelectedSentence(text);
+    setPronounceModalOpen(true);
+  };
+
+  const closePronounceModal = () => {
+    setPronounceModalOpen(false);
   };
 
   useEffect(() => {
@@ -101,7 +113,11 @@ const ArticleOriginal = () => {
                 onClick={() => toggleOpenSentenceDetail(index)}
               />
               |
-              <IoMicSharp size={20} />|
+              <IoMicSharp
+                size={20}
+                onClick={() => openPronounceModal(sentence.content)} // 마이크 클릭 시 모달 열기
+              />
+              |
               <IoVolumeMedium size={20} />
             </span>
             {visibleTranslations[index] && (
@@ -112,6 +128,13 @@ const ArticleOriginal = () => {
           </div>
         ))}
       </div>
+
+      {/* PronounceModal */}
+      <PronounceModal
+        isOpen={isPronounceModalOpen}
+        onClose={closePronounceModal}
+        text={selectedSentence} // 선택된 문장 전달
+      />
     </>
   );
 };

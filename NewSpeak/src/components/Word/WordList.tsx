@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import styles from './WordList.module.scss';
 import { FaMicrophone, FaBook } from 'react-icons/fa';
 import { GiSpeaker } from 'react-icons/gi';
+import PronounceModal from '../Modal/PronounceModal';
 
 const WordList = () => {
   interface Word {
@@ -168,9 +169,20 @@ const WordList = () => {
   ];
 
   const [flipped, setFlipped] = useState<number | null>(null);
+  const [isPronounceModalOpen, setPronounceModalOpen] = useState(false);
+  const [selectedText, setSelectedText] = useState<string>('');
 
   const handleExampleClick = (index: number) => {
     setFlipped(flipped === index ? null : index);
+  };
+
+  const openPronounceModal = (text: string) => {
+    setSelectedText(text);
+    setPronounceModalOpen(true);
+  };
+
+  const closePronounceModal = () => {
+    setPronounceModalOpen(false);
   };
 
   return (
@@ -215,7 +227,11 @@ const WordList = () => {
                       ))}
                     </div>
                     <div className={styles.buttonContainer}>
-                      <div className={styles.iconButton} title="발음 평가">
+                      <div
+                        className={styles.iconButton}
+                        title="발음 평가"
+                        onClick={() => openPronounceModal(word.content)} // 발음 평가 모달 열기
+                      >
                         <FaMicrophone />
                       </div>
                       <div className={styles.iconButton} title="발음 듣기">
@@ -236,6 +252,13 @@ const WordList = () => {
           </div>
         ))}
       </div>
+
+      {/* 발음 평가 모달창 */}
+      <PronounceModal
+        isOpen={isPronounceModalOpen}
+        onClose={closePronounceModal}
+        text={selectedText}
+      />
     </div>
   );
 };
