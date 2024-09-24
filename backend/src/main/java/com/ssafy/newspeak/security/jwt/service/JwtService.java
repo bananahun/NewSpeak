@@ -192,7 +192,7 @@ public class JwtService {
         cookie.setPath("/");      // 쿠키의 유효 경로 설정
         cookie.setMaxAge(7 * 24 * 60 * 60); // 7일 유효 기간 설정
 //        cookie.setSameSite("Strict"); // CSRF 방지
-        cookie.setDomain("localhost");
+        // cookie.setDomain("localhost");
         cookie.setAttribute("SameSite","None");
         response.addCookie(cookie);
     }
@@ -204,7 +204,7 @@ public class JwtService {
         cookie.setPath("/");      // 쿠키의 유효 경로 설정
         cookie.setMaxAge(0); // 7일 유효 기간 설정
 //        cookie.setSameSite("Strict"); // CSRF 방지
-        cookie.setDomain("localhost");
+        // cookie.setDomain("localhost");
         cookie.setAttribute("SameSite","None");
         response.addCookie(cookie);
     }
@@ -216,7 +216,7 @@ public class JwtService {
         cookie.setPath("/");      // 쿠키의 유효 경로 설정
         cookie.setMaxAge(0); // 7일 유효 기간 설정
 //        cookie.setSameSite("Strict"); // CSRF 방지
-        cookie.setDomain("localhost");
+        // cookie.setDomain("localhost");
         cookie.setAttribute("SameSite","None");
         response.addCookie(cookie);
     }
@@ -235,7 +235,7 @@ public class JwtService {
         cookie.setPath("/");      // 쿠키의 유효 경로 설정
         cookie.setMaxAge(7 * 24 * 60 * 60); // 7일 유효 기간 설정
 //        cookie.setSameSite("Strict"); // CSRF 방지
-        cookie.setDomain("localhost");
+        // cookie.setDomain("localhost");
         cookie.setAttribute("SameSite","None");
         response.addCookie(cookie);
         
