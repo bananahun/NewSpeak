@@ -43,6 +43,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         cookie.setPath("/"); // 쿠키가 유효한 경로
         cookie.setMaxAge(3600); // 쿠키 유효 시간 (초)
         cookie.setDomain("localhost");
+        cookie.setAttribute("SameSite","None");
         return cookie;
     }
 
