@@ -3,13 +3,14 @@ package com.ssafy.newspeak.user.controller;
 import com.ssafy.newspeak.security.jwt.MyUserDetails;
 import com.ssafy.newspeak.security.jwt.service.JwtService;
 import com.ssafy.newspeak.security.util.AuthUtil;
+import com.ssafy.newspeak.user.controller.dto.UserCategoriesDto;
 import com.ssafy.newspeak.user.controller.dto.VocaListDto;
 import com.ssafy.newspeak.user.entity.userCategory.UserCategory;
 import com.ssafy.newspeak.user.repository.dto.ArticleInfoDto;
 import com.ssafy.newspeak.user.repository.dto.VocaInfoDto;
 import com.ssafy.newspeak.user.service.UserArticleService;
+import com.ssafy.newspeak.user.service.UserCategoryService;
 import com.ssafy.newspeak.user.service.UserVocaService;
-import com.ssafy.newspeak.voca.entity.Voca;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ import java.util.List;
 public class MyPageController {
 
     private final UserArticleService userArticleService;
+    private final UserCategoryService userCategoryService;
     private final UserVocaService userVocaService;
     private final JwtService jwtService;
 
@@ -53,7 +55,9 @@ public class MyPageController {
     }
 
     @PostMapping("/categories")
-    public ResponseEntity<UserCategory> getCategory(){
+    public ResponseEntity<UserCategoriesDto> getCategory(){
+        MyUserDetails userDetails=AuthUtil.getUserDetails();
+        userCategoryService.getAll(userDetails.getUserId());
         return ResponseEntity.ofNullable(null);
     }
 

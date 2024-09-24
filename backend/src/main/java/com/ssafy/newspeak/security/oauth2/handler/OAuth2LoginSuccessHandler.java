@@ -7,12 +7,12 @@ import com.ssafy.newspeak.security.util.CookieName;
 import com.ssafy.newspeak.user.entity.Role;
 import com.ssafy.newspeak.user.entity.User;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.server.Cookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -42,6 +42,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 //        cookie.setSecure(true); // HTTPS에서만 전송
         cookie.setPath("/"); // 쿠키가 유효한 경로
         cookie.setMaxAge(3600); // 쿠키 유효 시간 (초)
+        cookie.setDomain("localhost");
+        cookie.setSameSite("none");
         return cookie;
     }
 
@@ -78,8 +80,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     private void loginSuccess(HttpServletResponse response, CustomOAuth2User oAuth2User) throws IOException {
         String accessToken = jwtService.createAccessToken(oAuth2User.getEmail(),oAuth2User.getUserId());
         String refreshToken = jwtService.createRefreshToken();
-        response.addCookie(setCookie(ACCESS_TOKEN,accessToken));
-        response.addCookie(setCookie(REFRESH_TOKEN,refreshToken));
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
         jwtService.updateRefreshToken(oAuth2User.getUserId(), refreshToken);
