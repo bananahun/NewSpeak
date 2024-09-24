@@ -40,8 +40,9 @@ public class ArticleController {
     }
 
     @PostMapping("/{articleId}/vocas")
-    public void vocasArticle(@PathVariable Long articleId) {
-
+    public void addWordFromArticle(@PathVariable Long articleId, @RequestBody AddWordRequest addWordRequest) {
+        MyUserDetails userDetails= AuthUtil.getUserDetails();
+        vocaService.addWord(addWordRequest,userDetails.getUserId());
     }
 
     @GetMapping

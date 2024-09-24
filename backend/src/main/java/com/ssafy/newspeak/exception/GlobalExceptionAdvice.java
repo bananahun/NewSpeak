@@ -1,5 +1,6 @@
 package com.ssafy.newspeak.exception;
 
+import jakarta.persistence.NoResultException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -41,6 +42,11 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(IllegalAccessException.class)
     public ResponseEntity<String> handleIllegalAccess(IllegalAccessException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(NoResultException.class)
+    public ResponseEntity<String> handleNoResultException(NoResultException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
 }

@@ -41,8 +41,6 @@ public class VocaController {
     public ResponseEntity<String> deleteVoca(@PathVariable Long vocaId){
         MyUserDetails userDetails=AuthUtil.getUserDetails();
         vocaService.deleteVocaById(userDetails.getUserId(),vocaId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok("Deleted voca");
     }
-
-
 }
