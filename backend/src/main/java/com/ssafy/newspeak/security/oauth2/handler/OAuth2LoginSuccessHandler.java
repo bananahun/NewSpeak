@@ -7,12 +7,12 @@ import com.ssafy.newspeak.security.util.CookieName;
 import com.ssafy.newspeak.user.entity.Role;
 import com.ssafy.newspeak.user.entity.User;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.server.Cookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -42,8 +42,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 //        cookie.setSecure(true); // HTTPS에서만 전송
         cookie.setPath("/"); // 쿠키가 유효한 경로
         cookie.setMaxAge(3600); // 쿠키 유효 시간 (초)
-        cookie.setDomain("localhost");
-        cookie.setSameSite("none");
+//        cookie.setDomain("localhost");
+        cookie.setAttribute("SameSite", "None");
         return cookie;
     }
 

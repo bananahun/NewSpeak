@@ -3,14 +3,15 @@ package com.ssafy.newspeak.user.controller;
 import com.ssafy.newspeak.security.jwt.MyUserDetails;
 import com.ssafy.newspeak.security.jwt.service.JwtService;
 import com.ssafy.newspeak.security.util.AuthUtil;
-import com.ssafy.newspeak.user.controller.dto.UserCategoriesDto;
+import com.ssafy.newspeak.user.controller.dto.CategoryListDto;
 import com.ssafy.newspeak.user.controller.dto.VocaListDto;
-import com.ssafy.newspeak.user.entity.userCategory.UserCategory;
+import com.ssafy.newspeak.user.entity.userCategory.UserCategoryId;
 import com.ssafy.newspeak.user.repository.dto.ArticleInfoDto;
 import com.ssafy.newspeak.user.repository.dto.VocaInfoDto;
 import com.ssafy.newspeak.user.service.UserArticleService;
 import com.ssafy.newspeak.user.service.UserCategoryService;
 import com.ssafy.newspeak.user.service.UserVocaService;
+import com.ssafy.newspeak.user.repository.dto.CategoryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,11 +55,23 @@ public class MyPageController {
         return ResponseEntity.ok().body(new VocaListDto(vocas,vocas.size()));
     }
 
-    @PostMapping("/categories")
-    public ResponseEntity<UserCategoriesDto> getCategory(){
+    @GetMapping("/categories")
+    public ResponseEntity<CategoryListDto> getCategory(){
         MyUserDetails userDetails=AuthUtil.getUserDetails();
-        userCategoryService.getAll(userDetails.getUserId());
-        return ResponseEntity.ofNullable(null);
+        List<CategoryDto> categories =userCategoryService.getAllCategoriesByUserId(userDetails.getUserId());
+
+        return ResponseEntity.ok().body(new CategoryListDto(categories));
+    }
+
+    @PostMapping("/categories")
+    public ResponseEntity<Void> postCategory(@RequestBody CategoryDto categoryDto) {
+        MyUserDetails userDetails=AuthUtil.getUserDetails();
+        UserCategoryId userCategoryId= UserCategoryId.builder()
+                .categoryId(categoryDto.getCategoryId())
+                .userId(userDetails.getUserId())
+                .build();
+        userCategoryService.postCategoryByUserId(userCategoryId);
+        return ResponseEntity.ok().build();
     }
 
 }
