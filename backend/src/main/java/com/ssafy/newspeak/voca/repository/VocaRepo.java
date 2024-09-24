@@ -1,5 +1,6 @@
-package com.ssafy.newspeak.voca;
+package com.ssafy.newspeak.voca.repository;
 
+import com.ssafy.newspeak.user.repository.dto.VocaInfoDto;
 import com.ssafy.newspeak.voca.entity.Voca;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface VocaRepo extends JpaRepository<Voca, Long> {
 
-    @Query("SELECT new com.ssafy.newspeak.user.repository.dto.VocaInfoDto(v.title,v.quizSuccessCount) " +
+    @Query("SELECT new com.ssafy.newspeak.user.repository.dto.VocaInfoDto(v.id,v.title,v.quizSuccessCount) " +
             "FROM Voca v WHERE v.user.id = :userId")
-    List<Voca> findVocaByUserId(@Param("userId") Long userId);
+    List<VocaInfoDto> findVocaByUserId(@Param("userId") Long userId);
 }

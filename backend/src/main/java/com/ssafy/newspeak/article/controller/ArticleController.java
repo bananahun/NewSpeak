@@ -7,6 +7,7 @@ import com.ssafy.newspeak.security.jwt.MyUserDetails;
 import com.ssafy.newspeak.security.util.AuthUtil;
 import com.ssafy.newspeak.user.entity.userArticle.UserArticleId;
 import com.ssafy.newspeak.user.service.UserArticleService;
+import com.ssafy.newspeak.voca.service.VocaService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class ArticleController {
 
     private final ArticleService articleService;
     private final UserArticleService userArticleService;
+    private final VocaService vocaService;
 
     @PostMapping("/scrap/{articleId}")
     @ResponseStatus(HttpStatus.OK)
@@ -35,6 +37,12 @@ public class ArticleController {
                 .userId(userDetails.getUserId())
                 .build();
         userArticleService.scrapArticle(userArticleId);
+    }
+
+    @PostMapping("/{articleId}/vocas")
+    public void addWordFromArticle(@PathVariable Long articleId, @RequestBody AddWordRequest addWordRequest) {
+        MyUserDetails userDetails= AuthUtil.getUserDetails();
+        vocaService.addWord(addWordRequest,userDetails.getUserId());
     }
 
     @GetMapping
