@@ -77,11 +77,11 @@ public class SecurityConfig {
                         .configurationSource(request -> {
                             CorsConfiguration config = new CorsConfiguration();
                             config.setAllowedOrigins(Arrays.asList(
-                                    "http://localhost:5500",
-                                    "http://localhost:5173",
-                                    "https://j11e103.p.ssafy.io"
+                                "http://localhost:5500",
+                                "http://localhost:5173",
+                                "https://j11e103.p.ssafy.io"
                             ));
-                            config.addAllowedMethod("*");
+                            config.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"));
                             config.addAllowedHeader("*");
                             config.setAllowCredentials(true);
                             return config;
@@ -94,8 +94,8 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(authorize -> authorize
                         .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
-//                        .requestMatchers("/signUp").permitAll()
-//                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/api/v1/auth/signUp","/api/v1/auth/email").hasRole("GUEST")
+                        .requestMatchers("/api/**").hasRole("USER")
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oAuth2LoginSuccessHandler)
