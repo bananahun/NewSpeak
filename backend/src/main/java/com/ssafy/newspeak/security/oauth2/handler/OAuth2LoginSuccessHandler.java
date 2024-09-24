@@ -63,6 +63,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 //                response.addCookie(cookie);
                 jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
                 jwtService.updateRefreshToken(oAuth2User.getUserId(), refreshToken);
+                log.info("signUpUrl :{}",signUpUrl);
                 response.sendRedirect(signUpUrl);
             } else {
                 loginSuccess(response, oAuth2User); // 로그인에 성공한 경우 access, refresh 토큰 생성
