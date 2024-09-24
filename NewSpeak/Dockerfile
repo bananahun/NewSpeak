@@ -1,9 +1,13 @@
-# Node.js 기반의 프론트엔드 예제
-FROM node:18-alpine
+FROM node:18-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
 RUN npm run build
+
+FROM node:18-alpine
+WORKDIR /app
+RUN npm install -g serve
+COPY --from=build /app/dist ./dist
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["serve", "-s", "dist", "-l", "3000"]
