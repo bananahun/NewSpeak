@@ -1,10 +1,12 @@
 package com.ssafy.newspeak.conversation.service.gpt;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.newspeak.conversation.GptRole;
 import com.ssafy.newspeak.conversation.dto.assistant.*;
 import com.ssafy.newspeak.conversation.dto.gpt.GptMessage;
+import com.ssafy.newspeak.conversation.dto.report.ReportCompleteResponse;
 import com.ssafy.newspeak.conversation.exception.JsonException;
 import com.ssafy.newspeak.conversation.exception.NotYetCompleteException;
 import com.ssafy.newspeak.pronounce.service.AudioFileUploadService;
@@ -21,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.*;
@@ -35,6 +36,9 @@ public class GptAssistantService {
 
     @Value("${gpt.api.assistant.report}")
     private String ASSISTANT_REPORT;
+
+    @Value("${gpt.api.assistant.conv}")
+    private String ASSISTANT_CONVERSATION;
 
     @Value("${gpt.api.audio}")
     private String AUDIO_URL;
@@ -55,7 +59,9 @@ public class GptAssistantService {
         this.openAiAudioSpeechClient = openAiAudioSpeechClient;
     }
 
-    public String createThread(CreateThreadRequest request) {
+    // 스레드를 만듭니다. (대화의 기초 시작)
+
+    public String createConv(CreateThreadRequest request) {
         CreateThreadResponse response = assistantTemplate.postForObject(DEFAULT_URL, request, CreateThreadResponse.class);
         if (response == null) {
             throw new RuntimeException("Failed to create thread. Response is null.");
@@ -71,7 +77,26 @@ public class GptAssistantService {
         return threadId;
     }
 
-    public String report(String threadId, String message) {
+    public String createReport(CreateThreadRequest request) {
+        CreateThreadResponse response = assistantTemplate.postForObject(DEFAULT_URL, request, CreateThreadResponse.class);
+        if (response == null) {
+            throw new RuntimeException("Failed to create thread. Response is null.");
+        }
+        String threadId = response.getId();
+        if (threadId == null) {
+            throw new RuntimeException("Failed to create thread. Thread ID is null.");
+        }
+        return threadId;
+    }
+
+    public String conversation(String threadId, String message) {
+        return answer(threadId, message, ASSISTANT_CONVERSATION);
+    }
+
+    public String report(String threadId, List<RunThreadResponse> reportCompleteRequests) throws JsonProcessingException {
+        System.out.println("reportCompleteRequests.toString() = " + reportCompleteRequests.toString());
+        ObjectMapper objectMapper = new ObjectMapper();
+        String message = objectMapper.writeValueAsString(reportCompleteRequests);
         return answer(threadId, message, ASSISTANT_REPORT);
     }
 
@@ -101,14 +126,17 @@ public class GptAssistantService {
         String messageURL = DEFAULT_URL + "/" + threadId + "/messages";
         ThreadMessageListResponse response = Optional.ofNullable(assistantTemplate.getForObject(messageURL, ThreadMessageListResponse.class))
                 .orElseThrow(RuntimeException::new);
-        String result =  objectMapper.readValue(response.getLast(), RunThreadResponse.class).getResponse();
+        objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+        RunThreadResponse dialog = objectMapper.readValue(response.getLast(), RunThreadResponse.class);
+        String result =  objectMapper.readValue(response.getLast(), RunThreadResponse.class).getAssistant();
         ResponseEntity<ByteArrayResource> audioFile = responseAudio(result);
         try {
-            return ThreadResult.of(result, audioFile);
+            return ThreadResult.of(dialog, audioFile);
         } catch (Exception e) {
             throw new JsonException(e);
         }
     }
+
 
     public ResponseEntity<ByteArrayResource> responseAudio(String result) throws IOException {
 
@@ -129,6 +157,28 @@ public class GptAssistantService {
                 .contentType(MediaType.parseMediaType("audio/mpeg"))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"output.mp3\"")
                 .body(byteArrayResource);
+    }
+
+    public ReportCompleteResponse reportCompleteResponse(String threadId, String runId) throws JsonProcessingException {
+        String checkURL = DEFAULT_URL + "/" + threadId + "/runs/" + runId;
+        ThreadRunResponse checkRes = Optional.ofNullable(assistantTemplate.getForObject(checkURL, ThreadRunResponse.class))
+                .orElseThrow(RuntimeException::new);
+
+        if (!checkRes.getStatus().equals("completed")) {
+            throw new NotYetCompleteException();
+        }
+
+        String messageURL = DEFAULT_URL + "/" + threadId + "/messages";
+        ThreadMessageListResponse response = Optional.ofNullable(assistantTemplate.getForObject(messageURL, ThreadMessageListResponse.class))
+                .orElseThrow(RuntimeException::new);
+        System.out.println("response.getLast() = " + response.getLast());
+        RunThreadReportResponse result =  objectMapper.readValue(response.getLast(), RunThreadReportResponse.class);
+        result.setConversation(response.getConversation());
+        try {
+            return ReportCompleteResponse.of(result);
+        } catch (Exception e) {
+            throw new JsonException(e);
+        }
     }
 }
 

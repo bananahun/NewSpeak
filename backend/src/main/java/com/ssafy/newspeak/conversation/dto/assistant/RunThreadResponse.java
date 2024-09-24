@@ -1,14 +1,11 @@
 package com.ssafy.newspeak.conversation.dto.assistant;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class RunThreadResponse {
-    private String response;
-
-    // Getter 및 Setter 메서드
-    public String getResponse() {
-        return response;
-    }
-
-    public void setResponse(String response) {
-        this.response = response;
-    }
+    private String user;
+    private String assistant;
     }

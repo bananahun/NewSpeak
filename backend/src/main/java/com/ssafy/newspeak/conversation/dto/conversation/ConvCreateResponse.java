@@ -1,11 +1,11 @@
-package com.ssafy.newspeak.conversation.dto.report;
+package com.ssafy.newspeak.conversation.dto.conversation;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor(staticName = "of")
-public class ReportCreateResponse {
+public class ConvCreateResponse {
 
     private final Long id;
     private final String content;

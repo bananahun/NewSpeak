@@ -1,6 +1,7 @@
 package com.ssafy.newspeak.conversation.entity;
 
 import com.ssafy.newspeak.article.entity.Article;
+import com.ssafy.newspeak.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
@@ -32,9 +34,14 @@ public class Report {
     @CreationTimestamp
     private Timestamp createdAt;
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id", nullable = false)
+//    private User user;
+
     public static Report of(String content) {
         Report report = new Report();
         report.content = content;
+//        dialog.user = user;
         return report;
     }
 }

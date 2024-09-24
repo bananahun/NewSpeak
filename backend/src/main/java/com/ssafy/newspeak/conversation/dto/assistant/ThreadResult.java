@@ -15,7 +15,7 @@ import java.util.Map;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ThreadResult {
 
-    private String question;
+    private RunThreadResponse dialog;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private ResponseEntity<ByteArrayResource> audio;

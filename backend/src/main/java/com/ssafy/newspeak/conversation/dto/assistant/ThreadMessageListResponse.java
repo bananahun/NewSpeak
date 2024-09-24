@@ -28,7 +28,20 @@ public class ThreadMessageListResponse {
         if (data.get(0).getContent() == null || data.get(0).getContent().length == 0) {
             throw new UnexpectedGptException();
         }
-        System.out.println("object = " + object);
-        return data.get(0).getContent()[0].text();
+
+        System.out.println("data.get(0).getContent()[0].text() = " + data.get(0).getContent()[0].text());
+        return data.get(0).getContent()[0].text().toString();
+    }
+
+    public String getConversation() {
+        if (data == null || data.isEmpty()) {
+            throw new UnexpectedGptException();
+        }
+        if (data.get(0).getContent() == null || data.get(0).getContent().length == 0) {
+            throw new UnexpectedGptException();
+        }
+
+        System.out.println("data.get(0).getContent()[0].text() = " + data.get(0).getContent()[0].text());
+        return data.get(1).getContent()[0].text();
     }
 }

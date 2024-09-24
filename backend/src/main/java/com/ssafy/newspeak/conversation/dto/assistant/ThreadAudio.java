@@ -16,10 +16,6 @@ public class ThreadAudio extends ByteArrayResource {
         super(byteArray);
     }
 
-    public ThreadAudio(byte[] byteArray, String description) {
-        super(byteArray, description);
-    }
-
     @Override
     @JsonIgnore
     public InputStream getInputStream() throws IOException {

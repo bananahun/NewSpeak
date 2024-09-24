@@ -12,7 +12,7 @@ public class ThreadMessageContent {
     private ThreadMessageContentText text;
 
     public String text() {
-        return text.value;
+        return text != null ? text.value : null; // text가 null일 경우 처리
     }
 
     @Getter

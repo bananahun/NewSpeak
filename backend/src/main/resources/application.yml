@@ -56,7 +56,8 @@ gpt:
     url: https://api.openai.com/v1/chat/completions
     assistant:
       create: https://api.openai.com/v2/assistants
-      report: asst_vUmhP9lrFQqRjNqjTTtPTfTE
+      conv: asst_KeT2kzSKqpgmpAVxZ9kbOPYg
+      report: asst_oY2GnaC2sJWZ0mM86obWrsGM
     threads: https://api.openai.com/v1/threads
     audio: https://api.openai.com/v1/audio/speech
   api-key: ${gpt.api-key}
