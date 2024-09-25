@@ -193,7 +193,6 @@ public class JwtService {
         cookie.setMaxAge(0); // 7일 유효 기간 설정
         cookie.setAttribute("SameSite","None");
         response.addCookie(cookie);
-        response.setHeader("Set-Cookie", "accessToken=" + accessToken + "; Max-Age=" + (7 * 24 * 60 * 60) + "; Path=/; Secure; HttpOnly; SameSite=None");
     }
 
     /**
@@ -211,7 +210,6 @@ public class JwtService {
         cookie.setMaxAge(0); // 7일 유효 기간 설정
         cookie.setAttribute("SameSite","None");
         response.addCookie(cookie);
-        response.setHeader("Set-Cookie", "refreshToken=" + refreshToken + "; Max-Age=" + (7 * 24 * 60 * 60) + "; Path=/; Secure; HttpOnly; SameSite=None");
     }
 
     public void setAccessTokenExpired(HttpServletResponse response) {
