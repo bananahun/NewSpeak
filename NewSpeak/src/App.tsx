@@ -11,6 +11,8 @@ import Test from './pages/Word/Test';
 import Nav from './components/Nav/Nav';
 import ArticleListDetail from './pages/Artricle/ArticleListDetail';
 import Report from './components/Conversation/Report';
+import ReportList from './pages/MyPage/ReportList';
+import ScrapList from './pages/MyPage/ScrapList';
 import useThemeStore from './store/ThemeStore';
 import './App.scss';
 import { handleContextMenu } from './utils/AddWord'; // 유틸 함수 임포트
@@ -57,6 +59,8 @@ function App() {
           <Route path="/articlelist" element={<ArticleListDetail />} />
           <Route path="/log" element={<Test />} />
           <Route path="/report" element={<Report />} />
+          <Route path="/reportlist" element={<ReportList />} />
+          <Route path="/scraplist" element={<ScrapList />} />
         </Routes>
 
         <div className="modal">
