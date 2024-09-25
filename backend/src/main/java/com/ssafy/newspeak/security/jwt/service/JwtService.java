@@ -187,15 +187,31 @@ public class JwtService {
 
     public void setAccessTokenCookie(HttpServletResponse response, String accessToken) {
         Cookie cookie = new Cookie("accessToken", accessToken);
-        Cookie cookie = new Cookie("accessToken", " ");
         cookie.setHttpOnly(true); // XSS 공격 방지
         cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
         cookie.setPath("/");      // 쿠키의 유효 경로 설정
         cookie.setMaxAge(0); // 7일 유효 기간 설정
-        cookie.setDomain("localhost");
         cookie.setAttribute("SameSite","None");
         response.addCookie(cookie);
         response.setHeader("Set-Cookie", "accessToken=" + accessToken + "; Max-Age=" + (7 * 24 * 60 * 60) + "; Path=/; Secure; HttpOnly; SameSite=None");
+    }
+
+    /**
+     * RefreshToken 헤더 설정
+     */
+    public void setRefreshTokenHeader(HttpServletResponse response, String refreshToken) {
+        response.setHeader(refreshHeader, refreshToken);
+    }
+
+    public void setRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setHttpOnly(true); // XSS 공격 방지
+        cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
+        cookie.setPath("/");      // 쿠키의 유효 경로 설정
+        cookie.setMaxAge(0); // 7일 유효 기간 설정
+        cookie.setAttribute("SameSite","None");
+        response.addCookie(cookie);
+        response.setHeader("Set-Cookie", "refreshToken=" + refreshToken + "; Max-Age=" + (7 * 24 * 60 * 60) + "; Path=/; Secure; HttpOnly; SameSite=None");
     }
 
     public void setAccessTokenExpired(HttpServletResponse response) {
@@ -219,25 +235,6 @@ public class JwtService {
         // cookie.setDomain("localhost");
         cookie.setAttribute("SameSite","None");
         response.addCookie(cookie);
-    }
-
-    /**
-     * RefreshToken 헤더 설정
-     */
-    public void setRefreshTokenHeader(HttpServletResponse response, String refreshToken) {
-        response.setHeader(refreshHeader, refreshToken);
-    }
-
-    public void setRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
-        Cookie cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setHttpOnly(true); // XSS 공격 방지
-        cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
-        cookie.setPath("/");      // 쿠키의 유효 경로 설정
-        cookie.setMaxAge(0); // 7일 유효 기간 설정
-        cookie.setDomain("localhost");
-        cookie.setAttribute("SameSite","None");
-        response.addCookie(cookie);
-        response.setHeader("Set-Cookie", "refreshToken=" + refreshToken + "; Max-Age=" + (7 * 24 * 60 * 60) + "; Path=/; Secure; HttpOnly; SameSite=None");
     }
 
     /**
