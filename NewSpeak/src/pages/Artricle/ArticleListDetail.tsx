@@ -1,20 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom'; // useLocation 사용
 import styles from './ArticleListDetail.module.scss';
 import useCategoryStore from '../../store/CategoryStore';
 import { categories } from '../../utils/Categories';
-
-// interface Article {
-//   id: number;
-//   title: string;
-//   content: string;
-//   category: string;
-//   imageUrl: string;
-//   level: number;
-//   writer: string;
-//   publisher: string;
-//   publishedDate: number; // 타임스탬프
-// }
 
 const newsData = {
   count: 20,
@@ -264,6 +252,7 @@ const newsData = {
 
 const ArticleListDetail = () => {
   const { id } = useCategoryStore(); // Zustand로부터 카테고리 ID 가져오기
+  const location = useLocation(); // 현재 경로 정보 가져오기
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
@@ -291,16 +280,17 @@ const ArticleListDetail = () => {
     }
   };
 
+  // 상단부 제목 설정: 스크랩 페이지에서 들어왔는지 여부 확인
+  const isScrapPage = location.pathname === '/scraplist';
+  const title = isScrapPage ? '스크랩 기사' : categories[id];
+
   return (
     <div className={styles['article-list-container']}>
-      <h1>{categories[id]}</h1>
-
+      <h1>{title}</h1> {/* 제목을 조건에 따라 변경 */}
       {/* 현재 페이지의 기사 목록 */}
       <div className={styles['article-list']}>
         {currentItems.map(item => (
           <div key={item.id}>
-            {' '}
-            {/* key는 이 위치에서 사용 */}
             <a href={`/article/${item.id}`} className={styles['article-card']}>
               <img
                 src={item.imageUrl}
@@ -317,7 +307,6 @@ const ArticleListDetail = () => {
           </div>
         ))}
       </div>
-
       {/* 이전/다음 버튼 */}
       <div>
         <button onClick={handlePreviousPage} disabled={currentPage === 1}>
