@@ -95,6 +95,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(authorize -> authorize
+                        .antMatchers("/", "/**").permitAll()
                         .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
                         .requestMatchers("/api/v1/auth/signUp","/api/v1/auth/email").hasRole("GUEST")
                         .requestMatchers("/api/**").hasRole("USER")
