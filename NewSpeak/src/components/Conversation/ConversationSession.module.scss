@@ -1,7 +1,4 @@
-.chatBox {
-  flex-grow: 1;
-  overflow-y: auto;
-  padding-right: 10px;
+.conversationSessions {
 }
 
 .botMessage,
@@ -13,6 +10,10 @@
 
 .botMessage {
   justify-content: flex-start;
+}
+
+.userMessage {
+  justify-content: flex-end;
 }
 
 .botIcon {
@@ -27,4 +28,24 @@
   font-size: 1rem;
   line-height: 1.5;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.botMessage {
+  opacity: 0;
+  animation: fadeIn 3s forwards;
+}
+
+.userMessage {
+  .messageContent {
+    background-color: var(--sub-color);
+  }
 }

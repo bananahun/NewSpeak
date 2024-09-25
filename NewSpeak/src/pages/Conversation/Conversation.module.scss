@@ -1,7 +1,22 @@
-.articleTitle {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
+.conversationHeader {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  padding-right: 20px;
+
+  .articleTitle {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .articleOriginalButton {
+    display: flex;
+    justify-content: end;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    align-self: end;
+  }
 }
 
 .conversationContainer {
@@ -11,17 +26,45 @@
   padding: 20px;
   height: 100%;
   overflow-y: scroll;
+  position: relative;
+
+  .articleOriginal {
+    position: absolute;
+    z-index: 1;
+    padding-right: 25px;
+    padding-bottom: 25px;
+    left: 50%;
+    top: 30px;
+  }
 }
 
 .buttonContainer {
   display: flex;
   gap: 12px;
   margin-top: 12px;
+  justify-content: center;
+
   button {
-    background-color: var(--font-color);
-    color: var(--background-color);
     padding: 8px 16px;
     border-radius: 6px;
-    cursor: pointer;
+    min-width: 200px;
+
+    &:disabled {
+      color: gray;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    &:disabled:hover {
+      box-shadow: none;
+      color: gray;
+    }
   }
+}
+
+.count {
+  display: flex;
+  justify-content: end;
+  padding-right: 20px;
+  padding-bottom: 10px;
 }
