@@ -187,14 +187,14 @@ public class JwtService {
 
     public void setAccessTokenCookie(HttpServletResponse response, String accessToken) {
         Cookie cookie = new Cookie("accessToken", accessToken);
-        // cookie.setHttpOnly(true); // XSS 공격 방지
-        cookie.setHttpOnly(false);
-       cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
+        cookie.setHttpOnly(true); //  XSS 공격 방지      
+        cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
         cookie.setPath("/");      // 쿠키의 유효 경로 설정
         cookie.setMaxAge(7 * 24 * 60 * 60); // 7일 유효 기간 설정
 //        cookie.setSameSite("Strict"); // CSRF 방지
-        // cookie.setDomain("localhost");
-        cookie.setAttribute("SameSite","None");
+        cookie.setDomain("localhost");
+        cookie.setSameSite("None");
+        // cookie.setAttribute("SameSite","None");
         response.addCookie(cookie);
     }
 
@@ -207,15 +207,15 @@ public class JwtService {
         cookie.setMaxAge(0); // 7일 유효 기간 설정
 //        cookie.setSameSite("Strict"); // CSRF 방지
         // cookie.setDomain("localhost");
-        cookie.setAttribute("SameSite","None");
+        // cookie.setAttribute("SameSite","None");
+        cookie.setSameSite("None");
         response.addCookie(cookie);
     }
 
     public void setRefreshTokenExpired(HttpServletResponse response) {
         Cookie cookie = new Cookie("refreshToken", " ");
-        // cookie.setHttpOnly(true); // XSS 공격 방지
-        cookie.setHttpOnly(false);
-       cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
+        cookie.setHttpOnly(true); // XSS 공격 방지
+        cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
         cookie.setPath("/");      // 쿠키의 유효 경로 설정
         cookie.setMaxAge(0); // 7일 유효 기간 설정
 //        cookie.setSameSite("Strict"); // CSRF 방지
@@ -233,14 +233,14 @@ public class JwtService {
 
     public void setRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
         Cookie cookie = new Cookie("refreshToken", refreshToken);
-        // cookie.setHttpOnly(true); // XSS 공격 방지
-        cookie.setHttpOnly(false);
+        cookie.setHttpOnly(true); // XSS 공격 방지
        cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
         cookie.setPath("/");      // 쿠키의 유효 경로 설정
         cookie.setMaxAge(7 * 24 * 60 * 60); // 7일 유효 기간 설정
 //        cookie.setSameSite("Strict"); // CSRF 방지
-        // cookie.setDomain("localhost");
-        cookie.setAttribute("SameSite","None");
+        cookie.setDomain("localhost");
+        cookie.setSameSite("None");
+        // cookie.setAttribute("SameSite","None");
         response.addCookie(cookie);
         
     }
