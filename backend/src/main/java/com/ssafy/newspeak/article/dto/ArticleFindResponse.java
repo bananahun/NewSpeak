@@ -1,6 +1,8 @@
 package com.ssafy.newspeak.article.dto;
 
 import com.ssafy.newspeak.article.entity.Article;
+import com.ssafy.newspeak.article.entity.Article;
+import com.ssafy.newspeak.category.entity.Category;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -21,7 +23,7 @@ public class ArticleFindResponse {
     private String writer;
     private Integer level;
     private LocalDateTime createdAt;
-    private String categoryName;
+    private Category category;
 
     public static ArticleFindResponse from(Article article) {
         ArticleFindResponse articleFindResponse = new ArticleFindResponse();
@@ -36,7 +38,7 @@ public class ArticleFindResponse {
         articleFindResponse.writer = article.getWriter();
         articleFindResponse.level = article.getLevel();
         articleFindResponse.createdAt = article.getCreatedAt();
-        articleFindResponse.categoryName = article.getCategory().getCategoryName();
+        articleFindResponse.category = article.getCategory();
         return articleFindResponse;
     }
 }

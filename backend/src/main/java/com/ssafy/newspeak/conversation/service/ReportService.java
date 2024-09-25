@@ -1,10 +1,19 @@
 package com.ssafy.newspeak.conversation.service;
 
+import com.ssafy.newspeak.conversation.dto.report.ReportDto;
 import com.ssafy.newspeak.conversation.dto.report.ReportResponse;
+import com.ssafy.newspeak.conversation.entity.Report;
+import com.ssafy.newspeak.conversation.exception.NoSuchReportException;
 import com.ssafy.newspeak.conversation.repository.ReportRepository;
-import jakarta.transaction.Transactional;
+
+import com.ssafy.newspeak.user.entity.User;
+import com.ssafy.newspeak.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -12,16 +21,36 @@ import org.springframework.stereotype.Service;
 public class ReportService {
 
     private final ReportRepository reportRepository;
+    private final UserRepository userRepository;
 
-    public ReportResponse create(String subject) {
-        return null;
+    public ReportDto create(String content) {
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(RuntimeException::new);
+        Report report = Report.of(content);
+        reportRepository.save(report);
+
+        return ReportDto.from(report);
     }
 
-    public ReportResponse findById(Long id) {
-        return null;
+    @Transactional(readOnly = true)
+    public List<ReportDto> getList() {
+        return reportRepository.findAll().stream()
+                .map(ReportDto::from)
+                .toList();
     }
 
-    public ReportResponse findByTitle(String title) {
-        return null;
+    @Transactional(readOnly = true)
+    public ReportDto getOne(Long reportId) throws NoSuchReportException {
+        return reportRepository.findById(reportId)
+                .map(ReportDto::from)
+                .orElseThrow(() -> new NoSuchReportException(reportId));
+    }
+
+//    public ReportResponse findByUser
+
+    public void deleteOne(Long reportId) throws NoSuchReportException {
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(RuntimeException::new);
+        reportRepository.delete(report);
     }
 }

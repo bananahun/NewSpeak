@@ -9,15 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProResponse {
 
-    private Long id;
-    private Integer proScore;
-    private Long sentenceId;
+    private Double proScore;
 
-    public static ProResponse from(Long id, Integer proScore, Long sentenceId) {
+    public static ProResponse from(Double proScore) {
         ProResponse sentenceProResponse = new ProResponse();
-        sentenceProResponse.id = id;
         sentenceProResponse.proScore = proScore;
-        sentenceProResponse.sentenceId = sentenceId;
         return sentenceProResponse;
     }
 }

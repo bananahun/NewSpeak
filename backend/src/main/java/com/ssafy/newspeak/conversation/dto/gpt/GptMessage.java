@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 public class GptMessage {
 
     private String role;
-    private String text;
+    private String content;
 
-    public static GptMessage of(GptRole role, String text) {return new GptMessage(role.getCode(), text);}
+    public static GptMessage of(GptRole role, String content) {return new GptMessage(role.getCode(), content);}
 
-    public static GptMessage system(String text) { return new GptMessage(GptRole.SYSTEM.getCode(), text);}
+    public static GptMessage system(String content) { return new GptMessage(GptRole.SYSTEM.getCode(), content);}
 
-    public void updateContent(String text) { this.text = text; }
+    public void updateContent(String content ) { this.content = content; }
 }

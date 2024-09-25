@@ -1,6 +1,8 @@
 package com.ssafy.newspeak.category.repository;
 
 import com.ssafy.newspeak.category.entity.Category;
+import com.ssafy.newspeak.article.entity.Article;
+import com.ssafy.newspeak.category.entity.Category;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

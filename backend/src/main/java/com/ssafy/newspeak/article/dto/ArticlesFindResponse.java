@@ -1,6 +1,8 @@
 package com.ssafy.newspeak.article.dto;
 
 import com.ssafy.newspeak.article.entity.Article;
+import com.ssafy.newspeak.article.entity.Article;
+import com.ssafy.newspeak.category.entity.Category;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -12,7 +14,7 @@ public class ArticlesFindResponse {
     private Long id;
     private String title;
     private String content;
-    private String categoryName;
+    private Category category;
     private String imageUrl;
     private String writer;
     private String publisher;
@@ -24,7 +26,7 @@ public class ArticlesFindResponse {
         articlesFindResponse.id = article.getId();
         articlesFindResponse.title = article.getTitle();
         articlesFindResponse.content = article.getContent();
-        articlesFindResponse.categoryName = article.getCategory().getCategoryName();
+        articlesFindResponse.category = article.getCategory();
         articlesFindResponse.imageUrl = article.getImageUrl();
         articlesFindResponse.level = article.getLevel();
         articlesFindResponse.writer = article.getWriter();

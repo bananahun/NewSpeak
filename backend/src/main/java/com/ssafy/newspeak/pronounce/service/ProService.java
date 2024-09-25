@@ -1,5 +1,16 @@
 package com.ssafy.newspeak.pronounce.service;
 
+import com.ssafy.newspeak.pronounce.dto.ProRequest;
+import com.ssafy.newspeak.pronounce.dto.ProResponse;
+import com.ssafy.newspeak.pronounce.entity.Pronounce;
+import com.ssafy.newspeak.pronounce.repository.ProRepository;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -14,25 +25,21 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.ssafy.newspeak.pronounce.dto.ProRequest;
-import com.google.gson.Gson;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 @Service
 @RequiredArgsConstructor
 public class ProService {
 
     private static final Logger LOGGER = Logger.getLogger(ProService.class.getName());
-    private static final String OPEN_API_URL = "http://aiopen.etri.re.kr:8000/WiseASR/Pronunciation";  // 영어 발음 평가 URL
+    private static final String OPEN_API_URL = "http://aiopen.etri.re.kr:8000/WiseASR/Pronunciation";
 
     @Value("${etri.api-key}")
     private String ACCESS_KEY;
 
     private final Gson gson;
+    private final ProRepository proRepository;  // ProRepository 주입
 
-    public String evaluatePronunciation(ProRequest request) {
+    @Transactional
+    public ProResponse evaluatePronunciation(ProRequest request) {
         String audioContents;
 
         // URL에서 오디오 파일 다운로드
@@ -76,7 +83,6 @@ public class ProService {
 
         input.put("argument", argument);
 
-        System.out.println("argument = " + argument);
         // API에 요청 보내기
         HttpURLConnection con = null;
         try {
@@ -101,7 +107,17 @@ public class ProService {
                 String responseBody = new String(buffer);
 
                 LOGGER.info("Response body: " + responseBody);
-                return responseBody;
+
+                // 응답 본문에서 score 값 추출
+                JsonObject responseJson = gson.fromJson(responseBody, JsonObject.class);
+                JsonObject returnObject = responseJson.getAsJsonObject("return_object");
+                Double score = returnObject.get("score").getAsDouble();  // score 추출
+                Pronounce pronounce = Pronounce.builder()
+                        .proScore(score)
+                        .audioPath(request.getSoundFilePath())
+                        .build();
+                proRepository.save(pronounce);
+                return ProResponse.from(score);
             }
 
         } catch (IOException e) {
