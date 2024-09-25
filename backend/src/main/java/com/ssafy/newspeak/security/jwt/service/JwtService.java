@@ -187,6 +187,7 @@ public class JwtService {
 
     public void setAccessTokenCookie(HttpServletResponse response, String accessToken) {
         Cookie cookie = new Cookie("accessToken", accessToken);
+        cookie.setDomain("localhost");
         cookie.setHttpOnly(true); // XSS 공격 방지
         cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
         cookie.setPath("/");      // 쿠키의 유효 경로 설정
@@ -204,7 +205,7 @@ public class JwtService {
 
     public void setRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
         Cookie cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setDomain("j11e103.p.ssafy.io");
+        cookie.setDomain("localhost");
         cookie.setHttpOnly(true); // XSS 공격 방지
         cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
         cookie.setPath("/");      // 쿠키의 유효 경로 설정
@@ -229,7 +230,7 @@ public class JwtService {
         Cookie cookie = new Cookie("refreshToken", " ");
         cookie.setHttpOnly(true); // XSS 공격 방지
         cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
-        cookie.setPath("/");      // 쿠키의 유효 경로 설정
+        cookie.setPath("/");      // 쿠키의 유효 경 로 설정
         cookie.setMaxAge(0); // 7일 유효 기간 설정
 //        cookie.setSameSite("Strict"); // CSRF 방지
         // cookie.setDomain("localhost");
