@@ -48,7 +48,7 @@ const MyPage = () => {
         <Link to="/reportlist">
           <button className={styles['btn-ghost']}>나의 보고서</button>
         </Link>
-        <Link to="/wordlist">
+        <Link to="/word">
           <button className={styles['btn-ghost']}>나의 단어장</button>
         </Link>
       </div>
