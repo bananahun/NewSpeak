@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -29,14 +30,21 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     private final String ACCESS_TOKEN="accessToken";
     private final String REFRESH_TOKEN="refreshToken";
 
-//    private final UserRepository userRepository;
+    @Value("${signUpUrl}")
+    private String signUpUrl;
+
+    @Value("${mainUrl}")
+    private String mainUrl;
 
     public Cookie setCookie(String name, String accessToken){
         Cookie cookie = new Cookie(name, accessToken);
-        cookie.setHttpOnly(true); // JavaScript에서 접근 불가
-//        cookie.setSecure(true); // HTTPS에서만 전송
+        // cookie.setHttpOnly(true); // JavaScript에서 접근 불가
+        cookie.setHttpOnly(false);
+       cookie.setSecure(true); // HTTPS에서만 전송
         cookie.setPath("/"); // 쿠키가 유효한 경로
         cookie.setMaxAge(3600); // 쿠키 유효 시간 (초)
+        // cookie.setDomain("localhost");
+        cookie.setAttribute("SameSite","None");
         return cookie;
     }
 
@@ -49,19 +57,20 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             // User의 Role이 GUEST일 경우 처음 요청한 회원이므로 회원가입 페이지로 리다이렉트
             if(oAuth2User.getRole() == Role.GUEST) {
 
-                String accessToken = jwtService.createAccessToken(oAuth2User.getAttribute("email"));
+                String accessToken = jwtService.createAccessToken(oAuth2User.getEmail(), oAuth2User.getUserId());
                 Cookie cookie=setCookie(ACCESS_TOKEN,accessToken);
                 String refreshToken = jwtService.createRefreshToken();
 //                response.addCookie(setCookie(REFRESH_TOKEN,refreshToken));
 //                response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
 ////                response.setHeader("Referrer Policy", "STRICT_ORIGIN_WHEN_CROSS_ORIGIN");
 //                response.addCookie(cookie);
-                String redirectUrl = "http://localhost:5500/signUp.html";
                 jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
-                jwtService.updateRefreshToken(oAuth2User.getAttribute("email"), refreshToken);
-                response.sendRedirect(redirectUrl);
+                jwtService.updateRefreshToken(oAuth2User.getUserId(), refreshToken);
+                log.info("signUpUrl :{}",signUpUrl);
+                response.sendRedirect(signUpUrl);
             } else {
                 loginSuccess(response, oAuth2User); // 로그인에 성공한 경우 access, refresh 토큰 생성
+                response.sendRedirect(mainUrl);
             }
         } catch (Exception e) {
             throw e;
@@ -70,12 +79,12 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     // TODO : 소셜 로그인 시에도 무조건 토큰 생성하지 말고 JWT 인증 필터처럼 RefreshToken 유/무에 따라 다르게 처리해보기
     private void loginSuccess(HttpServletResponse response, CustomOAuth2User oAuth2User) throws IOException {
-        String accessToken = jwtService.createAccessToken(oAuth2User.getEmail());
+        String accessToken = jwtService.createAccessToken(oAuth2User.getEmail(),oAuth2User.getUserId());
         String refreshToken = jwtService.createRefreshToken();
         response.addCookie(setCookie(ACCESS_TOKEN,accessToken));
         response.addCookie(setCookie(REFRESH_TOKEN,refreshToken));
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
-        jwtService.updateRefreshToken(oAuth2User.getAttribute("email"), refreshToken);
+        jwtService.updateRefreshToken(oAuth2User.getUserId(), refreshToken);
     }
 }

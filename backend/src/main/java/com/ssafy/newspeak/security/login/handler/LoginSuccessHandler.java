@@ -2,7 +2,9 @@ package com.ssafy.newspeak.security.login.handler;
 
 
 import com.ssafy.newspeak.security.jwt.service.JwtService;
-import com.ssafy.newspeak.user.repository.UserRepository;
+import com.ssafy.newspeak.security.util.AuthUtil;
+import com.ssafy.newspeak.security.util.UserAuthDto;
+import com.ssafy.newspeak.user.repository.UserRepo;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,8 +12,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+
+import java.security.Principal;
 
 
 @Slf4j
@@ -19,7 +25,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtService jwtService;
-    private final UserRepository userRepository;
+    private final UserRepo userRepo;
 
     @Value("${jwt.access.expiration}")
     private String accessTokenExpiration;
@@ -27,16 +33,19 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) {
-        String email = extractUsername(authentication); // 인증 정보에서 Username(email) 추출
-        String accessToken = jwtService.createAccessToken(email); // JwtService의 createAccessToken을 사용하여 AccessToken 발급
+        User userDetails = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+
+
+        String email = userDetails.getUsername(); // 인증 정보에서 Username(email) 추출
+        String accessToken = jwtService.createAccessToken(email,1L); // JwtService의 createAccessToken을 사용하여 AccessToken 발급
         String refreshToken = jwtService.createRefreshToken(); // JwtService의 createRefreshToken을 사용하여 RefreshToken 발급
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken); // 응답 헤더에 AccessToken, RefreshToken 실어서 응답
 
-        userRepository.findByEmail(email)
+        userRepo.findByEmail(email)
                 .ifPresent(user -> {
                     user.updateRefreshToken(refreshToken);
-                    userRepository.saveAndFlush(user);
+                    userRepo.saveAndFlush(user);
                 });
         log.info("로그인에 성공하였습니다. 이메일 : {}", email);
         log.info("로그인에 성공하였습니다. AccessToken : {}", accessToken);
@@ -47,4 +56,9 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return userDetails.getUsername();
     }
+
+//    private Class customUserAuthDto{
+//        String email;
+//        String
+//    }
 }

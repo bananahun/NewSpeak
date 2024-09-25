@@ -5,6 +5,7 @@ import com.ssafy.newspeak.sentence.entity.Sentence;
 import com.ssafy.newspeak.category.entity.Category;
 import com.ssafy.newspeak.conversation.entity.Report;
 import com.ssafy.newspeak.sentence.entity.Sentence;
+import com.ssafy.newspeak.user.entity.userArticle.UserArticle;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -18,6 +19,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static lombok.AccessLevel.PROTECTED;
 import static lombok.AccessLevel.PUBLIC;
@@ -80,4 +82,7 @@ public class Article {
     @JoinColumn(name = "report_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Report report;
+
+    @OneToMany(mappedBy = "article")
+    private Set<UserArticle> userArticles;
 }

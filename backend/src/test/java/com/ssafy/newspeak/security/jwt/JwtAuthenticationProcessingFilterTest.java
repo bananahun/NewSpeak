@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.newspeak.security.jwt.service.JwtService;
 import com.ssafy.newspeak.user.entity.Role;
 import com.ssafy.newspeak.user.entity.User;
-import com.ssafy.newspeak.user.repository.UserRepository;
+import com.ssafy.newspeak.user.repository.UserRepo;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +45,7 @@ class JwtAuthenticationProcessingFilterTest {
     MockMvc mockMvc;
 
     @Autowired
-    UserRepository userRepository;
+    UserRepo userRepo;
 
     @Autowired
     EntityManager em;
@@ -83,8 +83,8 @@ class JwtAuthenticationProcessingFilterTest {
      */
     @BeforeEach
     public void init() {
-        userRepository.save(User.builder().email(EMAIL).password(delegatingPasswordEncoder.encode(PASSWORD))
-                .nickname("KSH1").role(Role.USER).age(25).city("busan").build());
+        userRepo.save(User.builder().email(EMAIL).password(delegatingPasswordEncoder.encode(PASSWORD))
+                .nickname("KSH1").role(Role.USER).build());
         clear();
     }
 
@@ -144,7 +144,7 @@ class JwtAuthenticationProcessingFilterTest {
         MockCookie cookie = new MockCookie("accessToken", accessToken);
 
         // when, then
-        mockMvc.perform(get("/jwt-test") // "/login"이 아니고, 존재하는 주소를 보내기
+        mockMvc.perform(get("/api/v1/auth/jwt-test") // "/login"이 아니고, 존재하는 주소를 보내기
 //                        .header(accessHeader, BEARER + accessToken)) // 유효한 AccessToken만 담아서 요청
                         .cookie(cookie))
                 .andExpect(status().isOk());
@@ -161,7 +161,7 @@ class JwtAuthenticationProcessingFilterTest {
         mockMvc.perform(get("/jwt-test") // "/login"이 아니고, 존재하는 주소를 보내기
 //                        .header(accessHeader, BEARER + accessToken + "1")) // 틀린 AccessToken만 담아서 요청
                         .cookie(cookie))
-                .andExpect(status().isFound()); // 틀린 액세스 토큰이므로 302 리다이렉트
+                .andExpect(status().isUnauthorized()); // 틀린 액세스 토큰이므로 401
     }
 
     @Test

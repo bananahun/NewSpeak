@@ -7,9 +7,15 @@ import com.ssafy.newspeak.article.dto.ArticleFindResponse;
 import com.ssafy.newspeak.article.dto.ArticlesFindResponse;
 import com.ssafy.newspeak.article.entity.Article;
 import com.ssafy.newspeak.article.service.ArticleService;
+import com.ssafy.newspeak.security.jwt.MyUserDetails;
+import com.ssafy.newspeak.security.util.AuthUtil;
+import com.ssafy.newspeak.user.entity.userArticle.UserArticleId;
+import com.ssafy.newspeak.user.service.UserArticleService;
+import com.ssafy.newspeak.voca.service.VocaService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +29,25 @@ import static org.springframework.http.HttpStatus.*;
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final UserArticleService userArticleService;
+    private final VocaService vocaService;
+
+    @PostMapping("/scrap/{articleId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void scrapArticle(@PathVariable Long articleId) {
+        MyUserDetails userDetails= AuthUtil.getUserDetails();
+        UserArticleId userArticleId=UserArticleId.builder()
+                .articleId(articleId)
+                .userId(userDetails.getUserId())
+                .build();
+        userArticleService.scrapArticle(userArticleId);
+    }
+
+    @PostMapping("/{articleId}/vocas")
+    public void addWordFromArticle(@PathVariable Long articleId, @RequestBody AddWordRequest addWordRequest) {
+        MyUserDetails userDetails= AuthUtil.getUserDetails();
+        vocaService.addWord(addWordRequest,userDetails.getUserId());
+    }
 
     @GetMapping
     public ResponseEntity<Result> findAll() {

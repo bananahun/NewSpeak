@@ -2,7 +2,8 @@ package com.ssafy.newspeak.security.jwt.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.ssafy.newspeak.user.repository.UserRepository;
+import com.auth0.jwt.interfaces.Claim;
+import com.ssafy.newspeak.user.repository.UserRepo;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -44,14 +45,15 @@ public class JwtService {
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
     private static final String EMAIL_CLAIM = "email";
+    private static final String USER_ID = "userId";
     private static final String BEARER = "Bearer ";
 
-    private final UserRepository userRepository;
+    private final UserRepo userRepo;
 
     /**
      * AccessToken 생성 메소드
      */
-    public String createAccessToken(String email) {
+    public String createAccessToken(String email,Long userId) {
         Date now = new Date();
         return JWT.create() // JWT 토큰을 생성하는 빌더 반환
                 .withSubject(ACCESS_TOKEN_SUBJECT) // JWT의 Subject 지정 -> AccessToken이므로 AccessToken
@@ -61,6 +63,7 @@ public class JwtService {
                 //추가적으로 식별자나, 이름 등의 정보를 더 추가하셔도 됩니다.
                 //추가하실 경우 .withClaim(클래임 이름, 클래임 값) 으로 설정해주시면 됩니다
                 .withClaim(EMAIL_CLAIM, email)
+                .withClaim(USER_ID,userId)
                 .sign(Algorithm.HMAC512(secretKey)); // HMAC512 알고리즘 사용, application-jwt.yml에서 지정한 secret 키로 암호화
     }
 
@@ -149,12 +152,26 @@ public class JwtService {
      */
     public Optional<String> extractEmail(String accessToken) {
         try {
-            // 토큰 유효성 검사하는 데에 사용할 알고리즘이 있는 JWT verifier builder 반환
-            return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
+            Optional<Claim> emailClaim=Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
                     .build() // 반환된 빌더로 JWT verifier 생성
                     .verify(accessToken) // accessToken을 검증하고 유효하지 않다면 예외 발생
-                    .getClaim(EMAIL_CLAIM) // claim(Emial) 가져오기
-                    .asString());
+                    .getClaim(EMAIL_CLAIM));
+            String email=emailClaim.get().asString();
+            return Optional.of(email);
+        } catch (Exception e) {
+            log.error("액세스 토큰이 유효하지 않습니다.");
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Long> extractUserId(String accessToken) {
+        try {
+            Optional<Claim> userIdClaim=Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
+                    .build() // 반환된 빌더로 JWT verifier 생성
+                    .verify(accessToken) // accessToken을 검증하고 유효하지 않다면 예외 발생
+                    .getClaim(USER_ID));
+            Long userId=userIdClaim.get().asLong();
+            return Optional.of(userId);
         } catch (Exception e) {
             log.error("액세스 토큰이 유효하지 않습니다.");
             return Optional.empty();
@@ -170,11 +187,40 @@ public class JwtService {
 
     public void setAccessTokenCookie(HttpServletResponse response, String accessToken) {
         Cookie cookie = new Cookie("accessToken", accessToken);
-        cookie.setHttpOnly(true); // XSS 공격 방지
-//        cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
+        // cookie.setHttpOnly(true); // XSS 공격 방지
+        cookie.setHttpOnly(false);
+       cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
         cookie.setPath("/");      // 쿠키의 유효 경로 설정
         cookie.setMaxAge(7 * 24 * 60 * 60); // 7일 유효 기간 설정
 //        cookie.setSameSite("Strict"); // CSRF 방지
+        // cookie.setDomain("localhost");
+        cookie.setAttribute("SameSite","None");
+        response.addCookie(cookie);
+    }
+
+    public void setAccessTokenExpired(HttpServletResponse response) {
+        Cookie cookie = new Cookie("accessToken", " ");
+        // cookie.setHttpOnly(true); // XSS 공격 방지
+        cookie.setHttpOnly(false);
+       cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
+        cookie.setPath("/");      // 쿠키의 유효 경로 설정
+        cookie.setMaxAge(0); // 7일 유효 기간 설정
+//        cookie.setSameSite("Strict"); // CSRF 방지
+        // cookie.setDomain("localhost");
+        cookie.setAttribute("SameSite","None");
+        response.addCookie(cookie);
+    }
+
+    public void setRefreshTokenExpired(HttpServletResponse response) {
+        Cookie cookie = new Cookie("refreshToken", " ");
+        // cookie.setHttpOnly(true); // XSS 공격 방지
+        cookie.setHttpOnly(false);
+       cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
+        cookie.setPath("/");      // 쿠키의 유효 경로 설정
+        cookie.setMaxAge(0); // 7일 유효 기간 설정
+//        cookie.setSameSite("Strict"); // CSRF 방지
+        // cookie.setDomain("localhost");
+        cookie.setAttribute("SameSite","None");
         response.addCookie(cookie);
     }
 
@@ -187,19 +233,23 @@ public class JwtService {
 
     public void setRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
         Cookie cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setHttpOnly(true); // XSS 공격 방지
-//        cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
+        // cookie.setHttpOnly(true); // XSS 공격 방지
+        cookie.setHttpOnly(false);
+       cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
         cookie.setPath("/");      // 쿠키의 유효 경로 설정
         cookie.setMaxAge(7 * 24 * 60 * 60); // 7일 유효 기간 설정
 //        cookie.setSameSite("Strict"); // CSRF 방지
+        // cookie.setDomain("localhost");
+        cookie.setAttribute("SameSite","None");
         response.addCookie(cookie);
+        
     }
 
     /**
      * RefreshToken DB 저장(업데이트)
      */
-    public void updateRefreshToken(String email, String refreshToken) {
-        userRepository.findByEmail(email)
+    public void updateRefreshToken(Long userId, String refreshToken) {
+        userRepo.findById(userId)
                 .ifPresentOrElse(
                         user -> user.updateRefreshToken(refreshToken),
                         () -> new Exception("일치하는 회원이 없습니다.")
