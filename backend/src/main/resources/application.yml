@@ -19,7 +19,7 @@ spring:
       port: 6379
   profiles:
     include: "jwt, oauth"
-    active: dev
+    active: prod
   ai:
     openai:
       api-key : ${gpt.api-key}
