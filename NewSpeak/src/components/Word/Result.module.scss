@@ -1,0 +1,50 @@
+.resultContainer {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+
+  h2 {
+    margin-bottom: 10px;
+  }
+
+  p {
+    margin-bottom: 20px;
+  }
+
+  .answersContainer {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .leftColumn,
+  .rightColumn {
+    width: 48%; // 열의 너비를 조정
+  }
+
+  .answer {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  .answerText {
+    font-weight: bold;
+    flex: 1; // 텍스트가 가능한 공간을 차지하도록
+  }
+
+  .correct {
+    color: green;
+    margin-left: 10px;
+  }
+
+  .incorrect {
+    color: red;
+    margin-left: 10px;
+  }
+
+  .correctAnswer {
+    margin-left: 10px;
+    color: gray;
+  }
+}

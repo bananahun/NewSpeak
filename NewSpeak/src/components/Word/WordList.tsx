@@ -187,72 +187,72 @@ const WordList = () => {
 
   return (
     <div>
-      <div className={styles.header}>
-        <h1>나만의 단어장</h1>
+      <div className={styles.wordlist}>
         <Link to="/wordlist/test">
           <button className={styles.testButton}>테스트</button>
         </Link>
       </div>
-      <div className={styles.wordlist}>
-        {words.map((word, index) => (
-          <div key={index} className={styles.card}>
-            <div className={styles.cardInner}>
-              <div className={styles.cardContent}>
-                {flipped === index ? (
-                  <>
-                    <h3>{word.content}</h3>
-                    <div className={styles.examplesContainer}>
-                      {word.meanings.map((meaning, meaningIndex) => (
-                        <div key={meaningIndex} className={styles.exampleBox}>
-                          <p>예문: {meaning.example}</p>
-                          <p>예문 (한국어): {meaning.exampleKorean}</p>
-                        </div>
-                      ))}
-                    </div>
-                    <button
-                      className={styles.backButton}
-                      onClick={() => setFlipped(null)}
-                    >
-                      단어 확인
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <h3>{word.content}</h3>
-                    <div className={styles.meaningsContainer}>
-                      {word.meanings.map((meaning, meaningIndex) => (
-                        <div key={meaningIndex} className={styles.meaningBox}>
-                          <p>{meaning.meaning}</p>
-                        </div>
-                      ))}
-                    </div>
-                    <div className={styles.buttonContainer}>
-                      <div
-                        className={styles.iconButton}
-                        title="발음 평가"
-                        onClick={() => openPronounceModal(word.content)} // 발음 평가 모달 열기
+      <div className={styles.container}>
+        <div className={styles.wordlist2}>
+          {words.map((word, index) => (
+            <div key={index} className={styles.card}>
+              <div className={styles.cardInner}>
+                <div className={styles.cardContent}>
+                  {flipped === index ? (
+                    <>
+                      <h3>{word.content}</h3>
+                      <div className={styles.examplesContainer}>
+                        {word.meanings.map((meaning, meaningIndex) => (
+                          <div key={meaningIndex} className={styles.exampleBox}>
+                            <p>예문: {meaning.example}</p>
+                            <p>예문 (한국어): {meaning.exampleKorean}</p>
+                          </div>
+                        ))}
+                      </div>
+                      <button
+                        className={styles.backButton}
+                        onClick={() => setFlipped(null)}
                       >
-                        <FaMicrophone />
+                        단어 확인
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <h3>{word.content}</h3>
+                      <div className={styles.meaningsContainer}>
+                        {word.meanings.map((meaning, meaningIndex) => (
+                          <div key={meaningIndex} className={styles.meaningBox}>
+                            <p>{meaning.meaning}</p>
+                          </div>
+                        ))}
                       </div>
-                      <div className={styles.iconButton} title="발음 듣기">
-                        <GiSpeaker />
+                      <div className={styles.buttonContainer}>
+                        <div
+                          className={styles.iconButton}
+                          title="발음 평가"
+                          onClick={() => openPronounceModal(word.content)} // 발음 평가 모달 열기
+                        >
+                          <FaMicrophone />
+                        </div>
+                        <div className={styles.iconButton} title="발음 듣기">
+                          <GiSpeaker />
+                        </div>
+                        <div
+                          className={styles.iconButton}
+                          title="예문 확인"
+                          onClick={() => handleExampleClick(index)}
+                        >
+                          <FaBook />
+                        </div>
                       </div>
-                      <div
-                        className={styles.iconButton}
-                        title="예문 확인"
-                        onClick={() => handleExampleClick(index)}
-                      >
-                        <FaBook />
-                      </div>
-                    </div>
-                  </>
-                )}
+                    </>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-
       {/* 발음 평가 모달창 */}
       <PronounceModal
         isOpen={isPronounceModalOpen}

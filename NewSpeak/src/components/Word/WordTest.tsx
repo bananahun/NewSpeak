@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import styles from './WordTest.module.scss';
+import React, { useState, useEffect, useRef } from 'react';
 import TimeWatch from './TimeWatch';
+import styles from './WordTest.module.scss';
 
 interface Word {
   content: string;
@@ -11,184 +11,48 @@ interface Word {
   }[];
 }
 
-const words: Word[] = [
-  {
-    content: 'get',
-    meanings: [
-      {
-        meaning: '받다',
-        example: 'I got a letter from Dave this morning.',
-        exampleKorean: '내가 오늘 아침 데이브에게서 온 편지를 한 통 받았다.',
-      },
-      {
-        meaning: '얻다, 구하다, 마련하다',
-        example: 'Where did you get that skirt?',
-        exampleKorean: '그 치마 어디서 샀니?',
-      },
-    ],
-  },
-  {
-    content: 'set',
-    meanings: [
-      {
-        meaning: '놓다, 배치하다',
-        example: 'She set the book on the table.',
-        exampleKorean: '그녀는 책을 탁자 위에 놓았다.',
-      },
-      {
-        meaning: '설정하다',
-        example: 'Set your alarm for 6 a.m.',
-        exampleKorean: '알람을 오전 6시로 맞춰라.',
-      },
-    ],
-  },
-  {
-    content: 'run',
-    meanings: [
-      {
-        meaning: '달리다',
-        example: 'He runs five miles every morning.',
-        exampleKorean: '그는 매일 아침 5마일을 달린다.',
-      },
-      {
-        meaning: '운영하다',
-        example: 'She runs a successful bakery.',
-        exampleKorean: '그녀는 성공적인 제과점을 운영한다.',
-      },
-    ],
-  },
-  {
-    content: 'take',
-    meanings: [
-      {
-        meaning: '가져가다',
-        example: 'Take an umbrella with you.',
-        exampleKorean: '우산을 챙겨 가세요.',
-      },
-      {
-        meaning: '잡다, 쥐다',
-        example: 'He took my hand and led me through the crowd.',
-        exampleKorean: '그는 내 손을 잡고 군중을 헤쳐 나갔다.',
-      },
-    ],
-  },
-  {
-    content: 'make',
-    meanings: [
-      {
-        meaning: '만들다',
-        example: 'She made a beautiful cake.',
-        exampleKorean: '그녀는 아름다운 케이크를 만들었다.',
-      },
-      {
-        meaning: '~하게 하다',
-        example: 'You make me happy.',
-        exampleKorean: '넌 날 행복하게 해.',
-      },
-    ],
-  },
-  {
-    content: 'look',
-    meanings: [
-      {
-        meaning: '보다',
-        example: 'Look at the stars.',
-        exampleKorean: '별들을 봐.',
-      },
-      {
-        meaning: '찾다',
-        example: "I'm looking for my keys.",
-        exampleKorean: '내 열쇠를 찾고 있어.',
-      },
-    ],
-  },
-  {
-    content: 'give',
-    meanings: [
-      {
-        meaning: '주다',
-        example: 'I gave him a gift.',
-        exampleKorean: '나는 그에게 선물을 줬다.',
-      },
-      {
-        meaning: '건네주다',
-        example: 'Can you give me the book?',
-        exampleKorean: '책을 건네줄 수 있니?',
-      },
-    ],
-  },
-  {
-    content: 'find',
-    meanings: [
-      {
-        meaning: '찾다',
-        example: 'I finally found my keys.',
-        exampleKorean: '마침내 내 열쇠를 찾았다.',
-      },
-      {
-        meaning: '발견하다',
-        example: 'They found a solution to the problem.',
-        exampleKorean: '그들은 문제에 대한 해결책을 발견했다.',
-      },
-    ],
-  },
-  {
-    content: 'tell',
-    meanings: [
-      {
-        meaning: '말하다',
-        example: 'Tell me the truth.',
-        exampleKorean: '진실을 말해줘.',
-      },
-      {
-        meaning: '알리다',
-        example: 'Can you tell him the news?',
-        exampleKorean: '그에게 소식을 전해줄 수 있니?',
-      },
-    ],
-  },
-  {
-    content: 'keep',
-    meanings: [
-      {
-        meaning: '유지하다',
-        example: 'Keep the door open.',
-        exampleKorean: '문을 열어 둬.',
-      },
-      {
-        meaning: '보관하다',
-        example: 'She keeps all her letters in a box.',
-        exampleKorean: '그녀는 편지를 모두 상자에 보관한다.',
-      },
-    ],
-  },
-];
+interface WordTestProps {
+  words: Word[];
+  onTestComplete: (score: number, userAnswers: string[]) => void;
+}
 
-const WordTest = () => {
+const WordTest = ({ words, onTestComplete }: WordTestProps) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [userAnswer, setUserAnswer] = useState('');
   const [score, setScore] = useState(0);
-  const [isTestComplete, setIsTestComplete] = useState(false);
+  const [userAnswers, setUserAnswers] = useState<string[]>(
+    Array(words.length).fill(''),
+  );
   const [timer, setTimer] = useState(6); // 각 문제당 6초
+  const inputRef = useRef<HTMLInputElement | null>(null); // input ref
 
   const currentWord = words[currentQuestionIndex];
 
-  // Handle user answer submission
-  const handleSubmit = () => {
-    if (userAnswer.trim().toLowerCase() === currentWord.content.toLowerCase()) {
+  const handleAnswerSubmit = (isCorrect: boolean, answer: string) => {
+    setUserAnswers(prev => {
+      const updatedAnswers = [...prev];
+      updatedAnswers[currentQuestionIndex] = answer; // 현재 질문에 대한 답변 저장
+      return updatedAnswers;
+    });
+
+    if (isCorrect) {
       setScore(prevScore => prevScore + 1);
     }
 
-    setUserAnswer(''); // Reset answer field
-    setTimer(0); // 타이머를 0으로 설정하여 다음 문제로 넘김
+    const nextIndex = currentQuestionIndex + 1;
+
+    if (nextIndex < words.length) {
+      setCurrentQuestionIndex(nextIndex);
+      setTimer(6); // 타이머 리셋
+    } else {
+      onTestComplete(score + (isCorrect ? 1 : 0), userAnswers); // 최종 점수와 답안 전달
+    }
   };
 
-  // Timer logic
   useEffect(() => {
     const countdown = setInterval(() => {
       setTimer(prev => {
         if (prev === 1) {
-          handleSubmit(); // 시간이 다 지나면 자동으로 문제 제출
+          handleAnswerSubmit(false, ''); // 시간이 다 지나면 자동으로 문제 제출
           return 0; // 타이머를 0으로 설정
         }
         return prev - 1;
@@ -196,53 +60,57 @@ const WordTest = () => {
     }, 1000);
 
     return () => clearInterval(countdown);
-  }, []); // 처음 렌더링 시 1회만 실행
+  }, []);
 
   useEffect(() => {
-    if (timer === 0 && !isTestComplete) {
-      if (currentQuestionIndex < words.length - 1) {
-        setCurrentQuestionIndex(prevIndex => prevIndex + 1);
-        setTimer(6); // 다음 문제로 넘어갈 때 타이머를 6초로 리셋
-      } else {
-        setIsTestComplete(true);
-      }
-    }
-  }, [timer, isTestComplete, currentQuestionIndex]);
+    inputRef.current?.focus(); // 컴포넌트가 마운트될 때 입력창에 포커스
+  }, []);
 
-  if (isTestComplete) {
-    return (
-      <div className={styles.testComplete}>
-        <h2>시험 완료!</h2>
-        <p>
-          최종 점수: {score} / {words.length}
-        </p>
-      </div>
-    );
-  }
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleAnswerSubmit(
+        currentWord.content === userAnswers[currentQuestionIndex],
+        userAnswers[currentQuestionIndex],
+      );
+    }
+  };
 
   return (
     <div className={styles.wordTestContainer}>
-      <div className={styles.testContent}>
-        <h1>단어 시험</h1>
-        <h2>{currentWord.meanings[0].meaning}</h2>
-        <p>
-          문제 {currentQuestionIndex + 1} / {words.length}
-        </p>
-        <input
-          type="text"
-          value={userAnswer}
-          onChange={e => setUserAnswer(e.target.value)}
-          className={styles.answerInput}
-          placeholder="영어 단어를 입력하세요"
-        />
-        <button onClick={handleSubmit} className={styles.submitButton}>
-          제출
-        </button>
-      </div>
-      <div className={styles.timeWatchContainer}>
-        <TimeWatch timer={timer} />
-        <p className={styles.timer}>남은 시간: {timer}초</p>
-      </div>
+      <h1>단어 시험</h1>
+      <h2>{currentWord.meanings[0].meaning}</h2>
+      <p>
+        문제 {currentQuestionIndex + 1} / {words.length}
+      </p>
+      <input
+        type="text"
+        className={styles.answerInput}
+        placeholder="영어 단어를 입력하세요"
+        value={userAnswers[currentQuestionIndex]} // 현재 문제에 대한 답변 표시
+        onChange={e => {
+          const newAnswer = e.target.value;
+          setUserAnswers(prev => {
+            const updatedAnswers = [...prev];
+            updatedAnswers[currentQuestionIndex] = newAnswer; // 답변 업데이트
+            return updatedAnswers;
+          });
+        }}
+        onKeyPress={handleKeyPress} // Enter 키 이벤트 핸들링
+        ref={inputRef} // ref 연결
+      />
+      <button
+        onClick={() =>
+          handleAnswerSubmit(
+            currentWord.content === userAnswers[currentQuestionIndex],
+            userAnswers[currentQuestionIndex],
+          )
+        }
+        className={styles.submitButton}
+      >
+        제출
+      </button>
+      <TimeWatch timer={timer} />
+      <p className={styles.timer}>남은 시간: {timer}초</p>
     </div>
   );
 };
