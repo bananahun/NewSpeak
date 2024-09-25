@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useSpeechRecognition } from 'react-speech-kit';
 
 const ConversationModal = () => {
   const [value, setValue] = useState('');
