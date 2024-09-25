@@ -7,7 +7,7 @@ import com.ssafy.newspeak.conversation.exception.NoSuchReportException;
 import com.ssafy.newspeak.conversation.repository.ReportRepository;
 
 import com.ssafy.newspeak.user.entity.User;
-import com.ssafy.newspeak.user.repository.UserRepository;
+import com.ssafy.newspeak.user.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +21,7 @@ import java.util.Optional;
 public class ReportService {
 
     private final ReportRepository reportRepository;
-    private final UserRepository userRepository;
+    private final UserRepo userRepository;
 
     public ReportDto create(String content) {
 //        User user = userRepository.findById(userId)
