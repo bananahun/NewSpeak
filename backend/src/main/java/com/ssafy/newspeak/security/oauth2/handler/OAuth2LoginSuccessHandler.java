@@ -43,8 +43,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     //    cookie.setSecure(true); // HTTPS에서만 전송
         cookie.setPath("/"); // 쿠키가 유효한 경로
         cookie.setMaxAge(3600); // 쿠키 유효 시간 (초)
-        // cookie.setDomain(".p.ssafy.io");
-        // cookie.setAttribute("SameSite","None");
+        cookie.setDomain(".p.ssafy.io");
+        cookie.setAttribute("SameSite","None");
         return cookie;
     }
 
