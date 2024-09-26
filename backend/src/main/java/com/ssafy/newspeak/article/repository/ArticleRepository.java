@@ -6,6 +6,7 @@ import com.ssafy.newspeak.article.dto.ArticleFindResponse;
 import com.ssafy.newspeak.article.entity.Article;
 import com.ssafy.newspeak.category.dto.CategoryFindResponse;
 import com.ssafy.newspeak.category.entity.Category;
+import com.ssafy.newspeak.keyword.entity.Keyword;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,42 @@ public class ArticleRepository {
                 .collect(Collectors.toList());
     }
 
+    public List<Article> findByCategory(long id, int page, int size) {
+        if (id <= 0 || page < 0 || size <= 0) {
+            return Collections.emptyList();
+        }
+
+        Category category = em.find(Category.class, id);
+        if (category == null) {
+            return Collections.emptyList();
+        }
+
+        TypedQuery<Article> query = em.createQuery("select a from Article a where a.category = :category", Article.class);
+        query.setParameter("category", category);
+
+        // 페이지네이션 설정
+        query.setFirstResult(page * size); // 시작 인덱스 설정
+        query.setMaxResults(size); // 가져올 최대 결과 수 설정
+
+        return query.getResultList();
+    }
+
+    public List<Article> findByKeyword(long id, int page, int size) {
+        if (id <= 0 || page < 0 || size <= 0) {
+            return Collections.emptyList();
+        }
+
+        Keyword keyword = em.find(Keyword.class, id);
+        if (keyword == null) {
+            return Collections.emptyList();
+        }
+
+        TypedQuery<Article> query = em.createQuery("select a from Article a where a.keyword = :id", Article.class);
+        query.setParameter("id", id);
+
+        return query.getResultList();
+    }
+
     public List<Article> findByLevel(Integer level) {
         TypedQuery<Article> query = em.createQuery("select a from Article a where a.level = :level", Article.class);
         query.setParameter("level", level);
@@ -65,26 +102,6 @@ public class ArticleRepository {
         );
 
         query.setParameter("title", title);
-
-        return query.getResultList();
-    }
-
-    public List<Article> findByCategory(long id, int page, int size) {
-        if (id <= 0 || page < 0 || size <= 0) {
-            return Collections.emptyList();
-        }
-
-        Category category = em.find(Category.class, id);
-        if (category == null) {
-            return Collections.emptyList();
-        }
-
-        TypedQuery<Article> query = em.createQuery("select a from Article a where a.category = :category", Article.class);
-        query.setParameter("category", category);
-
-        // 페이지네이션 설정
-        query.setFirstResult(page * size); // 시작 인덱스 설정
-        query.setMaxResults(size); // 가져올 최대 결과 수 설정
 
         return query.getResultList();
     }

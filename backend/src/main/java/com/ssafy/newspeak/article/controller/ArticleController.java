@@ -63,6 +63,24 @@ public class ArticleController {
         return ResponseEntity.status(OK).body(result);
     }
 
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<Result> findByCategory(@PathVariable("categoryId") Long categoryId
+            ,@RequestParam("page") int page) {
+        List<ArticlesFindResponse> articlesFindResponses = articleService.findByCategory(categoryId, page);
+        int count = articlesFindResponses.size();
+        Result<List<ArticlesFindResponse>> result = new Result<>(count, articlesFindResponses);
+        return ResponseEntity.status(OK).body(result);
+    }
+
+    @GetMapping("/keyword/{keywordId}")
+    public ResponseEntity<Result> findByKeyword(@PathVariable("keywordId") Long keywordId
+    ,@RequestParam("page") int page) {
+        List<ArticlesFindResponse> articlesFindResponses = articleService.findByKeyword(keywordId, page);
+        int count = articlesFindResponses.size();
+        Result<List<ArticlesFindResponse>> result = new Result<>(count, articlesFindResponses);
+        return ResponseEntity.status(OK).body(result);
+    }
+
     @GetMapping("/level/{level}")
     public ResponseEntity<Result> findByLevel(@PathVariable("level") Integer level) {
         List<ArticlesFindResponse> articlesFindResponses = articleService.findByLevel(level);
@@ -74,15 +92,6 @@ public class ArticleController {
     @GetMapping("/search/{title}")
     public ResponseEntity<Result> findByTitle(@PathVariable("title") String title) {
         List<ArticlesFindResponse> articlesFindResponses = articleService.findByTitle(title);
-        int count = articlesFindResponses.size();
-        Result<List<ArticlesFindResponse>> result = new Result<>(count, articlesFindResponses);
-        return ResponseEntity.status(OK).body(result);
-    }
-
-    @GetMapping("/category/{categoryId}")
-    public ResponseEntity<Result> findByCategory(@PathVariable("categoryId") Long categoryId
-    ,@RequestParam("page") int page) {
-        List<ArticlesFindResponse> articlesFindResponses = articleService.findByCategory(categoryId, page);
         int count = articlesFindResponses.size();
         Result<List<ArticlesFindResponse>> result = new Result<>(count, articlesFindResponses);
         return ResponseEntity.status(OK).body(result);

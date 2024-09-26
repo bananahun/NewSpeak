@@ -1,6 +1,7 @@
 package com.ssafy.newspeak.article.entity;
 
 import com.ssafy.newspeak.category.entity.Category;
+import com.ssafy.newspeak.keyword.entity.Keyword;
 import com.ssafy.newspeak.sentence.entity.Sentence;
 import com.ssafy.newspeak.category.entity.Category;
 import com.ssafy.newspeak.conversation.entity.Report;
@@ -85,5 +86,4 @@ public class Article {
 
     @OneToMany(mappedBy = "article")
     private Set<UserArticle> userArticles;
-
 }

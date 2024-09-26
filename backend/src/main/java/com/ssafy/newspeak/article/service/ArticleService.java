@@ -34,6 +34,26 @@ public class ArticleService {
         return articleRepository.findTop5ArticlesByCategory();
     }
 
+    public List<ArticlesFindResponse> findByCategory(long id, int page) {
+        List<Article> articles = articleRepository.findByCategory(id, page, 5);
+        List<ArticlesFindResponse> articlesFindResponses = new ArrayList<>();
+        for (Article article : articles) {
+            ArticlesFindResponse articlesFindResponse = ArticlesFindResponse.from(article);
+            articlesFindResponses.add(articlesFindResponse);
+        }
+        return articlesFindResponses;
+    }
+
+    public List<ArticlesFindResponse> findByKeyword(long id, int page) {
+        List<Article> articles = articleRepository.findByKeyword(id, page, 5);
+        List<ArticlesFindResponse> articlesFindResponses = new ArrayList<>();
+        for (Article article : articles) {
+            ArticlesFindResponse articlesFindResponse = ArticlesFindResponse.from(article);
+            articlesFindResponses.add(articlesFindResponse);
+        }
+        return articlesFindResponses;
+    }
+
     public List<ArticlesFindResponse> findByLevel(Integer level) {
         List<Article> articles = articleRepository.findByLevel(level);
         List<ArticlesFindResponse> articlesFindResponses = new ArrayList<>();
@@ -46,16 +66,6 @@ public class ArticleService {
 
     public List<ArticlesFindResponse> findByTitle(String title) {
         List<Article> articles = articleRepository.findByTitle(title);
-        List<ArticlesFindResponse> articlesFindResponses = new ArrayList<>();
-        for (Article article : articles) {
-            ArticlesFindResponse articlesFindResponse = ArticlesFindResponse.from(article);
-            articlesFindResponses.add(articlesFindResponse);
-        }
-        return articlesFindResponses;
-    }
-
-    public List<ArticlesFindResponse> findByCategory(long id, int page) {
-        List<Article> articles = articleRepository.findByCategory(id, page, 5);
         List<ArticlesFindResponse> articlesFindResponses = new ArrayList<>();
         for (Article article : articles) {
             ArticlesFindResponse articlesFindResponse = ArticlesFindResponse.from(article);

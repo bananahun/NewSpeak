@@ -23,7 +23,7 @@ public class ArticleFindResponse {
     private String writer;
     private Integer level;
     private LocalDateTime createdAt;
-    private Category category;
+    private Long categoryId;
 
     public static ArticleFindResponse from(Article article) {
         ArticleFindResponse articleFindResponse = new ArticleFindResponse();
@@ -38,7 +38,7 @@ public class ArticleFindResponse {
         articleFindResponse.writer = article.getWriter();
         articleFindResponse.level = article.getLevel();
         articleFindResponse.createdAt = article.getCreatedAt();
-        articleFindResponse.category = article.getCategory();
+        articleFindResponse.categoryId = article.getCategory().getId();
         return articleFindResponse;
     }
 }
