@@ -85,4 +85,5 @@ public class Article {
 
     @OneToMany(mappedBy = "article")
     private Set<UserArticle> userArticles;
+
 }

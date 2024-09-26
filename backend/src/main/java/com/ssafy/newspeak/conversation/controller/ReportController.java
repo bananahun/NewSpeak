@@ -54,8 +54,8 @@ public class ReportController {
     @PostMapping("/dialog")
     @ExceptionHandler(NoSuchReportException.class)
     public ResponseEntity<AssistantResponse> startThread(@Valid
-                                                             @RequestParam("articleId") Long articleId) {
-        String threadId = gptAssistantService.createConv(CreateThreadRequest.dialog(articleService.findById(articleId).getContent()));
+                                                             @RequestBody AssistantArticleRequest body) {
+        String threadId = gptAssistantService.createConv(CreateThreadRequest.dialog(articleService.findById(body.getArticleId()).getContent()));
         AssistantResponse response = AssistantResponse.of(threadId);
 
         return ResponseEntity.status(OK).body(response);

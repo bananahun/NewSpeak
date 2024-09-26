@@ -1,17 +1,15 @@
 package com.ssafy.newspeak.article.controller;
 
-import com.ssafy.newspeak.article.dto.ArticleFindResponse;
-import com.ssafy.newspeak.article.dto.ArticlesFindResponse;
+import com.ssafy.newspeak.article.dto.*;
 import com.ssafy.newspeak.article.service.ArticleService;
 import com.ssafy.newspeak.article.dto.ArticleFindResponse;
 import com.ssafy.newspeak.article.dto.ArticlesFindResponse;
-import com.ssafy.newspeak.article.entity.Article;
-import com.ssafy.newspeak.article.service.ArticleService;
 import com.ssafy.newspeak.security.jwt.MyUserDetails;
 import com.ssafy.newspeak.security.util.AuthUtil;
 import com.ssafy.newspeak.user.entity.userArticle.UserArticleId;
 import com.ssafy.newspeak.user.service.UserArticleService;
 import com.ssafy.newspeak.voca.service.VocaService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +31,7 @@ public class ArticleController {
     private final VocaService vocaService;
 
     @PostMapping("/scrap/{articleId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(OK)
     public void scrapArticle(@PathVariable Long articleId) {
         MyUserDetails userDetails= AuthUtil.getUserDetails();
         UserArticleId userArticleId=UserArticleId.builder()
@@ -57,6 +55,14 @@ public class ArticleController {
         return ResponseEntity.status(OK).body(result);
     }
 
+    @GetMapping("/main")
+    public ResponseEntity<Result> findMain() {
+        List<ArticlesFindByCategoryMain> articleFindByCategoryMains = articleService.findByCategoryMains();
+        int count = articleFindByCategoryMains.size();
+        Result<List<ArticlesFindByCategoryMain>> result = new Result<>(count, articleFindByCategoryMains);
+        return ResponseEntity.status(OK).body(result);
+    }
+
     @GetMapping("/level/{level}")
     public ResponseEntity<Result> findByLevel(@PathVariable("level") Integer level) {
         List<ArticlesFindResponse> articlesFindResponses = articleService.findByLevel(level);
@@ -74,8 +80,9 @@ public class ArticleController {
     }
 
     @GetMapping("/category/{category_id}")
-    public ResponseEntity<Result> findByCategory(@PathVariable("category_id") Long category_id) {
-        List<ArticlesFindResponse> articlesFindResponses = articleService.findByCategory(category_id);
+    public ResponseEntity<Result> findByCategory(@PathVariable("category_id") Long category_id
+    ,@RequestParam("page") int page) {
+        List<ArticlesFindResponse> articlesFindResponses = articleService.findByCategory(category_id, page);
         int count = articlesFindResponses.size();
         Result<List<ArticlesFindResponse>> result = new Result<>(count, articlesFindResponses);
         return ResponseEntity.status(OK).body(result);

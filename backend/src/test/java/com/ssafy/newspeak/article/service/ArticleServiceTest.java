@@ -113,9 +113,9 @@ public class ArticleServiceTest {
     @DisplayName("전체 기사 카테고리로 조회")
     void findByCategory() {
         // when
-        List<ArticlesFindResponse> articles1 = articleService.findByCategory(category1.getId());
-        List<ArticlesFindResponse> articles2 = articleService.findByCategory(category2.getId());
-        List<ArticlesFindResponse> articles3 = articleService.findByCategory(3L);
+        List<ArticlesFindResponse> articles1 = articleService.findByCategory(category1.getId(),1);
+        List<ArticlesFindResponse> articles2 = articleService.findByCategory(category2.getId(),2);
+        List<ArticlesFindResponse> articles3 = articleService.findByCategory(3L,1);
 
         // then
         assertThat(articles1).hasSize(1);
