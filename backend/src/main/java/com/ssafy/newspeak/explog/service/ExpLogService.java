@@ -1,8 +1,10 @@
-package com.ssafy.newspeak.expLog.service;
+package com.ssafy.newspeak.explog.service;
 
-import com.ssafy.newspeak.expLog.entity.ExpLog;
-import com.ssafy.newspeak.expLog.repo.ExpLogRepo;
-import com.ssafy.newspeak.expLog.repo.dto.DailyExpDto;
+import com.ssafy.newspeak.explog.entity.ExpLog;
+import com.ssafy.newspeak.explog.repo.ExpLogRepo;
+import com.ssafy.newspeak.explog.repo.dto.DailyExpDto;
+import com.ssafy.newspeak.user.entity.User;
+import com.ssafy.newspeak.user.repository.UserRepo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,15 +13,21 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class ExpLogService {
     private final ExpLogRepo expLogRepo;
+    private final UserRepo userRepo;
 
-    public void saveExpLog(ExpLog expLog) {
-
+    public void saveExpLogAndAddToUserExp(ExpLogRequest expLogRequest,Long userId) {
+        User user=userRepo.findById(userId).orElseThrow(NoSuchElementException::new);
+        ExpLog expLog=new ExpLog(expLogRequest);
+        expLogRepo.save(expLog);
+        user.addExp(expLog.getChange());
+        userRepo.save(user);
     }
 
     public List<DailyExpDto> getDailyExpsByMonth(Long userId, YearMonth yearMonth) {

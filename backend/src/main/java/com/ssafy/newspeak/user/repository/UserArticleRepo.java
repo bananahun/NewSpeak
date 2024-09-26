@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 
 public interface UserArticleRepo extends JpaRepository<UserArticle, UserArticleId> {
-    @Query("SELECT new com.ssafy.newspeak.user.repository.dto.ArticleInfoDto(a.title, a.publishedDate) " +
+    @Query("SELECT new com.ssafy.newspeak.user.repository.dto.ArticleInfoDto(a.id,a.title, a.publishedDate) " +
             "FROM UserArticle ua JOIN ua.article a WHERE ua.user.id = :userId")
     Page<ArticleInfoDto> findArticleInfoDtoByUserId(@Param("userId") Long userId, Pageable pageable);
 

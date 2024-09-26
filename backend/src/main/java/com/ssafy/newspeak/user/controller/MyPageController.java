@@ -1,7 +1,7 @@
 package com.ssafy.newspeak.user.controller;
 
-import com.ssafy.newspeak.expLog.repo.dto.DailyExpDto;
-import com.ssafy.newspeak.expLog.service.ExpLogService;
+import com.ssafy.newspeak.explog.repo.dto.DailyExpDto;
+import com.ssafy.newspeak.explog.service.ExpLogService;
 import com.ssafy.newspeak.security.jwt.MyUserDetails;
 import com.ssafy.newspeak.security.jwt.service.JwtService;
 import com.ssafy.newspeak.security.util.AuthUtil;

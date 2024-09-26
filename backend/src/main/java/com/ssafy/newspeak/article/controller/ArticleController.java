@@ -28,7 +28,7 @@ public class ArticleController {
     private final UserArticleService userArticleService;
     private final VocaService vocaService;
 
-    @PostMapping("/scrap/{articleId}")
+    @PostMapping("/{articleId}/scrap")
     @ResponseStatus(HttpStatus.OK)
     public void scrapArticle(@PathVariable Long articleId) {
         MyUserDetails userDetails= AuthUtil.getUserDetails();

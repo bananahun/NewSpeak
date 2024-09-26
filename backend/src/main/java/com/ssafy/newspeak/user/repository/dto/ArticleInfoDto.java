@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 public class ArticleInfoDto {
+    Long id;
     String title;
     LocalDateTime publishedDate;
 }

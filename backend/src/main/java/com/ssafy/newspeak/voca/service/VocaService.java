@@ -19,8 +19,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Service
 @Transactional
@@ -48,15 +47,15 @@ public class VocaService {
             throw new AccessDeniedException("not your voca");
         }
 
-        List<WordDetail> wordDetails=vocaWordRepo.findVocaWordsByVocaId(vocaId);
-        if(wordDetails.isEmpty()){
-            throw new NoSuchElementException();
-        }
+        List<Word> words=vocaWordRepo.findVocaWordsByVocaId(vocaId);
+        List<WordDetail> wordDetails=WordDetail.from(words);
+
         return wordDetails;
     }
 
     public void addWord(AddWordRequest addWordRequest,Long userId){
         Word word=wordRepo.findByContent(addWordRequest.getWordContent());
+        if(word==null){throw new NoSuchElementException();}
         Voca voca=vocaRepo.findById(addWordRequest.getVocaId()).orElseThrow(NoSuchElementException::new);
 
         if(!userId.equals(voca.getUser().getId())){
@@ -77,11 +76,22 @@ public class VocaService {
         vocaRepo.delete(voca);
     }
 
-//    public List<Quiz> makeQuizsByVoca(Long userId,Long vocaId){
-//        Voca voca=vocaRepo.findById(vocaId).orElseThrow(NoSuchElementException::new);
-//        if(!userId.equals(voca.getUser().getId())){
-//            throw new AccessDeniedException("not your voca");
-//        }
-//        vocaRepo.
-//    }
+    public List<WordQuiz> makeQuizByVocaId(Long vocaId, Long userId) {
+        Voca voca=vocaRepo.findById(vocaId).orElseThrow(NoSuchElementException::new);
+        if(!userId.equals(voca.getUser().getId())){
+            throw new AccessDeniedException("not your voca");
+        }
+        List<Word> words=vocaWordRepo.findVocaWordsByVocaId(vocaId);
+        // 리스트를 무작위로 섞는다.
+        Collections.shuffle(words);
+
+        // 리스트가 10개 미만이면 그대로 사용하고, 10개 이상이면 상위 10개만 선택한다.
+        List<Word> randomWords = words.size() > 10 ? words.subList(0, 10) : words;
+
+        // 선택된 랜덤 단어 리스트를 WordQuiz.from()의 매개변수로 전달한다.
+        List<WordQuiz> wordQuizs = WordQuiz.from(randomWords);
+
+        return wordQuizs;
+    }
+
 }

@@ -1,7 +1,7 @@
 package com.ssafy.newspeak.user.entity;
 
 
-import com.ssafy.newspeak.expLog.entity.ExpLog;
+import com.ssafy.newspeak.explog.entity.ExpLog;
 import com.ssafy.newspeak.tier.Tier;
 import com.ssafy.newspeak.user.entity.userArticle.UserArticle;
 import com.ssafy.newspeak.voca.entity.Voca;
@@ -82,6 +82,10 @@ public class User {
 
     public void updateRefreshToken(String updateRefreshToken) {
         this.refreshToken = updateRefreshToken;
+    }
+
+    public void addExp(Integer change) {
+        this.exp+=change;
     }
 }
 
