@@ -68,30 +68,45 @@ public class ArticleRepository {
         return query.getResultList();
     }
 
-    public List<Article> findByKeyword(long id, int page, int size) {
-        if (id <= 0 || page < 0 || size <= 0) {
-            return Collections.emptyList();
+    // 특정 Keyword ID로 해당 키워드와 연관된 Article을 조회
+    public List<Article> findArticlesByKeywordId(Long keywordId, int page, int size) {
+        // 1단계: ArticleKeyword 테이블에서 해당 keywordId로 articleId 리스트를 조회
+        TypedQuery<Long> articleIdQuery = em.createQuery(
+                "SELECT ak.article.id FROM ArticleKeword ak WHERE ak.keyword.id = :keywordId",
+                Long.class
+        );
+        articleIdQuery.setParameter("keywordId", keywordId);
+
+        List<Long> articleIds = articleIdQuery.getResultList();
+
+        // 2단계: 조회된 articleId 리스트로 Article 테이블에서 Article 조회
+        if (articleIds.isEmpty()) {
+            return List.of(); // 검색된 articleId가 없으면 빈 리스트 반환
         }
 
-        Keyword keyword = em.find(Keyword.class, id);
-        if (keyword == null) {
-            return Collections.emptyList();
-        }
+        TypedQuery<Article> articleQuery = em.createQuery(
+                "SELECT a FROM Article a WHERE a.id IN :articleIds",
+                Article.class
+        );
+        articleQuery.setParameter("articleIds", articleIds);
 
-        TypedQuery<Article> query = em.createQuery("select a from Article a where a.keyword = :id", Article.class);
-        query.setParameter("id", id);
+        articleQuery.setFirstResult(page * size);
+        articleQuery.setMaxResults(size);
 
-        return query.getResultList();
+        // 결과 리스트 반환
+        return articleQuery.getResultList();
     }
 
-    public List<Article> findByLevel(Integer level) {
+    public List<Article> findByLevel(Integer level, int page, int size) {
         TypedQuery<Article> query = em.createQuery("select a from Article a where a.level = :level", Article.class);
         query.setParameter("level", level);
 
+        query.setFirstResult(page * size);
+        query.setMaxResults(size);
         return query.getResultList();
     }
 
-    public List<Article> findByTitle(String title) {
+    public List<Article> findByTitle(String title, int page, int size) {
         if (title == null || title.isEmpty()) {
             return Collections.emptyList();
         }
@@ -102,6 +117,9 @@ public class ArticleRepository {
         );
 
         query.setParameter("title", title);
+
+        query.setFirstResult(page * size);
+        query.setMaxResults(size);
 
         return query.getResultList();
     }

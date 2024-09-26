@@ -45,7 +45,7 @@ public class ArticleService {
     }
 
     public List<ArticlesFindResponse> findByKeyword(long id, int page) {
-        List<Article> articles = articleRepository.findByKeyword(id, page, 5);
+        List<Article> articles = articleRepository.findArticlesByKeywordId(id, page, 5);
         List<ArticlesFindResponse> articlesFindResponses = new ArrayList<>();
         for (Article article : articles) {
             ArticlesFindResponse articlesFindResponse = ArticlesFindResponse.from(article);
@@ -54,8 +54,8 @@ public class ArticleService {
         return articlesFindResponses;
     }
 
-    public List<ArticlesFindResponse> findByLevel(Integer level) {
-        List<Article> articles = articleRepository.findByLevel(level);
+    public List<ArticlesFindResponse> findByLevel(Integer level, int page) {
+        List<Article> articles = articleRepository.findByLevel(level, page, 5);
         List<ArticlesFindResponse> articlesFindResponses = new ArrayList<>();
         for (Article article : articles) {
             ArticlesFindResponse articlesFindResponse = ArticlesFindResponse.from(article);
@@ -64,8 +64,8 @@ public class ArticleService {
         return articlesFindResponses;
     }
 
-    public List<ArticlesFindResponse> findByTitle(String title) {
-        List<Article> articles = articleRepository.findByTitle(title);
+    public List<ArticlesFindResponse> findByTitle(String title, int page) {
+        List<Article> articles = articleRepository.findByTitle(title, page, 5);
         List<ArticlesFindResponse> articlesFindResponses = new ArrayList<>();
         for (Article article : articles) {
             ArticlesFindResponse articlesFindResponse = ArticlesFindResponse.from(article);
