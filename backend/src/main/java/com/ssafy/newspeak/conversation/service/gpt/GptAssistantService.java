@@ -40,14 +40,7 @@ public class GptAssistantService {
     @Value("${gpt.api.assistant.conv}")
     private String ASSISTANT_CONVERSATION;
 
-    @Value("${gpt.api.audio}")
-    private String AUDIO_URL;
-
-    @Value("${gpt.api-key}")
-    private String API_KEY;
-
     private final OpenAiAudioSpeechModel openAiAudioSpeechClient;
-    private final AudioFileUploadService audioFileUploadService;
 
     private final RestTemplate assistantTemplate;
     private final ObjectMapper objectMapper;
@@ -55,7 +48,6 @@ public class GptAssistantService {
     public GptAssistantService(@Qualifier("assistant") RestTemplate assistantTemplate, ObjectMapper objectMapper, AudioFileUploadService audioFileUploadService, OpenAiAudioSpeechModel openAiAudioSpeechClient) {
         this.assistantTemplate = assistantTemplate;
         this.objectMapper = objectMapper;
-        this.audioFileUploadService = audioFileUploadService;
         this.openAiAudioSpeechClient = openAiAudioSpeechClient;
     }
 

@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
 public class ArticleFindByCategoryMain {
     private Long id;
     private String title;
-    private String content;
-    private String contentKr;
     private LocalDateTime publishedDate;
     private String imageUrl;
     private String articleUrl;
@@ -26,8 +24,6 @@ public class ArticleFindByCategoryMain {
         ArticleFindByCategoryMain articleFindResponse = new ArticleFindByCategoryMain();
         articleFindResponse.setId(article.getId());
         articleFindResponse.setTitle(article.getTitle());
-        articleFindResponse.setContent(article.getContent());
-        articleFindResponse.setContentKr(article.getContentKr());
         articleFindResponse.setPublishedDate(article.getPublishedDate());
         articleFindResponse.setImageUrl(article.getImageUrl());
         articleFindResponse.setArticleUrl(article.getArticleUrl());

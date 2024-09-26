@@ -79,10 +79,10 @@ public class ArticleController {
         return ResponseEntity.status(OK).body(result);
     }
 
-    @GetMapping("/category/{category_id}")
-    public ResponseEntity<Result> findByCategory(@PathVariable("category_id") Long category_id
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<Result> findByCategory(@PathVariable("categoryId") Long categoryId
     ,@RequestParam("page") int page) {
-        List<ArticlesFindResponse> articlesFindResponses = articleService.findByCategory(category_id, page);
+        List<ArticlesFindResponse> articlesFindResponses = articleService.findByCategory(categoryId, page);
         int count = articlesFindResponses.size();
         Result<List<ArticlesFindResponse>> result = new Result<>(count, articlesFindResponses);
         return ResponseEntity.status(OK).body(result);

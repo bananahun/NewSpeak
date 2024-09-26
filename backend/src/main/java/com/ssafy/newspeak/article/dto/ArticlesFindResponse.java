@@ -13,7 +13,6 @@ public class ArticlesFindResponse {
 
     private Long id;
     private String title;
-    private String content;
     private Category category;
     private String imageUrl;
     private String writer;
@@ -25,7 +24,6 @@ public class ArticlesFindResponse {
         ArticlesFindResponse articlesFindResponse = new ArticlesFindResponse();
         articlesFindResponse.id = article.getId();
         articlesFindResponse.title = article.getTitle();
-        articlesFindResponse.content = article.getContent();
         articlesFindResponse.category = article.getCategory();
         articlesFindResponse.imageUrl = article.getImageUrl();
         articlesFindResponse.level = article.getLevel();
