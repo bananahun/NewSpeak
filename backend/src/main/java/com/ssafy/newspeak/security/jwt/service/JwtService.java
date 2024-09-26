@@ -193,6 +193,7 @@ public class JwtService {
         cookie.setMaxAge(7 * 24 * 60 * 60); // 7일 유효 기간 설정
 //        cookie.setSameSite("Strict"); // CSRF 방지
         response.addCookie(cookie);
+//        response.setHeader();
     }
 
     public void setAccessTokenExpired(HttpServletResponse response) {

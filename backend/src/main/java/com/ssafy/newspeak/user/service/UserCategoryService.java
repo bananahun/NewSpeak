@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -25,15 +26,24 @@ public class UserCategoryService {
 
     public List<CategoryDto> getAllCategoriesByUserId(Long userId) {
 
-        List<CategoryDto> userCategories=userCategoryRepo.findAllCategoryInfoByUserId(userId);
+        List<CategoryDto> userCategories=userCategoryRepo.findAllCategoryDtoByUserId(userId);
         return userCategories;
     }
 
-    public void postCategoryByUserId(UserCategoryId userCategoryId) {
+    public void updateCategoriesByUserId(Long userId,List<UserCategoryId> userCategoryIds) {
+        // 기존 관계 제거
+        userCategoryRepo.deleteByUserId(userId);
+
+        // 새로 선택한 카테고리와의 관계 추가
+        for (UserCategoryId userCategoryId : userCategoryIds) {
+            UserCategory userCategory=makeUserCategory(userCategoryId);
+            userCategoryRepo.save(userCategory);
+        }
+    }
+
+    public UserCategory makeUserCategory(UserCategoryId userCategoryId) {
         User user=userRepo.findById(userCategoryId.getUserId()).orElseThrow(NoSuchElementException::new);
         Category category=categoryRepository.findById(userCategoryId.getCategoryId()).orElseThrow(NoSuchElementException::new);
-
-        UserCategory userCategory=UserCategory.of(userCategoryId,user,category);
-        userCategoryRepo.save(userCategory);
+        return UserCategory.of(userCategoryId,user,category);
     }
 }

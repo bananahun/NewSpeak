@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
 @Embeddable
 @Builder
@@ -17,4 +17,5 @@ public class UserCategoryId implements Serializable {
     private Long userId;
 
     private Long categoryId;
+
 }

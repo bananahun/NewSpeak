@@ -4,6 +4,7 @@ import com.ssafy.newspeak.security.jwt.MyUserDetails;
 import com.ssafy.newspeak.security.util.AuthUtil;
 import com.ssafy.newspeak.user.repository.dto.VocaInfoDto;
 import com.ssafy.newspeak.voca.entity.Voca;
+import com.ssafy.newspeak.voca.repository.dto.WordDetail;
 import com.ssafy.newspeak.voca.service.VocaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,10 +32,10 @@ public class VocaController {
     }
 
     @GetMapping("/{vocaId}")
-    public VocaDto getVoca(@PathVariable Long vocaId) {
+    public ResponseEntity<List<WordDetail>> getVoca(@PathVariable Long vocaId) {
         MyUserDetails userDetails=AuthUtil.getUserDetails();
-        Voca voca= vocaService.getVocaById(vocaId,userDetails.getUserId());
-        return new VocaDto(voca);
+        List<WordDetail> wordDetails= vocaService.getVocaById(vocaId,userDetails.getUserId());
+        return ResponseEntity.ok(wordDetails);
     }
 
     @DeleteMapping("/{vocaId}")
@@ -43,4 +44,10 @@ public class VocaController {
         vocaService.deleteVocaById(userDetails.getUserId(),vocaId);
         return ResponseEntity.ok("Deleted voca");
     }
+
+//    @GetMapping("/{vocaId}/quiz")
+//    public ResponseEntity<Quizs> getQuizsByVoca(@PathVariable Long vocaId){
+//        MyUserDetails userDetails=AuthUtil.getUserDetails();
+//        vocaService.getVocasByUserId()
+//    }
 }
