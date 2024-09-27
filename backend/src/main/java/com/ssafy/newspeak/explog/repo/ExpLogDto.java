@@ -1,4 +1,4 @@
-package com.ssafy.newspeak.explog.repo.dto;
+package com.ssafy.newspeak.explog.repo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
