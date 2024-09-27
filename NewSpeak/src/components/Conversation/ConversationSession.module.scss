@@ -47,5 +47,24 @@
 .userMessage {
   .messageContent {
     background-color: var(--sub-color);
+    max-width: 100%;
+  }
+
+  .editButton,
+  .submitButton,
+  button {
+    margin-right: 10px;
+    border-radius: 10px;
+    width: fit-content;
+    cursor: pointer;
+  }
+
+  .editInput {
+    background-color: var(--background-color);
+    color: var(--font-color);
+    border: 1px solid var(--font-color);
+    resize: none;
+    padding: 5px;
+    border-radius: 10px;
   }
 }

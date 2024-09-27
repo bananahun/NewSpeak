@@ -1,6 +1,7 @@
 import axiosInstance from './axiosConfig';
 import useArticleStore from '../store/ArticleStore';
 import useConversationStore from '../store/ConversationStore';
+import { useEffect } from 'react';
 
 interface message {
   sender: 'user' | 'assistant';
@@ -14,10 +15,12 @@ const useConversationApi = () => {
     convRunId,
     reportThreadId,
     reportRunId,
+    isAudioReceived,
     setConvThreadId,
     setConvRunId,
     setReportThreadId,
     setReportRunId,
+    setIsAudioReceived,
     clearConvData,
   } = useConversationStore();
 
@@ -73,6 +76,8 @@ const useConversationApi = () => {
         `/conversation/dialog/${convThreadId}/${convRunId}`,
       );
       console.log('getResponseAudio:', response.data);
+      setConvRunId('');
+      setIsAudioReceived(true);
       return response.data;
     } catch (error) {
       console.error(error);
@@ -144,6 +149,8 @@ const useConversationApi = () => {
   };
 
   return {
+    convRunId,
+    isAudioReceived,
     createThread,
     postSpeechToThread,
     getResponseAudio,

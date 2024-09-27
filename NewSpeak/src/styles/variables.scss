@@ -1,26 +1,44 @@
 :root {
   --main-color: #fcbe8c;
+  --main-rgb: 252, 190, 140; /* RGB 값 추가 */
   --contrast-color: #ff8b5a;
+  --contrast-rgb: 255, 139, 90; /* RGB 값 추가 */
   --accent-color: #4a88fc;
+  --accent-rgb: 74, 136, 252; /* RGB 값 추가 */
   --sub-color: #8b7d70;
+  --sub-rgb: 139, 125, 112; /* RGB 값 추가 */
   --background-color: #fdfdfd;
+  --background-rgb: 253, 253, 253; /* RGB 값 추가 */
   --font-color: #3c3c3c;
+  --font-rgb: 60, 60, 60; /* RGB 값 추가 */
 }
 
 .light {
   --main-color: #fcbe8c;
+  --main-rgb: 252, 190, 140;
   --contrast-color: #ff8b5a;
+  --contrast-rgb: 255, 139, 90;
   --accent-color: #4a88fc;
+  --accent-rgb: 74, 136, 252;
   --sub-color: #8b7d70;
+  --sub-rgb: 139, 125, 112;
   --background-color: #fdfdfd;
+  --background-rgb: 253, 253, 253;
   --font-color: #3c3c3c;
+  --font-rgb: 60, 60, 60;
 }
 
 .dark {
   --main-color: #7f644b;
+  --main-rgb: 127, 100, 75;
   --contrast-color: #ff8b5a;
+  --contrast-rgb: 255, 139, 90;
   --accent-color: #ffb400;
+  --accent-rgb: 255, 180, 0;
   --sub-color: #8b7d70;
+  --sub-rgb: 139, 125, 112;
   --background-color: #3c3c3c;
+  --background-rgb: 60, 60, 60;
   --font-color: #eae5dc;
+  --font-rgb: 234, 229, 220;
 }
