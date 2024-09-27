@@ -6,20 +6,49 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition';
 import { CiMicrophoneOff, CiMicrophoneOn } from 'react-icons/ci';
+import spacebar from '../../assets/spacebar.png';
+import spacebarWhite from '../../assets/spacebarWhite.png';
+import useThemeStore from '../../store/ThemeStore';
 
 const ConversationModal = ({
   submitResponse,
+  setRecordModalOpen,
 }: {
   submitResponse: () => void;
+  setRecordModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { setCurrentAnswer } = useConversationStore();
+  const { theme } = useThemeStore();
   const { transcript, resetTranscript } = useSpeechRecognition();
   const [isListening, setIsListening] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedTranscript, setEditedTranscript] = useState('');
+  const [spacebarLogo, setSpacebarLogo] = useState(spacebar);
+
+  const closeModal = () => {
+    setIsListening(false);
+    setCurrentAnswer('');
+    resetTranscript();
+    setRecordModalOpen(false);
+  };
 
   useEffect(() => {
-    const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (theme === 'light') {
+      setSpacebarLogo(spacebar);
+    } else {
+      setSpacebarLogo(spacebarWhite);
+    }
+  }, [theme]);
+
+  useEffect(() => {
+    setCurrentAnswer(transcript);
+  }, [transcript]);
+
+  useEffect(() => {
+    setCurrentAnswer('');
+    resetTranscript();
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
       if (event.code === 'Space' && !isListening) {
         SpeechRecognition.startListening({
           language: 'en-US',
@@ -30,7 +59,7 @@ const ConversationModal = ({
       }
     };
 
-    const handleKeyUp = (event: React.KeyboardEvent) => {
+    const handleKeyUp = (event: KeyboardEvent) => {
       if (event.code === 'Space' && isListening) {
         SpeechRecognition.stopListening();
         setIsListening(false);
@@ -47,52 +76,30 @@ const ConversationModal = ({
     };
   }, [isListening]);
 
-  const handleEdit = () => {
-    setIsEditing(true);
-    setEditedTranscript(transcript);
-  };
-
-  const handleSaveEdit = () => {
-    setCurrentAnswer(editedTranscript);
-    setIsEditing(false);
-  };
-
-  useEffect(() => {
-    setEditedTranscript(transcript);
-  }, [transcript]);
-
   return (
     <div className={styles.conversationModal}>
       <div className={styles.modalHeader}>
-        <p>Spacebar를 꾹 누른 채로, SPEAKO에게 보낼 메세지를 녹음 하세요!</p>
-      </div>
-      <div className={styles.modalContainer}>
-        {!isEditing ? (
-          <div>{editedTranscript}</div>
-        ) : (
-          <input
-            type="text"
-            value={editedTranscript}
-            onChange={e => setEditedTranscript(e.target.value)}
-            className={styles.editInput}
+        <div className={styles.title}>
+          <p>Press </p>
+          <img
+            src={spacebarLogo}
+            alt="'spacebar'"
+            className={styles.spacebar}
           />
-        )}
+        </div>
+        <button onClick={() => closeModal()}>x</button>
       </div>
+      <div className={styles.modalContainer}>{transcript}</div>
       <div className={styles.buttonContainer}>
-        <button className={styles.sttButton}>
+        <div className={styles.sttButton}>
           {isListening ? (
             <CiMicrophoneOn size="48" />
           ) : (
             <CiMicrophoneOff size="48" />
           )}
-        </button>
+        </div>
         <div className={styles.activeButtons}>
           <button onClick={resetTranscript}>다시 녹음할래요</button>
-          {isEditing ? (
-            <button onClick={handleSaveEdit}>완료</button>
-          ) : (
-            <button onClick={handleEdit}>조금만 수정할래요</button>
-          )}
           <button onClick={submitResponse}>잘 녹음 됐어요</button>
         </div>
       </div>

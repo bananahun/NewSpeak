@@ -50,7 +50,7 @@ const Conversation = () => {
       setConversationCount(0);
       setIsConvStarted(false);
     } else {
-      navigate('/conversation');
+      navigate('/article');
     }
   };
 
@@ -65,13 +65,12 @@ const Conversation = () => {
   };
 
   const userResponse = () => {
-    setConversationCount(conversationCount + 1);
     setRecordModalOpen(true);
   };
 
   const submitResponse = () => {
-    setConversationCount(conversationCount => conversationCount + 1);
     setRecordModalOpen(false);
+    setConversationCount(conversationCount => conversationCount + 1);
     console.log(currentAnswer);
   };
 
@@ -129,11 +128,6 @@ const Conversation = () => {
           </span>
         )}
         {renderStep(step)}
-        {isConvStarted && recordModalOpen && (
-          <span className={styles.recordModal}>
-            <ConversationModal submitResponse={submitResponse} />
-          </span>
-        )}
       </div>
       <div className={styles.buttonContainer}>
         <button onClick={leftButton}>{activeLeftButton}</button>
@@ -144,6 +138,14 @@ const Conversation = () => {
           </button>
         )}
       </div>
+      {isConvStarted && recordModalOpen && (
+        <span className={styles.recordModal}>
+          <ConversationModal
+            submitResponse={submitResponse}
+            setRecordModalOpen={setRecordModalOpen}
+          />
+        </span>
+      )}
     </>
   );
 };

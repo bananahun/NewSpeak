@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import ConversationModal from '../Modal/ConversationModal';
 import useConversationApi from '../../apis/ConversationApi';
+import useConversationStore from '../../store/ConversationStore';
 import styles from './ConversationSession.module.scss';
+import { LiaEdit } from 'react-icons/lia';
+import { MdSend } from 'react-icons/md';
 
 interface Conversation {
   sender: 'user' | 'assistant';
@@ -13,8 +15,9 @@ const ConversationSession = ({
 }: {
   conversationCount: number;
 }) => {
-  // const [conv, setConv] = useState(false);
   const {
+    convRunId,
+    isAudioReceived,
     createThread,
     postSpeechToThread,
     getResponseAudio,
@@ -22,82 +25,51 @@ const ConversationSession = ({
     postReportDetail,
     generateReport,
   } = useConversationApi();
+  const { currentAnswer, setCurrentAnswer } = useConversationStore();
+  const [isEditing, setIsEditing] = useState(false);
+  const [activeAnswer, setActiveAnswer] = useState(currentAnswer);
+  const [editedAnswer, setEditedAnswer] = useState('');
   const [conversation, setConversation] = useState<Conversation[]>([]);
 
   useEffect(() => {
-    setConversation([
-      {
-        sender: 'user',
-        content:
-          'What are the main points of the latest news article on climate change?',
-      },
-      {
-        sender: 'assistant',
-        content:
-          'The article discusses the rising global temperatures, the impact of climate change on ecosystems, and the urgent need for international cooperation to address the crisis.',
-      },
-      {
-        sender: 'user',
-        content: 'Who are the key figures mentioned in the article?',
-      },
-      {
-        sender: 'assistant',
-        content:
-          'The article mentions several key figures, including climate scientists, government officials, and activists advocating for policy changes.',
-      },
-      {
-        sender: 'user',
-        content:
-          'What actions are suggested to combat climate change in the article?',
-      },
-      {
-        sender: 'assistant',
-        content:
-          'The article suggests several actions, such as reducing carbon emissions, investing in renewable energy, and implementing stricter regulations on pollutants.',
-      },
-      {
-        sender: 'user',
-        content:
-          'Are there any statistics or studies referenced in the article?',
-      },
-      {
-        sender: 'assistant',
-        content:
-          'Yes, the article references a recent study indicating that global temperatures could rise by 1.5 degrees Celsius by 2030 if current trends continue.',
-      },
-      {
-        sender: 'user',
-        content:
-          'What are the potential consequences if these issues are not addressed?',
-      },
-      {
-        sender: 'assistant',
-        content:
-          'The article warns of severe consequences, including increased natural disasters, loss of biodiversity, and negative impacts on human health and food security.',
-      },
-    ]);
-  }, []);
+    setActiveAnswer(currentAnswer);
+    setEditedAnswer(currentAnswer);
+    console.log(activeAnswer);
+  }, [currentAnswer]);
 
-  useEffect(() => {}, [conversationCount]);
+  useEffect(() => {
+    if (conversationCount === 1) {
+      flow1();
+      return;
+    }
+  }, []);
 
   const flow1 = () => {
     createThread();
   };
 
-  // 여기 STT자리
-
   const flow2 = () => {
-    const answer = 'Hello, GPT.';
-    postSpeechToThread(answer);
-    // answer에 있는 내용 sender: user / content: text 해서 conversation에 저장
-    // STT 구현 해야함
+    setConversation(prev => [
+      ...prev,
+      { sender: 'user', content: currentAnswer },
+    ]);
+    postSpeechToThread(currentAnswer);
+    setEditedAnswer('');
+    setActiveAnswer('');
+    setCurrentAnswer('');
   };
 
-  const flow3 = () => {
-    getResponseAudio();
-    // text 받아서 {sender: assistant}, {content: text} conversation 저장
-    // mp3파일 bite형식 파일 변환 해야함
-  };
+  useEffect(() => {
+    if (convRunId) {
+      getResponseAudio();
+    }
+  }, [convRunId]);
+
+  useEffect(() => {
+    if (isAudioReceived) {
+      console.log('audio');
+    }
+  });
 
   const flow4 = () => {
     createReportThread();
@@ -110,6 +82,16 @@ const ConversationSession = ({
   const flow6 = () => {
     generateReport();
     // 보고서 만드는 함수 호출, 완료 여부 어케암
+  };
+
+  const handleEdit = () => {
+    setIsEditing(true);
+    setEditedAnswer(editedAnswer);
+  };
+
+  const handleSaveEdit = () => {
+    setCurrentAnswer(editedAnswer);
+    setIsEditing(false);
   };
 
   return (
@@ -131,7 +113,42 @@ const ConversationSession = ({
           );
         })}
       </div>
-      {/* {conv && <ConversationModal />} */}
+      <div className={styles.userMessage}>
+        {activeAnswer && (
+          <>
+            {isEditing ? (
+              <button onClick={handleSaveEdit}>완료</button>
+            ) : (
+              <>
+                <LiaEdit
+                  size={25}
+                  onClick={handleEdit}
+                  className={styles.editButton}
+                />
+                <MdSend
+                  size={25}
+                  onClick={flow2}
+                  className={styles.submitButton}
+                />
+              </>
+            )}
+            <div className={styles.messageContent}>
+              {!isEditing ? (
+                <div>{editedAnswer}</div>
+              ) : (
+                <textarea
+                  value={editedAnswer}
+                  onChange={e => setEditedAnswer(e.target.value)}
+                  className={styles.editInput}
+                  cols={Math.min(120, Math.max(editedAnswer.length, 40))}
+                  rows={Math.max(2, editedAnswer.length / 120)}
+                  maxLength={255}
+                />
+              )}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };
