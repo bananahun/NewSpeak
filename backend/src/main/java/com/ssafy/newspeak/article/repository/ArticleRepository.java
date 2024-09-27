@@ -70,30 +70,14 @@ public class ArticleRepository {
 
     // 특정 Keyword ID로 해당 키워드와 연관된 Article을 조회
     public List<Article> findArticlesByKeywordId(Long keywordId, int page, int size) {
-        // 1단계: ArticleKeyword 테이블에서 해당 keywordId로 articleId 리스트를 조회
-        TypedQuery<Long> articleIdQuery = em.createQuery(
-                "SELECT ak.article.id FROM ArticleKeword ak WHERE ak.keyword.id = :keywordId",
-                Long.class
-        );
-        articleIdQuery.setParameter("keywordId", keywordId);
-
-        List<Long> articleIds = articleIdQuery.getResultList();
-
-        // 2단계: 조회된 articleId 리스트로 Article 테이블에서 Article 조회
-        if (articleIds.isEmpty()) {
-            return List.of(); // 검색된 articleId가 없으면 빈 리스트 반환
-        }
-
         TypedQuery<Article> articleQuery = em.createQuery(
-                "SELECT a FROM Article a WHERE a.id IN :articleIds",
+                "SELECT a FROM Article a WHERE a.id IN (SELECT ak.article.id FROM ArticleKeword ak WHERE ak.keyword.id = :keywordId)",
                 Article.class
         );
-        articleQuery.setParameter("articleIds", articleIds);
-
+        articleQuery.setParameter("keywordId", keywordId);
         articleQuery.setFirstResult(page * size);
         articleQuery.setMaxResults(size);
 
-        // 결과 리스트 반환
         return articleQuery.getResultList();
     }
 

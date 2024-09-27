@@ -9,6 +9,9 @@ import com.ssafy.newspeak.conversation.exception.NoSuchReportException;
 import com.ssafy.newspeak.conversation.service.ReportService;
 import com.ssafy.newspeak.conversation.service.gpt.GptAssistantService;
 //import com.ssafy.newspeak.user.dto.UserAuthDto;
+import com.ssafy.newspeak.security.jwt.MyUserDetails;
+import com.ssafy.newspeak.security.util.AuthUtil;
+import com.ssafy.newspeak.security.util.UserAuthDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,9 +34,20 @@ public class ReportController {
 
     // 생성된 보고서에 대한 api입니다.
 
+    @PostMapping
+    public ResponseEntity<ReportCreateResponse> createUserReport(@Valid @RequestBody ReportCompleteResponse body) throws JsonProcessingException {
+        MyUserDetails user = AuthUtil.getUserDetails();
+
+        ReportDto report = reportService.create(body.getContent().getTitle(), body, user.getUserId());
+        ReportCreateResponse response = ReportCreateResponse.of(report.getId(), report.getTitle(), report.getContent());
+
+        return ResponseEntity.status(CREATED).body(response);
+    }
+
     @GetMapping
     public ResponseEntity<ReportListResponse> getReportList() {
-        List<ReportDto> reports = reportService.getList();
+        MyUserDetails user = AuthUtil.getUserDetails();
+        List<ReportDto> reports = reportService.getList(user.getUserId());
         ReportListResponse response = ReportListResponse.of(reports.size(), reports);
         return ResponseEntity.status(OK).body(response);
     }
@@ -46,9 +60,14 @@ public class ReportController {
 
     @DeleteMapping("/{reportId}")
     public Long deleteReport(@PathVariable Long reportId) {
-        reportService.deleteOne(reportId);
+        MyUserDetails user = AuthUtil.getUserDetails();
+        reportService.deleteOne(reportId, user.getUserId());
         return reportId;
     }
+
+    /*
+    *
+    * 대화와 보고서 open ai 관련 API 입니다.*/
 
     // 먼저 대화를 생성합니다.
     @PostMapping("/dialog")
