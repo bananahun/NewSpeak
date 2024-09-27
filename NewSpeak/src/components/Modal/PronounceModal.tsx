@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import MicRecorder from 'mic-recorder-to-mp3-fixed';
 import styles from './PronounceModal.module.scss';
 import ReactDOM from 'react-dom';
+import userApi from '../../apis/UserApi';
 
 interface PronounceModalProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface PronounceModalProps {
 const PronounceModal = ({ isOpen, onClose, text }: PronounceModalProps) => {
   const [isRecording, setIsRecording] = useState(false);
   const [mp3Url, setMp3Url] = useState<string | null>(null); // MP3 URL 상태
+  const [proScore, setProScore] = useState<number | null>(null); // 발음 점수 상태
   const recorderRef = useRef<MicRecorder | null>(null);
 
   const startRecording = async () => {
@@ -33,6 +35,9 @@ const PronounceModal = ({ isOpen, onClose, text }: PronounceModalProps) => {
         const mp3Url = URL.createObjectURL(file); // MP3 URL 생성
         setMp3Url(mp3Url);
         setIsRecording(false);
+        const response = await userApi.fetchPronounce(file);
+        setProScore(response.proScore); 
+      console.log('발음 점수:', response.proScore); // proScore 응답 처리
       } catch (error) {
         console.error('녹음 중지 중 오류 발생:', error);
       }
@@ -61,11 +66,18 @@ const PronounceModal = ({ isOpen, onClose, text }: PronounceModalProps) => {
           </div>
         )}
 
+        {proScore !== null && (
+          <div>
+            <p>발음 점수: {proScore}</p>
+          </div>
+        )}
+        
         <button onClick={onClose}>닫기</button>
       </div>
     </div>,
     document.body,
   );
 };
+
 
 export default PronounceModal;

@@ -2,6 +2,7 @@ import React from 'react';
 import WordList from '../../components/Word/WordList';
 import styles from './Word.module.scss';
 
+
 const Word = () => {
   return (
     <div>
