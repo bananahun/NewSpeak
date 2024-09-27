@@ -34,9 +34,9 @@ public class ExpLog{
     @CreatedDate
     private LocalDate createdDate; // 생성 날짜
 
-    public ExpLog(ExpLogRequest expLogRequest){
-        this.change = expLogRequest.getChange();
-        this.user = expLogRequest.getUser();
-        this.activityType = expLogRequest.getActivityType();
-    }
+//    public ExpLog(ExpLogRequest expLogRequest){
+//        this.change = expLogRequest.getChange();
+//        this.user = expLogRequest.getUser();
+//        this.activityType = expLogRequest.getActivityType();
+//    }
 }

@@ -57,12 +57,12 @@ public class VocaController {
         return ResponseEntity.ok(new WordQuizs(wordQuizs));
     }
 
-    @PostMapping("/{vocaId}/quiz")
-    public ResponseEntity<ExpResult> postVocaQuizResult(@RequestBody VocaQuizResult vocaQuizResult){
-        MyUserDetails userDetails=AuthUtil.getUserDetails();
-
-        expLogService.saveExpLogAndAddToUserExp(new ExpLogRequest(,userDetails.getUserId(),));
-
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping("/{vocaId}/quiz")
+//    public ResponseEntity<ExpResult> postVocaQuizResult(@RequestBody VocaQuizResult vocaQuizResult){
+//        MyUserDetails userDetails=AuthUtil.getUserDetails();
+//
+//        expLogService.saveExpLogAndAddToUserExp(new ExpLogRequest(,userDetails.getUserId(),));
+//
+//        return ResponseEntity.ok().build();
+//    }
 }
