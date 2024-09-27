@@ -4,16 +4,16 @@ import cloud from 'd3-cloud';
 
 // 색상 배열 정의
 const colors = [
-  '#FF6347',
-  '#4682B4',
-  '#32CD32',
-  '#FFD700',
-  '#FF69B4',
-  '#8A2BE2',
-  '#7FFF00',
-  '#D2691E',
-  '#DC143C',
-  '#00BFFF',
+  '#F56C00',
+  '#F5B200',
+  '#F59400',
+  '#F54000',
+  '#F5D000',
+  '#F5B552',
+  '#CD9466',
+  '#CDB166',
+  '#CC8166',
+  '#CDBD66',
 ];
 
 // 단어 데이터의 타입 정의
@@ -38,22 +38,21 @@ const WordCloud: React.FC<WordCloudProps> = ({ data }) => {
       const width = container.clientWidth;
       const height = container.clientHeight;
 
-      // 단어 구름 그리기 함수 정의
+      // 기존 svg 제거
+      d3.select(container).select('svg').remove();
+
+      // 새로운 svg 추가
+      const svg = d3
+        .select(container)
+        .append('svg')
+        .attr('width', width)
+        .attr('height', height)
+        .append('g')
+        .attr('transform', `translate(${width / 2}, ${height / 2})`);
+
+      // 단어 요소 추가
       const draw = (words: cloud.Word[]) => {
-        // 기존 svg 제거
-        d3.select(container).select('svg').remove();
-
-        // 새로운 svg 추가
-        const svg = d3
-          .select(container)
-          .append('svg')
-          .attr('width', width)
-          .attr('height', height)
-          .append('g')
-          .attr('transform', `translate(${width / 2}, ${height / 2})`);
-
-        // 단어 요소 추가
-        svg
+        const texts = svg
           .selectAll('text')
           .data(words)
           .enter()
@@ -65,45 +64,87 @@ const WordCloud: React.FC<WordCloudProps> = ({ data }) => {
             () => colors[Math.floor(Math.random() * colors.length)],
           )
           .attr('text-anchor', 'middle')
-          .attr('transform', (d: cloud.Word) => {
-            const angle = Math.random() * Math.PI * 2; // 원형 배치를 위한 각도 계산
-            const radius = Math.sqrt(Math.random()) * (width / 2); // 반경 계산 (중앙으로부터 분포)
-            const x = radius * Math.cos(angle); // X 좌표
-            const y = radius * Math.sin(angle); // Y 좌표
-            return `translate(${x}, ${y})`; // 원형 배치
-          })
+          .attr(
+            'transform',
+            (d: cloud.Word) => `translate(${d.x}, ${d.y}) rotate(${d.rotate})`,
+          )
           .text((d: cloud.Word) => d.text as string)
-          .style('cursor', 'pointer')
-          .on('mouseover', function (event, d) {
-            d3.select(this)
+          .style('cursor', 'pointer');
+
+        // 각 단어가 계속 부드럽게 이동하도록 설정
+        function moveWord(
+          textElement: d3.Selection<
+            SVGTextElement,
+            cloud.Word,
+            SVGGElement,
+            unknown
+          >,
+          d: cloud.Word,
+        ) {
+          let currentX = d.x;
+          let currentY = d.y;
+
+          function continuousMove() {
+            // 새로운 목표 위치 계산
+            const targetX = currentX + (Math.random() * 30 - 15); // X축으로 15px 내외로 움직임
+            const targetY = currentY + (Math.random() * 30 - 15); // Y축으로 15px 내외로 움직임
+
+            // 텍스트의 실제 크기와 회전을 고려한 경계 계산
+            const bbox = textElement.node()?.getBBox();
+            const textWidth = bbox ? bbox.width : 0;
+            const textHeight = bbox ? bbox.height : 0;
+
+            // 단어가 이동할 때 경계 안에 있게 제한 (SVG 안에만 위치)
+            const boundedTargetX = Math.max(
+              -width / 2 + textWidth / 2,
+              Math.min(targetX, width / 2 - textWidth / 2),
+            );
+            const boundedTargetY = Math.max(
+              -height / 2.1 + textHeight / 2,
+              Math.min(targetY, height / 2 - textHeight / 2),
+            );
+
+            textElement
               .transition()
-              .duration(200)
-              .style('font-size', `${d.size! * 1.5}px`); // 글씨 커지기
-          })
-          .on('mouseout', function (event, d) {
-            d3.select(this)
-              .transition()
-              .duration(200)
-              .style('font-size', `${d.size}px`); // 원래 크기로 돌아가기
-          });
+              .duration(1000) // 1초 동안 부드럽게 이동
+              .ease(d3.easeLinear) // 일정한 속도로 이동
+              .attrTween('transform', function () {
+                return d3.interpolateString(
+                  `translate(${currentX}, ${currentY}) rotate(${d.rotate})`,
+                  `translate(${boundedTargetX}, ${boundedTargetY}) rotate(${d.rotate})`,
+                );
+              })
+              .on('end', function () {
+                currentX = boundedTargetX; // 현재 위치 업데이트
+                currentY = boundedTargetY; // 현재 위치 업데이트
+                continuousMove(); // 이동이 끝나면 다시 이동
+              });
+          }
+
+          continuousMove(); // 초기 움직임 시작
+        }
+
+        // 모든 단어에 대해 움직임 설정
+        texts.each(function (d: cloud.Word) {
+          moveWord(d3.select(this), d);
+        });
       };
 
       // d3-cloud 레이아웃 설정
-      const layout = cloud<WordData>()
+      cloud<WordData>()
         .size([width, height])
         .words(
           data.map(d => ({
             text: d.text,
-            size: d.size,
+            size: d.size + 10,
           })),
         )
-        .padding(5)
+        .padding(7)
         .rotate(() => 0) // 모든 단어는 가로로 유지
         .font('Impact')
         .fontSize(d => d.size)
-        .on('end', draw); // 'end' 이벤트가 발생하면 draw 호출
-
-      layout.start();
+        .on('end', draw)
+        .start();
     };
 
     drawWordCloud();
@@ -117,14 +158,15 @@ const WordCloud: React.FC<WordCloudProps> = ({ data }) => {
       ref={containerRef}
       id="word-cloud"
       style={{
-        width: 'calc(100vw - 12rem)', // 네비게이션 바 너비를 제외한 전체 너비
-        height: '90vh', // 전체 화면 높이
-        overflow: 'hidden', // 스크롤 방지
+        width: '40vh',
+        height: '40vh',
+        overflow: 'hidden',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        position: 'relative',
       }}
-    ></div>
+    />
   );
 };
 
