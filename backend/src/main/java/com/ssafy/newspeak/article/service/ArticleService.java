@@ -1,9 +1,11 @@
 package com.ssafy.newspeak.article.service;
 
+import com.ssafy.newspeak.article.dto.ArticlesFindByCategoryMain;
 import com.ssafy.newspeak.article.dto.ArticleFindResponse;
 import com.ssafy.newspeak.article.dto.ArticlesFindResponse;
 import com.ssafy.newspeak.article.entity.Article;
 import com.ssafy.newspeak.article.repository.ArticleRepository;
+import com.ssafy.newspeak.category.entity.Category;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,8 +30,12 @@ public class ArticleService {
         return articlesFindResponses;
     }
 
-    public List<ArticlesFindResponse> findByLevel(Integer level) {
-        List<Article> articles = articleRepository.findByLevel(level);
+    public List<ArticlesFindByCategoryMain> findByCategoryMains() {
+        return articleRepository.findTop5ArticlesByCategory();
+    }
+
+    public List<ArticlesFindResponse> findByCategory(long id, int page) {
+        List<Article> articles = articleRepository.findByCategory(id, page, 5);
         List<ArticlesFindResponse> articlesFindResponses = new ArrayList<>();
         for (Article article : articles) {
             ArticlesFindResponse articlesFindResponse = ArticlesFindResponse.from(article);
@@ -38,8 +44,8 @@ public class ArticleService {
         return articlesFindResponses;
     }
 
-    public List<ArticlesFindResponse> findByTitle(String title) {
-        List<Article> articles = articleRepository.findByTitle(title);
+    public List<ArticlesFindResponse> findByKeyword(long id, int page) {
+        List<Article> articles = articleRepository.findArticlesByKeywordId(id, page, 5);
         List<ArticlesFindResponse> articlesFindResponses = new ArrayList<>();
         for (Article article : articles) {
             ArticlesFindResponse articlesFindResponse = ArticlesFindResponse.from(article);
@@ -48,8 +54,18 @@ public class ArticleService {
         return articlesFindResponses;
     }
 
-    public List<ArticlesFindResponse> findByCategory(long id) {
-        List<Article> articles = articleRepository.findByCategory(id);
+    public List<ArticlesFindResponse> findByLevel(Integer level, int page) {
+        List<Article> articles = articleRepository.findByLevel(level, page, 5);
+        List<ArticlesFindResponse> articlesFindResponses = new ArrayList<>();
+        for (Article article : articles) {
+            ArticlesFindResponse articlesFindResponse = ArticlesFindResponse.from(article);
+            articlesFindResponses.add(articlesFindResponse);
+        }
+        return articlesFindResponses;
+    }
+
+    public List<ArticlesFindResponse> findByTitle(String title, int page) {
+        List<Article> articles = articleRepository.findByTitle(title, page, 5);
         List<ArticlesFindResponse> articlesFindResponses = new ArrayList<>();
         for (Article article : articles) {
             ArticlesFindResponse articlesFindResponse = ArticlesFindResponse.from(article);

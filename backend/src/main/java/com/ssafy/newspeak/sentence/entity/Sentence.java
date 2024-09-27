@@ -37,6 +37,9 @@ public class Sentence {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column
+    private Integer order;
+
     @ManyToOne
     @JoinColumn(name = "article_id")
     @OnDelete(action = OnDeleteAction.CASCADE)

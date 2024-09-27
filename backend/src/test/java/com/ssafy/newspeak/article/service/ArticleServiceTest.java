@@ -74,9 +74,9 @@ public class ArticleServiceTest {
     @DisplayName("전체 기사 레벨로 조회")
     void findByLevel() {
         // when
-        List<ArticlesFindResponse> articles1 = articleService.findByLevel(0);
-        List<ArticlesFindResponse> articles2 = articleService.findByLevel(1);
-        List<ArticlesFindResponse> articles3 = articleService.findByLevel(2);
+        List<ArticlesFindResponse> articles1 = articleService.findByLevel(0,1);
+        List<ArticlesFindResponse> articles2 = articleService.findByLevel(1,1);
+        List<ArticlesFindResponse> articles3 = articleService.findByLevel(2,1);
 
         // then
         assertThat(articles1).hasSize(1);
@@ -94,9 +94,9 @@ public class ArticleServiceTest {
     @DisplayName("전체 기사 제목으로 조회")
     void findByTitle() {
         // when
-        List<ArticlesFindResponse> articles1 = articleService.findByTitle("제목");
-        List<ArticlesFindResponse> articles2 = articleService.findByTitle("제목1");
-        List<ArticlesFindResponse> articles3 = articleService.findByTitle("제목3");
+        List<ArticlesFindResponse> articles1 = articleService.findByTitle("제목", 1);
+        List<ArticlesFindResponse> articles2 = articleService.findByTitle("제목1", 1);
+        List<ArticlesFindResponse> articles3 = articleService.findByTitle("제목3", 1);
 
         // then
         assertThat(articles1).hasSize(2);
@@ -113,9 +113,9 @@ public class ArticleServiceTest {
     @DisplayName("전체 기사 카테고리로 조회")
     void findByCategory() {
         // when
-        List<ArticlesFindResponse> articles1 = articleService.findByCategory(category1.getId());
-        List<ArticlesFindResponse> articles2 = articleService.findByCategory(category2.getId());
-        List<ArticlesFindResponse> articles3 = articleService.findByCategory(3L);
+        List<ArticlesFindResponse> articles1 = articleService.findByCategory(category1.getId(),1);
+        List<ArticlesFindResponse> articles2 = articleService.findByCategory(category2.getId(),2);
+        List<ArticlesFindResponse> articles3 = articleService.findByCategory(3L,1);
 
         // then
         assertThat(articles1).hasSize(1);

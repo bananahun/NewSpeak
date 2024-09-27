@@ -1,10 +1,11 @@
 package com.ssafy.newspeak.pronounce.entity;
 
+import com.ssafy.newspeak.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 @Getter
 @Builder
@@ -20,12 +21,9 @@ public class Pronounce {
     private Long id;
 
     @Column
-    private String script;
+    private Double proScore;
 
-    @Column
-    private Integer proScore;
-
-    @Column(name = "audio_path")
+    @Column(name = "audio_path", length = 2000)
     private String audioPath;
 
     @Column

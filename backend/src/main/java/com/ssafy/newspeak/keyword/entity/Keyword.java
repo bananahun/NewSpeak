@@ -6,6 +6,8 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.List;
+
 @Getter
 @Builder
 @Entity
@@ -24,8 +26,8 @@ public class Keyword {
     @Column
     private Integer cnt;
 
-    @ManyToOne
+    @OneToMany
     @JoinColumn(name="article_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Article article;
+    private List<Article> article;
 }

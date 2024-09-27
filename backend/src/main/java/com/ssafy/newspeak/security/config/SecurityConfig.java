@@ -79,8 +79,9 @@ public class SecurityConfig {
                             config.setAllowedOrigins(Arrays.asList(
                                 "http://localhost:5500",
                                 "http://localhost:5173",
-                                    "https://localhost:5173",
-                                "https://j11e103.p.ssafy.io"
+                                "https://j11e103.p.ssafy.io",
+                                "http://local.p.ssafy.io:5500",
+                                "http://local.p.ssafy.io:5173"
                             ));
                             config.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"));
                             config.addAllowedHeader("*");
@@ -96,7 +97,7 @@ public class SecurityConfig {
                 .authorizeRequests(authorize -> authorize
                         .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
                         .requestMatchers("/api/v1/auth/signUp","/api/v1/auth/email").hasRole("GUEST")
-                        .requestMatchers("/api/**").hasRole("USER")
+                        .requestMatchers("/api/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oAuth2LoginSuccessHandler)

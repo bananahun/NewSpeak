@@ -1,5 +1,6 @@
 package com.ssafy.newspeak.keyword.repository;
 
+import com.ssafy.newspeak.article.entity.Article;
 import com.ssafy.newspeak.keyword.entity.Keyword;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ public class KeywordRepository {
 
     public List<Keyword> findAll() {
         return em.createQuery("select k from Keyword k order by cnt desc", Keyword.class)
+                .setMaxResults(100)
                 .getResultList();
     }
 

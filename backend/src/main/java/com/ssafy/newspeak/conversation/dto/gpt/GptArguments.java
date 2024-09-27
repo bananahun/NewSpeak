@@ -10,5 +10,4 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GptArguments {
     private String question;
-    private String result;
 }

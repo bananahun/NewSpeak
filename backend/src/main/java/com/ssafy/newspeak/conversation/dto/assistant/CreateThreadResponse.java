@@ -8,7 +8,7 @@ public class CreateThreadResponse {
 
     private String id;
     private String object;
-    private String metadata;
+    private Object metadata;
 
     @JsonProperty("created_at")
     private Long createdAt;

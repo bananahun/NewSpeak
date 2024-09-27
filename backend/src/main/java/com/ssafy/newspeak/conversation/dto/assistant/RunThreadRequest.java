@@ -15,5 +15,7 @@ public class RunThreadRequest {
 
     private String assistantId;
 
-    public static RunThreadRequest create(String assistantId) { return new RunThreadRequest(assistantId); }
+    public static RunThreadRequest create(String assistantId) {
+        return new RunThreadRequest(assistantId);
+    }
 }
