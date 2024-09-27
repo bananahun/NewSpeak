@@ -16,16 +16,18 @@ const colors = [
   '#00BFFF',
 ];
 
+// 단어 데이터의 타입 정의
 interface WordData {
   text: string;
   size: number;
 }
 
+// WordCloud 컴포넌트의 Props 타입 정의
 interface WordCloudProps {
   data: WordData[];
 }
 
-const WordCloud = ({ data }: WordCloudProps) => {
+const WordCloud: React.FC<WordCloudProps> = ({ data }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,11 +35,61 @@ const WordCloud = ({ data }: WordCloudProps) => {
       const container = containerRef.current;
       if (!container) return;
 
-      // 네비게이션 바 너비를 고려하여 오른쪽 공간의 너비를 설정
       const width = container.clientWidth;
       const height = container.clientHeight;
 
-      const layout = cloud()
+      // 단어 구름 그리기 함수 정의
+      const draw = (words: cloud.Word[]) => {
+        // 기존 svg 제거
+        d3.select(container).select('svg').remove();
+
+        // 새로운 svg 추가
+        const svg = d3
+          .select(container)
+          .append('svg')
+          .attr('width', width)
+          .attr('height', height)
+          .append('g')
+          .attr('transform', `translate(${width / 2}, ${height / 2})`);
+
+        // 단어 요소 추가
+        svg
+          .selectAll('text')
+          .data(words)
+          .enter()
+          .append('text')
+          .style('font-size', (d: cloud.Word) => `${d.size}px`) // 단어 크기 조정
+          .style('font-family', 'Impact')
+          .style(
+            'fill',
+            () => colors[Math.floor(Math.random() * colors.length)],
+          )
+          .attr('text-anchor', 'middle')
+          .attr('transform', (d: cloud.Word) => {
+            const angle = Math.random() * Math.PI * 2; // 원형 배치를 위한 각도 계산
+            const radius = Math.sqrt(Math.random()) * (width / 2); // 반경 계산 (중앙으로부터 분포)
+            const x = radius * Math.cos(angle); // X 좌표
+            const y = radius * Math.sin(angle); // Y 좌표
+            return `translate(${x}, ${y})`; // 원형 배치
+          })
+          .text((d: cloud.Word) => d.text as string)
+          .style('cursor', 'pointer')
+          .on('mouseover', function (event, d) {
+            d3.select(this)
+              .transition()
+              .duration(200)
+              .style('font-size', `${d.size! * 1.5}px`); // 글씨 커지기
+          })
+          .on('mouseout', function (event, d) {
+            d3.select(this)
+              .transition()
+              .duration(200)
+              .style('font-size', `${d.size}px`); // 원래 크기로 돌아가기
+          });
+      };
+
+      // d3-cloud 레이아웃 설정
+      const layout = cloud<WordData>()
         .size([width, height])
         .words(
           data.map(d => ({
@@ -45,56 +97,13 @@ const WordCloud = ({ data }: WordCloudProps) => {
             size: d.size,
           })),
         )
-        .padding(40)
-        .rotate(() => 0)
+        .padding(5)
+        .rotate(() => 0) // 모든 단어는 가로로 유지
         .font('Impact')
         .fontSize(d => d.size)
-        .on('end', draw);
+        .on('end', draw); // 'end' 이벤트가 발생하면 draw 호출
 
       layout.start();
-
-      function draw(words) {
-        const svg = d3.select(container).select('svg').remove(); // 기존 svg 제거
-
-        const newSvg = d3
-          .select(container)
-          .append('svg')
-          .attr('width', '90%') // 부모 div의 너비를 채움
-          .attr('height', '90%') // 부모 div의 높이를 채움
-          .style('border', '1px solid black')
-          .style('border-radius', '12px')
-          .style('overflow', 'hidden') // 스크롤 방지
-          .append('g')
-          .attr('transform', `translate(${width / 2}, ${height / 2})`); // 중앙에 위치
-
-        newSvg
-          .selectAll('text')
-          .data(words)
-          .enter()
-          .append('text')
-          .style('font-size', d => `${d.size}px`)
-          .style('font-family', 'Impact')
-          .style(
-            'fill',
-            () => colors[Math.floor(Math.random() * colors.length)],
-          )
-          .attr('text-anchor', 'middle')
-          .attr('transform', d => `translate(${d.x}, ${d.y})`)
-          .text(d => d.text)
-          .style('cursor', 'pointer')
-          .on('mouseover', function (event, d) {
-            d3.select(this)
-              .transition()
-              .duration(200)
-              .style('font-size', `${d.size * 1.5}px`);
-          })
-          .on('mouseout', function (event, d) {
-            d3.select(this)
-              .transition()
-              .duration(200)
-              .style('font-size', `${d.size}px`);
-          });
-      }
     };
 
     drawWordCloud();

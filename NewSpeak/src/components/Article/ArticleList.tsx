@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { fetchArticleList } from '../../apis/ArticleApi';
+import useArticleApi from '../../apis/ArticleApi';
 import { categories } from '../../utils/Categories';
 import useCategoryStore from '../../store/CategoryStore';
 import ArticleSlider from '../Slider/ArticleSlider';
@@ -25,7 +25,7 @@ const ArticleList = () => {
   useEffect(() => {
     setSelectedCategory(categoryId);
     const fetchData = async () => {
-      const data = await fetchArticleList();
+      const data = await useArticleApi.getArticleList();
       setArticleList(data);
     };
     fetchData();
