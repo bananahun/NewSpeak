@@ -81,8 +81,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     private void loginSuccess(HttpServletResponse response, CustomOAuth2User oAuth2User) throws IOException {
         String accessToken = jwtService.createAccessToken(oAuth2User.getEmail(),oAuth2User.getUserId());
         String refreshToken = jwtService.createRefreshToken();
-        response.addCookie(setCookie(ACCESS_TOKEN,accessToken));
-        response.addCookie(setCookie(REFRESH_TOKEN,refreshToken));
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
         jwtService.updateRefreshToken(oAuth2User.getUserId(), refreshToken);

@@ -1,5 +1,6 @@
 package com.ssafy.newspeak.user.service;
 
+import com.ssafy.newspeak.user.controller.dto.UserCategoryRequest;
 import com.ssafy.newspeak.user.entity.User;
 import com.ssafy.newspeak.user.entity.userArticle.UserArticle;
 import com.ssafy.newspeak.user.entity.userCategory.UserCategory;
@@ -20,12 +21,4 @@ public class UserService {
     private final UserArticleRepo userArticleRepo;
     private final UserCategoryRepo userCategoryRepo;
 
-    public List<UserCategory> findUserCategoryAll(Long userId) {
-        return userCategoryRepo.findAllByUserId(userId);
-    }
-
-    public List<UserArticle> findUserArticleAll(Long userId) {
-//        return userArticleRepo.findAllByUserId(userId);
-        return null;
-    }
 }

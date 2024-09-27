@@ -20,6 +20,5 @@ public class VocaWord {
     public VocaWord(VocaWordId vocaWordId, Long sentenceId ){
         this.vocaWordId = vocaWordId;
         this.sentenceId = sentenceId;
-
     }
 }
