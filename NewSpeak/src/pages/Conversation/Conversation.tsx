@@ -4,12 +4,15 @@ import useArticleStore from '../../store/ArticleStore';
 import AboutConv from '../../components/Conversation/AboutConv';
 import ConversationSession from '../../components/Conversation/ConversationSession';
 import ArticleModal from '../../components/Modal/ArticleModal';
+import ConversationModal from '../../components/Modal/ConversationModal';
 import styles from './Conversation.module.scss';
 import Swal from 'sweetalert2';
+import useConversationStore from '../../store/ConversationStore';
 
 const Conversation = () => {
   const navigate = useNavigate();
   const articleMeta = useArticleStore.getState().articleMeta;
+  const { currentAnswer } = useConversationStore();
   const [step, setStep] = useState(1);
   const [articleTitle, setArticleTitle] = useState('');
   const [activeLeftButton, setActiveLeftButton] = useState('나가기');
@@ -17,8 +20,8 @@ const Conversation = () => {
   const [isConvStarted, setIsConvStarted] = useState(false);
   const [conversationCount, setConversationCount] = useState(0);
   const [isUserTurn, setIsUserTurn] = useState(true);
-  const [threadId, setThreadId] = useState('thread_123123');
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [recordModalOpen, setRecordModalOpen] = useState(false);
+  const [articleModalOpen, setArticleModalOpen] = useState(false);
 
   const renderStep = (step: number) => {
     switch (step) {
@@ -57,20 +60,23 @@ const Conversation = () => {
     } else {
       setStep(2);
       setIsConvStarted(true);
-      setConversationCount(0);
+      setConversationCount(1);
     }
   };
 
   const userResponse = () => {
     setConversationCount(conversationCount + 1);
+    setRecordModalOpen(true);
   };
 
-  const GPTResponse = () => {
+  const submitResponse = () => {
     setConversationCount(conversationCount => conversationCount + 1);
+    setRecordModalOpen(false);
+    console.log(currentAnswer);
   };
 
   const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
+    setArticleModalOpen(!articleModalOpen);
   };
 
   useEffect(() => {
@@ -94,16 +100,12 @@ const Conversation = () => {
       setIsUserTurn(false);
       setConversationCount(10);
     }
-    setIsUserTurn(!isUserTurn);
+    if (conversationCount / 2 > 0) {
+      setIsUserTurn(true);
+    } else {
+      setIsUserTurn(!isUserTurn);
+    }
   }, [conversationCount]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      if (!isUserTurn) {
-        GPTResponse();
-      }
-    }, 2000);
-  }, [isUserTurn]);
 
   return (
     <>
@@ -121,12 +123,17 @@ const Conversation = () => {
         </div>
       </div>
       <div className={styles.conversationContainer}>
-        {isModalOpen && (
+        {articleModalOpen && (
           <span className={styles.articleOriginal}>
             <ArticleModal />
           </span>
         )}
         {renderStep(step)}
+        {isConvStarted && recordModalOpen && (
+          <span className={styles.recordModal}>
+            <ConversationModal submitResponse={submitResponse} />
+          </span>
+        )}
       </div>
       <div className={styles.buttonContainer}>
         <button onClick={leftButton}>{activeLeftButton}</button>
@@ -137,7 +144,6 @@ const Conversation = () => {
           </button>
         )}
       </div>
-      {/* 녹음하는 모달 컴포넌트 + 녹음 완료 여부 prop */}
     </>
   );
 };

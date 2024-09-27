@@ -1,46 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import ConversationModal from '../Modal/ConversationModal';
+import useConversationApi from '../../apis/ConversationApi';
 import styles from './ConversationSession.module.scss';
 
-const mockConv = {
-  conversations: [
-    {
-      user: 'What are the main points of the latest news article on climate change?',
-      assistant:
-        'The article discusses the rising global temperatures, the impact of climate change on ecosystems, and the urgent need for international cooperation to address the crisis.',
-    },
-    {
-      user: 'Who are the key figures mentioned in the article?',
-      assistant:
-        'The article mentions several key figures, including climate scientists, government officials, and activists advocating for policy changes.',
-    },
-    {
-      user: 'What actions are suggested to combat climate change in the article?',
-      assistant:
-        'The article suggests several actions, such as reducing carbon emissions, investing in renewable energy, and implementing stricter regulations on pollutants.',
-    },
-    {
-      user: 'Are there any statistics or studies referenced in the article?',
-      assistant:
-        'Yes, the article references a recent study indicating that global temperatures could rise by 1.5 degrees Celsius by 2030 if current trends continue.',
-    },
-    {
-      user: 'What are the potential consequences if these issues are not addressed?',
-      assistant:
-        'The article warns of severe consequences, including increased natural disasters, loss of biodiversity, and negative impacts on human health and food security.',
-    },
-  ],
-};
-
-// conv:
-// {
-//    conversations: [
-//        {
-//            "user": 유저응답,
-//            "assistant":gpt응답
-//        }
-//    ]
-// }
+interface Conversation {
+  sender: 'user' | 'assistant';
+  content: string;
+}
 
 const ConversationSession = ({
   conversationCount,
@@ -48,53 +14,122 @@ const ConversationSession = ({
   conversationCount: number;
 }) => {
   // const [conv, setConv] = useState(false);
+  const {
+    createThread,
+    postSpeechToThread,
+    getResponseAudio,
+    createReportThread,
+    postReportDetail,
+    generateReport,
+  } = useConversationApi();
+  const [conversation, setConversation] = useState<Conversation[]>([]);
 
-  // articleId를 담아 threadId 생성 POST요청
-  // /api/v1/conversation/dialog, params: {articleId: number}
-  // ThreadResponse
-  // {id: thread_~~~}
+  useEffect(() => {
+    setConversation([
+      {
+        sender: 'user',
+        content:
+          'What are the main points of the latest news article on climate change?',
+      },
+      {
+        sender: 'assistant',
+        content:
+          'The article discusses the rising global temperatures, the impact of climate change on ecosystems, and the urgent need for international cooperation to address the crisis.',
+      },
+      {
+        sender: 'user',
+        content: 'Who are the key figures mentioned in the article?',
+      },
+      {
+        sender: 'assistant',
+        content:
+          'The article mentions several key figures, including climate scientists, government officials, and activists advocating for policy changes.',
+      },
+      {
+        sender: 'user',
+        content:
+          'What actions are suggested to combat climate change in the article?',
+      },
+      {
+        sender: 'assistant',
+        content:
+          'The article suggests several actions, such as reducing carbon emissions, investing in renewable energy, and implementing stricter regulations on pollutants.',
+      },
+      {
+        sender: 'user',
+        content:
+          'Are there any statistics or studies referenced in the article?',
+      },
+      {
+        sender: 'assistant',
+        content:
+          'Yes, the article references a recent study indicating that global temperatures could rise by 1.5 degrees Celsius by 2030 if current trends continue.',
+      },
+      {
+        sender: 'user',
+        content:
+          'What are the potential consequences if these issues are not addressed?',
+      },
+      {
+        sender: 'assistant',
+        content:
+          'The article warns of severe consequences, including increased natural disasters, loss of biodiversity, and negative impacts on human health and food security.',
+      },
+    ]);
+  }, []);
 
-  // articleId로 생성한 threadId 로 POST요청
-  // POST: DialogAnswer /api/v1/conversation/dialog/{threadId}
-  // {answer: "STT변환한 text"}
-  // run ID를 반환
-  // res: {id: "run_ajdhjda"}
+  useEffect(() => {}, [conversationCount]);
 
-  // threadId, runId를 담아서 GET 요청
-  // GET: /api/v1/conversation/dialog/{threadId}/{runId}
-  // TTS 변환한 AI 대답 반환.mp3
-  // text는 ?
+  const flow1 = () => {
+    createThread();
+  };
 
-  // 레포트 생성을 위한 Thread id를 받기 위해 POST 요청
-  // POST: /api/v1/conversation/report
-  // 보고서 생성을 위한 새로운 threadId 반환
-  // res: {id: "thread_dahgjhadg"}
+  // 여기 STT자리
 
-  // 레포트 생성 threadId, 대화 목록을 담아서 POST 요청
-  // POST: /api/v1/conversation/report/{threadId}
-  // 레포트가 담긴 run Id
-  // res: {id: "run_djanbjf"}
+  const flow2 = () => {
+    const answer = 'Hello, GPT.';
+    postSpeechToThread(answer);
+    // answer에 있는 내용 sender: user / content: text 해서 conversation에 저장
+    // STT 구현 해야함
+  };
 
-  // 레포트 확인하는 POST 요청
-  // POST: /api/v1/conversation/report/{threadId}/{runId}
-  // res: 레포트.JSON
+  const flow3 = () => {
+    getResponseAudio();
+    // text 받아서 {sender: assistant}, {content: text} conversation 저장
+    // mp3파일 bite형식 파일 변환 해야함
+  };
+
+  const flow4 = () => {
+    createReportThread();
+  };
+
+  const flow5 = () => {
+    postReportDetail(conversation);
+  };
+
+  const flow6 = () => {
+    generateReport();
+    // 보고서 만드는 함수 호출, 완료 여부 어케암
+  };
+
   return (
     <div>
       <div className={styles.converSationSession}>
-        {mockConv.conversations
-          .slice(0, (conversationCount - 1) / 2)
-          .map((conv, index) => {
-            return (
-              <div key={index}>
-                <div className={styles.userMessage}>
-                  <div className={styles.messageContent}>{conv.user}</div>
-                </div>
-                <div className={styles.botMessage}>
-                  <div className={styles.messageContent}>{conv.assistant}</div>
-                </div>
+        {conversation.map((conv, index) => {
+          return (
+            <div key={index}>
+              <div
+                className={
+                  conv.sender === 'user'
+                    ? styles.userMessage
+                    : styles.botMessage
+                }
+              >
+                <div className={styles.messageContent}>{conv.content}</div>
               </div>
-            );
-          })}
+            </div>
+          );
+        })}
       </div>
       {/* {conv && <ConversationModal />} */}
     </div>

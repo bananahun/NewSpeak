@@ -1,0 +1,41 @@
+.conversationModal {
+  display: flex;
+  flex-direction: column;
+  justify-self: center;
+  align-items: center;
+  position: relative;
+
+  button {
+    width: fit-content;
+  }
+
+  .modalHeader {
+    position: fixed;
+    top: 25px;
+  }
+
+  .modalContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .buttonContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+
+    .sttButtons,
+    .activeButtons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .activeButtons {
+      flex-wrap: nowrap;
+    }
+  }
+}

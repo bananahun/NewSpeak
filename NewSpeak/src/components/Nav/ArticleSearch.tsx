@@ -26,7 +26,7 @@ const ArticleSearch = ({ isOpen, isFirstRender }: ArticleSearchProps) => {
           <FaSearch size={'20'} />
         </button>
       </div>
-      <div>
+      <div className={styles.searchedArticles}>
         <li>list</li>
         <li>list</li>
         <li>list</li>
