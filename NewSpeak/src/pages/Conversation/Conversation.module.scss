@@ -36,6 +36,22 @@
     left: 50%;
     top: 30px;
   }
+
+  .recordModal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 400px;
+    min-height: 600px;
+    width: 45vw;
+    height: 30vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+  }
 }
 
 .buttonContainer {

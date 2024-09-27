@@ -26,10 +26,8 @@ const WordSearch = ({ isOpen, isFirstRender }: WordSearchProps) => {
           <FaSearch size={'20'} />
         </button>
       </div>
-      <div>
-        <li>
-          listlistlistlistlistlistlistlistlistlistlistlistlistlistlistlistlistlist
-        </li>
+      <div className={styles.searchedWords}>
+        <li>listlistlistlistlistlistlistlistlistlistlistlistlist</li>
         <li>list</li>
         <li>list</li>
       </div>
