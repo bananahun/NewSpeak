@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Slider from 'react-slick';
 import { categories } from '../../utils/Categories';
-import useCategoryStore from '../../store/CategoryStore';
+import {useCategoryStore} from '../../store/CategoryStore';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import styles from './CategorySlider.module.scss';

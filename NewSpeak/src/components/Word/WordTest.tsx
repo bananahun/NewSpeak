@@ -3,14 +3,16 @@ import TimeWatch from './TimeWatch';
 import styles from './WordTest.module.scss';
 
 interface Word {
-  content: string;
-  meanings: {
+  wordId: number;
+  answer: string;
+  level: number;
+  createdAt: Date | null; // 수정: 날짜 혹은 null일 수 있는 필드
+  meaningDatas: {
     meaning: string;
     example: string;
     exampleKorean: string;
   }[];
 }
-
 interface WordTestProps {
   words: Word[];
   onTestComplete: (score: number, userAnswers: string[]) => void;
@@ -69,7 +71,7 @@ const WordTest = ({ words, onTestComplete }: WordTestProps) => {
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleAnswerSubmit(
-        currentWord.content === userAnswers[currentQuestionIndex],
+        currentWord.answer === userAnswers[currentQuestionIndex],
         userAnswers[currentQuestionIndex],
       );
     }
@@ -78,7 +80,7 @@ const WordTest = ({ words, onTestComplete }: WordTestProps) => {
   return (
     <div className={styles.wordTestContainer}>
       <h1>단어 시험</h1>
-      <h2>{currentWord.meanings[0].meaning}</h2>
+      <h2>{currentWord.meaningDatas[0].meaning}</h2>
       <p>
         문제 {currentQuestionIndex + 1} / {words.length}
       </p>
@@ -101,7 +103,7 @@ const WordTest = ({ words, onTestComplete }: WordTestProps) => {
       <button
         onClick={() =>
           handleAnswerSubmit(
-            currentWord.content === userAnswers[currentQuestionIndex],
+            currentWord.answer === userAnswers[currentQuestionIndex],
             userAnswers[currentQuestionIndex],
           )
         }

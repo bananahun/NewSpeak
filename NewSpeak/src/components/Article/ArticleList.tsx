@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import useArticleApi from '../../apis/ArticleApi';
 import { categories } from '../../utils/Categories';
-import useCategoryStore from '../../store/CategoryStore';
+import {useCategoryStore} from '../../store/CategoryStore';
 import ArticleSlider from '../Slider/ArticleSlider';
 import CategorySlider from '../Slider/CategorySlider';
 import styles from './ArticleList.module.scss';

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom'; // useLocation 사용
 import styles from './ArticleListDetail.module.scss';
-import useCategoryStore from '../../store/CategoryStore';
+import {useCategoryStore} from '../../store/CategoryStore';
 import { categories } from '../../utils/Categories';
 
 const newsData = {
