@@ -37,8 +37,9 @@ public class MyPageController {
     private final JwtService jwtService;
     private final ExpLogService expLogService;
 
-    @GetMapping("/test")
-    public ResponseEntity<Object> getVocaList() {
+    @GetMapping("/info")
+    public ResponseEntity<MyInfo> getMyInfo() {
+        MyUserDetails userDetails=AuthUtil.getUserDetails();
         return ResponseEntity.ok(null);
     }
 

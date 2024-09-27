@@ -20,6 +20,7 @@ public class MyUserDetails implements UserDetails {
     private String nickname;
     private String email;
     private String password;
+    private String imageUrl;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -41,6 +42,7 @@ public class MyUserDetails implements UserDetails {
         this.nickname = user.getNickname();
         this.email = user.getEmail();
         this.password=user.getPassword();
+        this.imageUrl=user.getImageUrl();
 
         List<GrantedAuthority> authorities = new ArrayList(roles.length);
         

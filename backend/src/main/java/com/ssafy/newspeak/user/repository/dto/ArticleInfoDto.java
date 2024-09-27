@@ -11,4 +11,7 @@ public class ArticleInfoDto {
     Long id;
     String title;
     LocalDateTime publishedDate;
+    String imageUrl;
+    String publisher;
+
 }
