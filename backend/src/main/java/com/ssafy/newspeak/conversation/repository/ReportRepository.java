@@ -22,5 +22,9 @@ public class ReportRepository {
 
     public Optional<Report> findById(Long id) { return Optional.ofNullable(em.find(Report.class, id));}
 
-    public List<Report> findAll() { return em.createQuery("from Report", Report.class).getResultList();}
+    public List<Report> findAll(Long userId) {
+        return em.createQuery("SELECT r FROM Report r WHERE r.user.id = :userId", Report.class)
+                .setParameter("userId", userId)
+                .getResultList();
+    }
 }

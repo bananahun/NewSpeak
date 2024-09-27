@@ -29,19 +29,23 @@ public class Report {
     private Long id;
 
     @Column
+    private String title;
+
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @CreationTimestamp
     private Timestamp createdAt;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", nullable = false)
-//    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    public static Report of(String content) {
+    public static Report of(String title, String content, User user) {
         Report report = new Report();
+        report.title = title;
         report.content = content;
-//        dialog.user = user;
+        report.user = user;
         return report;
     }
 }
