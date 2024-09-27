@@ -20,6 +20,10 @@ import { useModalStore } from './store/ModalStore';
 import AddWordModal from './components/Modal/AddWordModal';
 import OAuthCallback from './utils/OAuthCallback';
 
+///
+import TestApiComponent from './pages/Test';
+///
+
 function App() {
   const { theme } = useThemeStore();
   const location = useLocation();
@@ -61,6 +65,9 @@ function App() {
           <Route path="/report" element={<Report />} />
           <Route path="/reportlist" element={<ReportList />} />
           <Route path="/scraplist" element={<ScrapList />} />
+          ///
+          <Route path="/test/api" element={<TestApiComponent />} />
+          ///
         </Routes>
 
         <div className="modal">
