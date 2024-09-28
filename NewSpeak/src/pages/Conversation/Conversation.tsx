@@ -8,11 +8,14 @@ import ConversationModal from '../../components/Modal/ConversationModal';
 import styles from './Conversation.module.scss';
 import Swal from 'sweetalert2';
 import useConversationStore from '../../store/ConversationStore';
+import useConversationApi from '../../apis/ConversationApi';
 
 const Conversation = () => {
   const navigate = useNavigate();
   const articleMeta = useArticleStore.getState().articleMeta;
-  const { currentAnswer } = useConversationStore();
+  const { createReportThread } = useConversationApi();
+  const { isGeneratingReport, reportCreated, clearConvData } =
+    useConversationStore();
   const [step, setStep] = useState(1);
   const [articleTitle, setArticleTitle] = useState('');
   const [activeLeftButton, setActiveLeftButton] = useState('나가기');
@@ -23,32 +26,72 @@ const Conversation = () => {
   const [recordModalOpen, setRecordModalOpen] = useState(false);
   const [articleModalOpen, setArticleModalOpen] = useState(false);
 
+  useEffect(() => {
+    clearConvData();
+  }, []);
+
   const renderStep = (step: number) => {
     switch (step) {
       case 1:
         return <AboutConv />;
       default:
-        return <ConversationSession conversationCount={conversationCount} />;
+        return (
+          <ConversationSession setConversationCount={setConversationCount} />
+        );
     }
   };
 
   const reportAlert = () => {
     Swal.fire({
-      title: '작성 완료.',
-      text: '바로 보러 가시겠어요?',
+      title: '회화 끝내기.',
+      text: '보고서를 생성할까요?',
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: '네',
       cancelButtonText: '아니요',
+    }).then(async response => {
+      if (response.isConfirmed) {
+        Swal.fire({
+          title: '회화 완료',
+          text: 'SPEAKO가 보고서를 작성중입니다.',
+          footer: '완료될때까지 시간이 조금 걸릴 수 있어요.',
+          icon: 'info',
+          showCancelButton: false,
+          confirmButtonText: '확인',
+        }).then(() => {
+          // 로딩중 띄우기
+          createReportThread();
+        });
+      }
     });
   };
 
+  useEffect(() => {
+    if (reportCreated) {
+      navigate('/mypage');
+    }
+  }, [reportCreated]);
+
   const leftButton = () => {
     if (step === 2) {
-      // 저장하지 않고 나갈거냐는 알림 메시지
-      setStep(1);
-      setConversationCount(0);
-      setIsConvStarted(false);
+      Swal.fire({
+        title: '돌아가기.',
+        text: '저장하지 않고 나가시겠어요?',
+        footer: '지금까지 진행된 대화가 사라질거에요.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: '네',
+        cancelButtonText: '아니요',
+      }).then(response => {
+        if (response.isConfirmed) {
+          setStep(1);
+          setConversationCount(0);
+          clearConvData();
+          setIsConvStarted(false);
+        } else {
+          return;
+        }
+      });
     } else {
       navigate('/article');
     }
@@ -58,6 +101,10 @@ const Conversation = () => {
     if (step === 2) {
       reportAlert();
     } else {
+      // 레포트 생성 실패했을때, 강제중단하는 로직
+      if (isGeneratingReport) {
+        return;
+      }
       setStep(2);
       setIsConvStarted(true);
       setConversationCount(1);
@@ -70,8 +117,6 @@ const Conversation = () => {
 
   const submitResponse = () => {
     setRecordModalOpen(false);
-    setConversationCount(conversationCount => conversationCount + 1);
-    console.log(currentAnswer);
   };
 
   const toggleModal = () => {
@@ -86,7 +131,7 @@ const Conversation = () => {
       setActiveLeftButton('나가기');
       setActiveRightButton('대화 시작하기');
     }
-  });
+  }, [step]);
 
   useEffect(() => {
     if (articleMeta) {
@@ -117,7 +162,7 @@ const Conversation = () => {
             기사 전문 보기
           </div>
           {isConvStarted && (
-            <div className={styles.count}>{conversationCount} / 10</div>
+            <div className={styles.count}>{conversationCount - 1} / 10</div>
           )}
         </div>
       </div>

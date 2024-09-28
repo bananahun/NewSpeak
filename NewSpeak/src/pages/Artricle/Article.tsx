@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ArticleOriginal from '../../components/Article/ArticleOriginal';
 import ArticleTranslation from '../../components/Article/ArticleTranslation';
 import useArticleStore from '../../store/ArticleStore';
+import useConversationStore from '../../store/ConversationStore';
 import { getLogo } from '../../store/ThemeStore';
 import { FaRegCircleQuestion, FaRegBookmark } from 'react-icons/fa6';
 import styles from './Article.module.scss';
@@ -11,6 +12,7 @@ import { IconButton } from '@mui/material';
 const Article = () => {
   const navigate = useNavigate();
   const articleMeta = useArticleStore.getState().articleMeta;
+  const { clearConvData } = useConversationStore();
   const logo = getLogo();
   const [articleTitle, setArticleTitle] = useState('');
   const [articleImageUrl, setArticleImageUrl] = useState('');
@@ -46,7 +48,11 @@ const Article = () => {
     } else {
       setActiveTranslateMessage('전문 번역');
     }
-  });
+  }, [isTranslateOpen]);
+
+  useEffect(() => {
+    clearConvData();
+  }, []);
 
   return (
     <>

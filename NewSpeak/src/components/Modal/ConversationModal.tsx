@@ -30,6 +30,14 @@ const ConversationModal = ({
     setRecordModalOpen(false);
   };
 
+  const completeRecord = () => {
+    if (!transcript) {
+      // 녹음된거 없을때, 3번정도 누르면 직접 입력하게 해도 ㄱㅊ을듯
+      setCurrentAnswer('녹음된 문장이 없음');
+    }
+    submitResponse();
+  };
+
   useEffect(() => {
     if (theme === 'light') {
       setSpacebarLogo(spacebar);
@@ -100,7 +108,7 @@ const ConversationModal = ({
         </div>
         <div className={styles.activeButtons}>
           <button onClick={resetTranscript}>다시 녹음할래요</button>
-          <button onClick={submitResponse}>잘 녹음 됐어요</button>
+          <button onClick={completeRecord}>잘 녹음 됐어요</button>
         </div>
       </div>
     </div>

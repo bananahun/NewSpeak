@@ -5,84 +5,112 @@ import styles from './ConversationSession.module.scss';
 import { LiaEdit } from 'react-icons/lia';
 import { MdSend } from 'react-icons/md';
 
-interface Conversation {
-  sender: 'user' | 'assistant';
-  content: string;
-}
-
 const ConversationSession = ({
-  conversationCount,
+  setConversationCount,
 }: {
-  conversationCount: number;
+  setConversationCount: React.Dispatch<React.SetStateAction<number>>;
 }) => {
   const {
     convRunId,
-    isAudioReceived,
+    recommendedAnswers,
     createThread,
     postSpeechToThread,
     getResponseAudio,
-    createReportThread,
-    postReportDetail,
-    generateReport,
   } = useConversationApi();
-  const { currentAnswer, setCurrentAnswer } = useConversationStore();
+  const {
+    currentAnswer,
+    conversation,
+    setCurrentAnswer,
+    addConversation,
+    clearConversation,
+  } = useConversationStore();
   const [isEditing, setIsEditing] = useState(false);
+  const [isFirstMessage, setIsFirstMessage] = useState(true);
   const [activeAnswer, setActiveAnswer] = useState(currentAnswer);
   const [editedAnswer, setEditedAnswer] = useState('');
-  const [conversation, setConversation] = useState<Conversation[]>([]);
+  const [byteMp3, setByteMp3] = useState('');
+  const [activeResponse, setActiveResponse] = useState('');
+  const [isFirstRender, setIsFirstRender] = useState(true);
+
+  useEffect(() => {
+    if (isFirstRender) {
+      clearConversation();
+      createThread();
+      setIsFirstRender(false);
+      setIsFirstMessage(true);
+      return;
+    }
+  }, [isFirstRender]);
 
   useEffect(() => {
     setActiveAnswer(currentAnswer);
     setEditedAnswer(currentAnswer);
-    console.log(activeAnswer);
   }, [currentAnswer]);
 
   useEffect(() => {
-    if (conversationCount === 1) {
-      flow1();
-      return;
-    }
-  }, []);
+    console.log(recommendedAnswers);
+  }, [recommendedAnswers]);
 
-  const flow1 = () => {
-    createThread();
-  };
-
-  const flow2 = () => {
-    setConversation(prev => [
-      ...prev,
-      { sender: 'user', content: currentAnswer },
-    ]);
+  const submitAnswer = () => {
+    addConversation('user', currentAnswer);
+    setConversationCount(prev => prev + 1);
     postSpeechToThread(currentAnswer);
     setEditedAnswer('');
     setActiveAnswer('');
     setCurrentAnswer('');
+    setIsFirstMessage(false);
   };
 
   useEffect(() => {
+    if (isFirstMessage) {
+      return;
+    }
     if (convRunId) {
-      getResponseAudio();
+      const getByteMp3 = async () => {
+        try {
+          const response = await getResponseAudio();
+          setByteMp3(response.audio.body.byteArray);
+          setActiveResponse(response.dialog.assistant);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      getByteMp3();
     }
   }, [convRunId]);
 
   useEffect(() => {
-    if (isAudioReceived) {
-      console.log('audio');
+    if (activeResponse) {
+      addConversation('assistant', activeResponse);
+      setConversationCount(prev => prev + 1);
     }
-  });
+    setActiveAnswer('');
+  }, [activeResponse]);
 
-  const flow4 = () => {
-    createReportThread();
+  const base64ToArrayBuffer = (base64: string) => {
+    const binaryString = atob(base64);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes.buffer;
   };
 
-  const flow5 = () => {
-    postReportDetail(conversation);
+  const byteToMp3 = (byteData: string) => {
+    const arrayBuffer = base64ToArrayBuffer(byteData);
+    const blob = new Blob([arrayBuffer], { type: 'audio/mpeg' });
+    const url: string = URL.createObjectURL(blob);
+    return url;
   };
 
-  const flow6 = () => {
-    generateReport();
-    // 보고서 만드는 함수 호출, 완료 여부 어케암
-  };
+  useEffect(() => {
+    if (byteMp3) {
+      const audio = new Audio(byteToMp3(byteMp3));
+      audio.play();
+      setByteMp3('');
+    }
+  }, [byteMp3]);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -94,6 +122,11 @@ const ConversationSession = ({
     setIsEditing(false);
   };
 
+  // TODO: 추천받은 문장 어디 띄우지
+  // TODO: 녹음다하고 수정할 때 영어만 적을 수 있게 + 255자 제한
+  // TODO: mp3 플레이될 때 녹음하기 비활성화 찍기
+  // TODO: ai 응답 스크립트 on / off
+  // TODO: 수정할 때, 너무 길어지면 CSS 이상해짐
   return (
     <div>
       <div className={styles.converSationSession}>
@@ -127,7 +160,7 @@ const ConversationSession = ({
                 />
                 <MdSend
                   size={25}
-                  onClick={flow2}
+                  onClick={submitAnswer}
                   className={styles.submitButton}
                 />
               </>
