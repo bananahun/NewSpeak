@@ -1,7 +1,9 @@
-package com.ssafy.newspeak.user.controller;
+package com.ssafy.newspeak.user.controller.dto;
 
 import com.ssafy.newspeak.security.jwt.MyUserDetails;
+import lombok.Getter;
 
+@Getter
 public class MyInfo {
     private String email;
     private String nickname;

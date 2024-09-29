@@ -1,5 +1,7 @@
 package com.ssafy.newspeak.explog.service;
 
+import com.ssafy.newspeak.activitytype.entity.ActivityType;
+import com.ssafy.newspeak.activitytype.repo.ActivityTypeRepo;
 import com.ssafy.newspeak.explog.entity.ExpLog;
 import com.ssafy.newspeak.explog.repo.ExpLogRepo;
 import com.ssafy.newspeak.explog.repo.DailyExpDto;
@@ -21,14 +23,25 @@ import java.util.NoSuchElementException;
 public class ExpLogService {
     private final ExpLogRepo expLogRepo;
     private final UserRepo userRepo;
+    private final ActivityTypeRepo activityTypeRepo;
 
-//    public void saveExpLogAndAddToUserExp(ExpLogRequest expLogRequest,Long userId) {
-//        User user=userRepo.findById(userId).orElseThrow(NoSuchElementException::new);
-//        ExpLog expLog=new ExpLog(expLogRequest);
-//        expLogRepo.save(expLog);
-//        user.addExp(expLog.getChange());
-//        userRepo.save(user);
-//    }
+    public ExpLog saveExpLogAndAddToUserExp(ExpLogRequest expLogRequest) {
+        User user=userRepo.findById(expLogRequest.getUserId())
+            .orElseThrow(NoSuchElementException::new);
+        ActivityType activityType=activityTypeRepo.findById(expLogRequest.getActTypeId())
+            .orElseThrow(NoSuchElementException::new);
+        Integer fullExp=activityType.getFullExp();
+        Double rate=fullExp * expLogRequest.getRate();
+        ExpLog expLog = ExpLog.builder()
+            .activityType(activityType)
+            .change((int) (fullExp * rate))
+            .build();
+        expLogRepo.save(expLog);
+        user.addExp(expLog.getChange());
+        userRepo.save(user);
+
+        return expLog;
+    }
 
     public List<DailyExpDto> getDailyExpsByMonth(Long userId, YearMonth yearMonth) {
         LocalDate startDate = yearMonth.atDay(1); // 해당 월의 첫 날
