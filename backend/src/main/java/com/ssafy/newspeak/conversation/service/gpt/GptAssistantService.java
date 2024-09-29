@@ -6,10 +6,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.newspeak.conversation.GptRole;
 import com.ssafy.newspeak.conversation.dto.assistant.*;
 import com.ssafy.newspeak.conversation.dto.gpt.GptMessage;
-import com.ssafy.newspeak.conversation.dto.report.ReportCompleteResponse;
+import com.ssafy.newspeak.conversation.dto.report.AfterReportCompleteResponse;
+import com.ssafy.newspeak.conversation.dto.report.BeforeReportCompleteResponse;
+import com.ssafy.newspeak.conversation.dto.report.ReportDto;
 import com.ssafy.newspeak.conversation.exception.JsonException;
 import com.ssafy.newspeak.conversation.exception.NotYetCompleteException;
+import com.ssafy.newspeak.conversation.service.ReportService;
 import com.ssafy.newspeak.pronounce.service.AudioFileUploadService;
+import com.ssafy.newspeak.security.jwt.MyUserDetails;
+import com.ssafy.newspeak.security.util.AuthUtil;
+import org.aspectj.lang.annotation.After;
 import org.springframework.ai.openai.OpenAiAudioSpeechModel;
 import org.springframework.ai.openai.OpenAiAudioSpeechOptions;
 import org.springframework.ai.openai.api.OpenAiAudioApi;
@@ -41,14 +47,16 @@ public class GptAssistantService {
     private String ASSISTANT_CONVERSATION;
 
     private final OpenAiAudioSpeechModel openAiAudioSpeechClient;
+    private final ReportService reportService;
 
     private final RestTemplate assistantTemplate;
     private final ObjectMapper objectMapper;
 
-    public GptAssistantService(@Qualifier("assistant") RestTemplate assistantTemplate, ObjectMapper objectMapper, AudioFileUploadService audioFileUploadService, OpenAiAudioSpeechModel openAiAudioSpeechClient) {
+    public GptAssistantService(@Qualifier("assistant") RestTemplate assistantTemplate, ObjectMapper objectMapper, AudioFileUploadService audioFileUploadService, OpenAiAudioSpeechModel openAiAudioSpeechClient, ReportService reportService) {
         this.assistantTemplate = assistantTemplate;
         this.objectMapper = objectMapper;
         this.openAiAudioSpeechClient = openAiAudioSpeechClient;
+        this.reportService = reportService;
     }
 
     // 스레드를 만듭니다. (대화의 기초 시작)
@@ -151,7 +159,7 @@ public class GptAssistantService {
                 .body(byteArrayResource);
     }
 
-    public ReportCompleteResponse reportCompleteResponse(String threadId, String runId) throws JsonProcessingException {
+    public AfterReportCompleteResponse reportCompleteResponse(String threadId, String runId) throws JsonProcessingException {
         String checkURL = DEFAULT_URL + "/" + threadId + "/runs/" + runId;
         ThreadRunResponse checkRes = Optional.ofNullable(assistantTemplate.getForObject(checkURL, ThreadRunResponse.class))
                 .orElseThrow(RuntimeException::new);
@@ -166,10 +174,14 @@ public class GptAssistantService {
         System.out.println("response.getLast() = " + response.getLast());
         RunThreadReportResponse result =  objectMapper.readValue(response.getLast(), RunThreadReportResponse.class);
         result.setConversation(response.getConversation());
+        // 저장하기
+        MyUserDetails user = AuthUtil.getUserDetails();
+        BeforeReportCompleteResponse beforeReportSave = BeforeReportCompleteResponse.of(result);
         try {
-            return ReportCompleteResponse.of(result);
+            reportService.create(beforeReportSave.getContent().getTitle(), beforeReportSave, user.getUserId());
+            return AfterReportCompleteResponse.of(beforeReportSave.getContent(), true);
         } catch (Exception e) {
-            throw new JsonException(e);
+            return AfterReportCompleteResponse.of(beforeReportSave.getContent(), false);
         }
     }
 }

@@ -3,7 +3,6 @@ package com.ssafy.newspeak.conversation.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ssafy.newspeak.article.service.ArticleService;
 import com.ssafy.newspeak.conversation.dto.assistant.*;
-import com.ssafy.newspeak.conversation.dto.conversation.ConvCreateResponse;
 import com.ssafy.newspeak.conversation.dto.report.*;
 import com.ssafy.newspeak.conversation.exception.NoSuchReportException;
 import com.ssafy.newspeak.conversation.service.ReportService;
@@ -11,9 +10,9 @@ import com.ssafy.newspeak.conversation.service.gpt.GptAssistantService;
 //import com.ssafy.newspeak.user.dto.UserAuthDto;
 import com.ssafy.newspeak.security.jwt.MyUserDetails;
 import com.ssafy.newspeak.security.util.AuthUtil;
-import com.ssafy.newspeak.security.util.UserAuthDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.lang.annotation.After;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,15 +33,15 @@ public class ReportController {
 
     // 생성된 보고서에 대한 api입니다.
 
-    @PostMapping
-    public ResponseEntity<ReportCreateResponse> createUserReport(@Valid @RequestBody ReportCompleteResponse body) throws JsonProcessingException {
-        MyUserDetails user = AuthUtil.getUserDetails();
-
-        ReportDto report = reportService.create(body.getContent().getTitle(), body, user.getUserId());
-        ReportCreateResponse response = ReportCreateResponse.of(report.getId(), report.getTitle(), report.getContent());
-
-        return ResponseEntity.status(CREATED).body(response);
-    }
+//    @PostMapping
+//    public ResponseEntity<ReportCreateResponse> createUserReport(@Valid @RequestBody ReportCompleteResponse body) throws JsonProcessingException {
+//        MyUserDetails user = AuthUtil.getUserDetails();
+//
+//        ReportDto report = reportService.create(body.getContent().getTitle(), body, user.getUserId());
+//        ReportCreateResponse response = ReportCreateResponse.of(report.getId(), report.getTitle(), report.getContent());
+//
+//        return ResponseEntity.status(CREATED).body(response);
+//    }
 
     @GetMapping
     public ResponseEntity<ReportListResponse> getReportList() {
@@ -127,11 +126,11 @@ public class ReportController {
 
     // 만들어진 대화에 대한 평가를 확인합니다.
     @GetMapping("report/{threadId}/{runId}")
-    public ResponseEntity<ReportCompleteResponse> reportCompleteResponse(
+    public ResponseEntity<AfterReportCompleteResponse> reportCompleteResponse(
             @PathVariable("threadId") String threadId,
             @PathVariable("runId") String runId
     ) throws IOException {
-        ReportCompleteResponse response = gptAssistantService.reportCompleteResponse(threadId, runId);
+        AfterReportCompleteResponse response = gptAssistantService.reportCompleteResponse(threadId, runId);
         return ResponseEntity.status(OK).body(response);
     }
 }

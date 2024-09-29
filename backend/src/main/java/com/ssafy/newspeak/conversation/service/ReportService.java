@@ -2,9 +2,8 @@ package com.ssafy.newspeak.conversation.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.newspeak.conversation.dto.report.ReportCompleteResponse;
+import com.ssafy.newspeak.conversation.dto.report.BeforeReportCompleteResponse;
 import com.ssafy.newspeak.conversation.dto.report.ReportDto;
-import com.ssafy.newspeak.conversation.dto.report.ReportResponse;
 import com.ssafy.newspeak.conversation.entity.Report;
 import com.ssafy.newspeak.conversation.exception.NoSuchReportException;
 import com.ssafy.newspeak.conversation.repository.ReportRepository;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -26,7 +24,7 @@ public class ReportService {
     private final ReportRepository reportRepository;
     private final UserRepo userRepository;
 
-    public ReportDto create(String title, ReportCompleteResponse content, Long userId) throws JsonProcessingException {
+    public ReportDto create(String title, BeforeReportCompleteResponse content, Long userId) throws JsonProcessingException {
         User user = userRepository.findById(userId)
                 .orElseThrow(RuntimeException::new);
         ObjectMapper objectMapper = new ObjectMapper();

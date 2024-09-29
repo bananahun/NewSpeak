@@ -3,9 +3,11 @@ package com.ssafy.newspeak.article.dto;
 import com.ssafy.newspeak.article.entity.Article;
 import com.ssafy.newspeak.article.entity.Article;
 import com.ssafy.newspeak.category.entity.Category;
+import com.ssafy.newspeak.sentence.entity.Sentence;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -24,14 +26,15 @@ public class ArticleFindResponse {
     private Integer level;
     private LocalDateTime createdAt;
     private Long categoryId;
-
+    private List<ArticleSentence> sentences;
     public static ArticleFindResponse from(Article article) {
         ArticleFindResponse articleFindResponse = new ArticleFindResponse();
         articleFindResponse.id = article.getId();
         articleFindResponse.title = article.getTitle();
+        articleFindResponse.sentences = ArticleSentence.from(article.getSentences());
+        articleFindResponse.publishedDate = article.getPublishedDate();
         articleFindResponse.content = article.getContent();
         articleFindResponse.contentKr = article.getContentKr();
-        articleFindResponse.publishedDate = article.getPublishedDate();
         articleFindResponse.imageUrl = article.getImageUrl();
         articleFindResponse.articleUrl = article.getArticleUrl();
         articleFindResponse.publisher = article.getPublisher();
