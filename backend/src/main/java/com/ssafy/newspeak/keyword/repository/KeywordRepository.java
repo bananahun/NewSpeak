@@ -17,7 +17,7 @@ public class KeywordRepository {
 
     public List<Keyword> findAll() {
         return em.createQuery("select k from Keyword k order by cnt desc", Keyword.class)
-                .setMaxResults(100)
+                .setMaxResults(30)
                 .getResultList();
     }
 

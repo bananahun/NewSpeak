@@ -4,7 +4,6 @@ import com.ssafy.newspeak.conversation.dto.assistant.RunThreadResponse;
 import lombok.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Builder
