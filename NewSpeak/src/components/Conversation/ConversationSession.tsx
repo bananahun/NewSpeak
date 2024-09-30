@@ -105,6 +105,21 @@ const ConversationSession = ({
   };
 
   useEffect(() => {
+    if (activeResponse) {
+      addConversation('assistant', activeResponse);
+      setConversationCount(prev => prev + 1);
+    }
+    setActiveAnswer('');
+  }, [activeResponse]);
+
+  const byteToMp3 = (byteData: string) => {
+    const arrayBuffer = base64ToArrayBuffer(byteData);
+    const blob = new Blob([arrayBuffer], { type: 'audio/mpeg' });
+    const url: string = URL.createObjectURL(blob);
+    return url;
+  };
+
+  useEffect(() => {
     if (byteMp3) {
       const audio = new Audio(byteToMp3(byteMp3));
       audio.play();
