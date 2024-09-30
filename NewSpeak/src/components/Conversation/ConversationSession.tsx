@@ -97,13 +97,6 @@ const ConversationSession = ({
     return bytes.buffer;
   };
 
-  const byteToMp3 = (byteData: string) => {
-    const arrayBuffer = base64ToArrayBuffer(byteData);
-    const blob = new Blob([arrayBuffer], { type: 'audio/mpeg' });
-    const url: string = URL.createObjectURL(blob);
-    return url;
-  };
-
   useEffect(() => {
     if (activeResponse) {
       addConversation('assistant', activeResponse);
