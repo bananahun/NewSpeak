@@ -43,9 +43,12 @@ public class ExpLogService {
         return expLog;
     }
 
-    public List<DailyExpDto> getDailyExpsByMonth(Long userId, YearMonth yearMonth) {
-        LocalDate startDate = yearMonth.atDay(1); // 해당 월의 첫 날
-        LocalDate endDate = yearMonth.atEndOfMonth(); // 해당 월의 마지막 날
+    public List<DailyExpDto> getDailyExpsByMonth(Long userId) {
+//        LocalDate startDate = yearMonth.atDay(1); // 해당 월의 첫 날
+//        LocalDate endDate = yearMonth.atEndOfMonth(); // 해당 월의 마지막 날
+
+        LocalDate endDate = LocalDate.now(); // 현재 날짜
+        LocalDate startDate = endDate.minusMonths(6).withDayOfMonth(1); // 6개월 전의 첫 날
 
         List<DailyExpDto> dailyExps = expLogRepo.findDailyExpByUserIdAndMonth(userId, startDate, endDate);
 

@@ -40,4 +40,8 @@ public class UserArticleService {
         return UserArticle.of(userArticleId,user,article);
     }
 
+    public void unscrapArticle(UserArticleId userArticleId) {
+        userArticleRepo.deleteById(userArticleId);
+    }
+
 }

@@ -6,6 +6,8 @@ import com.ssafy.newspeak.user.controller.dto.UserSignUpDto;
 import com.ssafy.newspeak.user.entity.Role;
 import com.ssafy.newspeak.user.entity.User;
 import com.ssafy.newspeak.user.repository.UserRepo;
+import com.ssafy.newspeak.voca.controller.VocaPostDto;
+import com.ssafy.newspeak.voca.service.VocaService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -26,6 +28,7 @@ public class AuthService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final VocaService vocaService;
 
     public void signUp(UserSignUpDto userSignUpDto) throws Exception {
 
@@ -48,6 +51,7 @@ public class AuthService {
         userRepo.save(user);
     }
 
+    private final String VocaDefaultName="나의 단어장";
     public void OAuthSignUp(HttpServletRequest request,UserSignUpDto userSignUpDto) throws Exception {
         Cookie[] cookies=request.getCookies();
         String accessToken=jwtService.extractAccessToken(cookies).orElse(null);
@@ -62,6 +66,8 @@ public class AuthService {
         }
         user.updateNickname(userSignUpDto.getNickname());
         user.authorizeUser();
+        
+        vocaService.makeVoca(new VocaPostDto(VocaDefaultName),user);
 
         userRepo.save(user);
     }

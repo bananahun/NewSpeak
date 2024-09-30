@@ -37,6 +37,11 @@ public class VocaService {
         vocaRepo.save(voca);
     }
 
+    public void makeVoca(VocaPostDto vocaPostDto,User user) {
+        Voca voca = new Voca(vocaPostDto,user);
+        vocaRepo.save(voca);
+    }
+
     public List<VocaInfoDto>  getVocasByUserId(Long userId){
         return vocaRepo.findVocaByUserId(userId);
     }

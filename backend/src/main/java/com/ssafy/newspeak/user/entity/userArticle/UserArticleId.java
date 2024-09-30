@@ -8,11 +8,16 @@ import java.io.Serializable;
 
 @Getter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 @EqualsAndHashCode
 @Embeddable
 public class UserArticleId implements Serializable {
     private Long userId;
     private Long articleId;
+
+    @Builder
+    public UserArticleId(Long userId, Long articleId) {
+        this.userId = userId;
+        this.articleId = articleId;
+    }
 }

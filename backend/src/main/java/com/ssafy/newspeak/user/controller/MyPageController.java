@@ -93,10 +93,12 @@ public class MyPageController {
     }
 
     @GetMapping("/exp-logs")
-    public ResponseEntity<DailyExpListDto> getExpLogs(@RequestParam int year, @RequestParam int month) {
+    public ResponseEntity<DailyExpListDto> getExpLogs(
+            @RequestParam(defaultValue = "2024") int year
+            , @RequestParam(defaultValue = "9") int month) {
         MyUserDetails userDetails=AuthUtil.getUserDetails();
-        YearMonth yearMonth = YearMonth.of(year, month);
-        List<DailyExpDto> dailyExpListDtoList=expLogService.getDailyExpsByMonth(userDetails.getUserId(),yearMonth);
+//        YearMonth yearMonth = YearMonth.of(year, month);
+        List<DailyExpDto> dailyExpListDtoList=expLogService.getDailyExpsByMonth(userDetails.getUserId());
         return ResponseEntity.ok().body(new DailyExpListDto(dailyExpListDtoList));
     }
 }
