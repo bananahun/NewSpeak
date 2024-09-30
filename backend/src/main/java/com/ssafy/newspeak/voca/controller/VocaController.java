@@ -26,9 +26,10 @@ public class VocaController {
     private final ExpLogService expLogService;
 
     @PostMapping("")
-    public void makeVoca(@RequestBody VocaPostDto vocaPostDto) {
+    public ResponseEntity<MakeVocaResponse> makeVoca(@RequestBody VocaPostDto vocaPostDto) {
         MyUserDetails userDetails=AuthUtil.getUserDetails();
-        vocaService.makeVoca(vocaPostDto,userDetails.getUserId());
+        Long vocaId=vocaService.makeVoca(vocaPostDto,userDetails.getUserId());
+        return ResponseEntity.ok(new MakeVocaResponse(vocaId));
     }
 
     @GetMapping("")
