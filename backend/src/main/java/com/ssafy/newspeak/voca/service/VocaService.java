@@ -31,10 +31,11 @@ public class VocaService {
     private final VocaWordRepo vocaWordRepo;
     private final WordRepository wordRepo;
 
-    public void makeVoca(VocaPostDto vocaPostDto,Long userId) {
+    public Long makeVoca(VocaPostDto vocaPostDto,Long userId) {
         User user =userRepo.findById(userId).orElseThrow(NoSuchElementException::new);
         Voca voca = new Voca(vocaPostDto,user);
         vocaRepo.save(voca);
+        return voca.getId();
     }
 
     public void makeVoca(VocaPostDto vocaPostDto,User user) {
