@@ -23,9 +23,13 @@ public class ArticleRepository {
 
     private final EntityManager em;
 
-    public List<Article> findAll() {
-        return em.createQuery("select a from Article a", Article.class)
-                .getResultList();
+    public List<Article> findAll(int page, int size) {
+        TypedQuery<Article> articleQuery = em.createQuery("select a from Article a", Article.class);
+
+        articleQuery.setFirstResult(page * size); // 시작 인덱스 설정
+        articleQuery.setMaxResults(size); // 가져올 최대 결과 수 설정
+
+        return articleQuery.getResultList();
     }
 
     public List<ArticlesFindByCategoryMain> findTop5ArticlesByCategory() {

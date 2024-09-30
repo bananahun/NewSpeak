@@ -2,6 +2,7 @@ package com.ssafy.newspeak.pronounce.controller;
 
 import com.ssafy.newspeak.pronounce.dto.ProRequest;
 import com.ssafy.newspeak.pronounce.dto.ProResponse;
+import com.ssafy.newspeak.pronounce.dto.PronounceClientRequest;
 import com.ssafy.newspeak.pronounce.service.AudioFileUploadService;
 import com.ssafy.newspeak.pronounce.service.ProService;
 import lombok.AllArgsConstructor;
@@ -26,8 +27,8 @@ public class ProController {
 
     @PostMapping
     public ResponseEntity<ProResponse> evaluatePronunciation(
-            @RequestParam("file") MultipartFile audioFile) throws IOException {
-            String audioFileUrl = audioFileUploadService.uploadFile(audioFile);
+            @RequestBody PronounceClientRequest body) throws IOException {
+            String audioFileUrl = audioFileUploadService.uploadFile(body.getAudioFile());
             ProRequest request = new ProRequest("english", audioFileUrl);
             ProResponse result = proService.evaluatePronunciation(request);
             return ResponseEntity.status(OK).body(result);

@@ -48,8 +48,8 @@ public class ArticleController {
     }
 
     @GetMapping
-    public ResponseEntity<Result> findAll() {
-        List<ArticlesFindResponse> articlesFindResponses = articleService.findAll();
+    public ResponseEntity<Result> findAll(int page) {
+        List<ArticlesFindResponse> articlesFindResponses = articleService.findAll(page);
         int count = articlesFindResponses.size();
         Result<List<ArticlesFindResponse>> result = new Result<>(count, articlesFindResponses);
         return ResponseEntity.status(OK).body(result);
