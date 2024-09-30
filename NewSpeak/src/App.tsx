@@ -37,7 +37,7 @@ function App() {
 
   useEffect(() => {
     checkAuth();
-  }, []);
+  }, [location]);
 
   useEffect(() => {
     const contextMenuHandler = (event: MouseEvent) =>
@@ -78,11 +78,11 @@ function App() {
 
         <div className="modal">
           {' '}
-          <AddWordModal
+          {/* <AddWordModal
             word={selectedWord}
             isOpen={isOpen}
             onClose={closeModal}
-          />
+          /> */}
         </div>
       </main>
     </div>
