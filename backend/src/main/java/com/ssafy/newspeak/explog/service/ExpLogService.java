@@ -5,6 +5,7 @@ import com.ssafy.newspeak.activitytype.repo.ActivityTypeRepo;
 import com.ssafy.newspeak.explog.entity.ExpLog;
 import com.ssafy.newspeak.explog.repo.ExpLogRepo;
 import com.ssafy.newspeak.explog.repo.DailyExpDto;
+import com.ssafy.newspeak.security.jwt.service.JwtService;
 import com.ssafy.newspeak.user.entity.User;
 import com.ssafy.newspeak.user.repository.UserRepo;
 import jakarta.transaction.Transactional;
