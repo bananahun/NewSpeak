@@ -95,6 +95,26 @@ const getMyArticles = async () => {
   }
 };
 
+const createMyArticles = async (articleId: number) => {
+  try {
+    const response = await axiosInstance.post(`/my/articles/${articleId}`);
+    console.log(response.data, '[API] createMyArticles 호출 결과');
+    return response.data;
+  } catch (error) {
+    console.error('[API] createMyArticles 에러:', error);
+  }
+};
+
+const deleteMyArticles = async (articleId: number) => {
+  try {
+    const response = await axiosInstance.delete(`/my/articles/${articleId}`);
+    console.log(response.data, '[API] deleteMyArticles 호출 결과');
+    return response.data;
+  } catch (error) {
+    console.error('[API] deleteMyArticles 에러:', error);
+  }
+};
+
 const fetchPronounce = async (audioFile: File) => {
   try {
     // FormData 객체 생성
@@ -152,6 +172,8 @@ const userApi = {
     getMyArticles,
     getUserStreaks,
     fetchPronounce,
+    createMyArticles,
+    deleteMyArticles
 }
 
 export default userApi;
