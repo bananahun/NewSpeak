@@ -36,8 +36,8 @@ const PronounceModal = ({ isOpen, onClose, text }: PronounceModalProps) => {
         setMp3Url(mp3Url);
         setIsRecording(false);
         const response = await userApi.fetchPronounce(file);
-        setProScore(response.proScore); 
-      console.log('발음 점수:', response.proScore); // proScore 응답 처리
+        setProScore(response.proScore);
+        console.log('발음 점수:', response.proScore); // proScore 응답 처리
       } catch (error) {
         console.error('녹음 중지 중 오류 발생:', error);
       }
@@ -49,6 +49,9 @@ const PronounceModal = ({ isOpen, onClose, text }: PronounceModalProps) => {
   return ReactDOM.createPortal(
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
+        <button className={styles.closeButton} onClick={onClose}>
+          x
+        </button>
         <p>{text}</p>
 
         {isRecording ? (
@@ -71,13 +74,10 @@ const PronounceModal = ({ isOpen, onClose, text }: PronounceModalProps) => {
             <p>발음 점수: {proScore}</p>
           </div>
         )}
-        
-        <button onClick={onClose}>닫기</button>
       </div>
     </div>,
     document.body,
   );
 };
-
 
 export default PronounceModal;

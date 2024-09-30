@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './ArticleModal.module.scss';
+import styles from './ArticleInConversationModal.module.scss';
 
 const article = {
   sentence: [
@@ -41,7 +41,7 @@ const article = {
   ],
 };
 
-const ArticleModal = () => {
+const ArticleInConversationModal = () => {
   const [articleOriginal, setArticleOriginal] = useState(article.sentence);
   return (
     <>
@@ -56,4 +56,4 @@ const ArticleModal = () => {
   );
 };
 
-export default ArticleModal;
+export default ArticleInConversationModal;
