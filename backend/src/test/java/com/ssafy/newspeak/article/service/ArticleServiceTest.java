@@ -62,7 +62,7 @@ public class ArticleServiceTest {
     @DisplayName("전체 기사 조회")
     void findAll() {
         // when
-        List<ArticlesFindResponse> response = articleService.findAll();
+        List<ArticlesFindResponse> response = articleService.findAll(0);
 
         // then
         assertEquals(2, response.size(), "반환된 기사 수가 맞지 않습니다.");
