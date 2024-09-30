@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import useArticleStore from '../../store/ArticleStore';
 import AboutConv from '../../components/Conversation/AboutConv';
 import ConversationSession from '../../components/Conversation/ConversationSession';
-import ArticleModal from '../../components/Modal/ArticleModal';
+import ArticleInConversationModal from '../../components/Modal/ArticleInConversationModal';
 import ConversationModal from '../../components/Modal/ConversationModal';
 import styles from './Conversation.module.scss';
 import Swal from 'sweetalert2';
@@ -169,7 +169,7 @@ const Conversation = () => {
       <div className={styles.conversationContainer}>
         {articleModalOpen && (
           <span className={styles.articleOriginal}>
-            <ArticleModal />
+            <ArticleInConversationModal />
           </span>
         )}
         {renderStep(step)}

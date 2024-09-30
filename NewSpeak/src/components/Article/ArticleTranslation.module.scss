@@ -8,14 +8,25 @@
     border: var(--font-color) 1px solid;
     border-radius: 6px;
     padding: 2px 12px;
-    width: 60%;
+    width: 50%;
+
+    .tooltip {
+      position: fixed;
+      background-color: rgba(var(--main-rgb), 0.77);
+      color: var(--font-color);
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 14px;
+      pointer-events: none;
+      z-index: 1000;
+    }
   }
 
   .articleTranslation {
     border: var(--font-color) 1px solid;
     border-radius: 6px;
     padding: 2px 15px;
-    width: 40%;
+    width: 50%;
   }
 
   .sentenceContainer {
@@ -26,7 +37,6 @@
 
   .accent {
     font-weight: bold;
-    // letter-spacing: -0.02em;
   }
 
   .highlight {
@@ -36,6 +46,7 @@
 
   .sentence {
     font-size: 16px;
+    cursor: default;
   }
 }
 
