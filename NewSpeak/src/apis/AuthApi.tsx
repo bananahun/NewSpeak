@@ -24,8 +24,8 @@ export const fetchEmail = async () => {
     return response.data;
   } catch (error) {
     console.error('Fetch email error:', error);
+    return error;
   }
-  return null;
 };
 
 export const signUp = async (form: UserCreateForm) => {
@@ -35,5 +35,15 @@ export const signUp = async (form: UserCreateForm) => {
   } catch (error) {
     console.error('Create user error:', error);
     return null;
+  }
+};
+
+export const getUserInfo = async () => {
+  try {
+    const response = await axiosInstance.get('/my/info');
+    return response.data;
+  } catch (error) {
+    console.error('Get user info error:', error);
+    return false;
   }
 };

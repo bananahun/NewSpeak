@@ -1,47 +1,46 @@
 import { create } from 'zustand';
+import { fetchEmail, getUserInfo } from '../apis/AuthApi';
 
 interface AuthState {
   isLoggedIn: boolean;
   user: null | any;
-  token: string | null;
-  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  checkAuth: () => void;
 }
 
 const useAuthStore = create<AuthState>(set => ({
   isLoggedIn: false,
   user: null,
-  token: null,
-
-  login: async (email: string, password: string) => {
-    try {
-      // 로그인 API 요청
-      const response = await fetch('/api/v1/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // 로그인 성공 시 상태 업데이트 및 토큰 저장
-        set({ isLoggedIn: true, user: data.user, token: data.token });
-        localStorage.setItem('token', data.token);
-      } else {
-        throw new Error(data.message || '로그인 실패');
-      }
-    } catch (error) {
-      console.error('로그인 오류:', error);
-      throw error;
-    }
-  },
 
   logout: () => {
-    set({ isLoggedIn: false, user: null, token: null });
+    set({ isLoggedIn: false, user: null });
     localStorage.removeItem('token');
+  },
+
+  checkAuth: async () => {
+    try {
+      const userEmail = await fetchEmail();
+      console.log(userEmail.status);
+      if (userEmail) {
+        if (userEmail.status === 403) {
+          set({ isLoggedIn: true });
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    // try {
+    //   const userInfo = await getUserInfo();
+    //   console.log(userInfo);
+    // } catch (error) {
+    //   console.error('Failed to fetch user info:', error);
+    //   set({ isLoggedIn: false });
+    // }
+    // if (token) {
+    //   set({ isLoggedIn: true });
+    // } else {
+    //   set({ isLoggedIn: false });
+    // }
   },
 }));
 
