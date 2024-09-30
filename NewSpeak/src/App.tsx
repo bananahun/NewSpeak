@@ -20,6 +20,7 @@ import { handleContextMenu } from "./utils/AddWord"; // 유틸 함수 임포트
 import { useModalStore } from "./store/ModalStore";
 import AddWordModal from "./components/Modal/AddWordModal";
 import OAuthCallback from "./utils/OAuthCallback";
+import About from './pages/About/About';
 
 ///
 import TestApiComponent from "./pages/Test";
@@ -59,6 +60,7 @@ function App() {
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/article" element={<Article />} />
           <Route path="/conversation" element={<Conversation />} />
+          <Route path="/about" element={<About />} />
           <Route path="/word" element={<Word />} />
           <Route path="/wordlist/test" element={<Test />} />
           <Route path="/articlelist" element={<ArticleListDetail />} />
