@@ -46,7 +46,7 @@
     }
 
     li > a:hover {
-      background-color: var(--main-color);
+      background-color: var(--main-color) !important;
       font-weight: bold;
     }
   }
@@ -56,11 +56,27 @@
   }
 }
 
+.navbar .links .active > a {
+  background-color: var(--main-color) !important;
+  color: white !important;
+  font-weight: bold !important;
+}
+
 .searchBar {
   position: fixed;
   z-index: 1;
 }
 
-.lastButton {
-  border-bottom: none !important;
+.logout {
+  display: flex;
+  align-items: center;
+  justify-self: center;
+  cursor: pointer;
+}
+
+.addWord {
+  display: flex;
+  align-items: center;
+  justify-self: center;
+  cursor: pointer;
 }
