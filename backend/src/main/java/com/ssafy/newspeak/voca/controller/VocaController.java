@@ -1,5 +1,8 @@
 package com.ssafy.newspeak.voca.controller;
 
+import com.ssafy.newspeak.activitytype.entity.ActivityTypeEnum;
+import com.ssafy.newspeak.explog.controller.ExpResult;
+import com.ssafy.newspeak.explog.entity.ExpLog;
 import com.ssafy.newspeak.explog.service.ExpLogRequest;
 import com.ssafy.newspeak.explog.service.ExpLogService;
 import com.ssafy.newspeak.security.jwt.MyUserDetails;
@@ -57,12 +60,15 @@ public class VocaController {
         return ResponseEntity.ok(new WordQuizs(wordQuizs));
     }
 
-//    @PostMapping("/{vocaId}/quiz")
-//    public ResponseEntity<ExpResult> postVocaQuizResult(@RequestBody VocaQuizResult vocaQuizResult){
-//        MyUserDetails userDetails=AuthUtil.getUserDetails();
-//
-//        expLogService.saveExpLogAndAddToUserExp(new ExpLogRequest(,userDetails.getUserId(),));
-//
-//        return ResponseEntity.ok().build();
-//    }
+    @PostMapping("/{vocaId}/quiz")
+    public ResponseEntity<ExpResult> postVocaQuizResult(@RequestBody VocaQuizResult vocaQuizResult){
+        MyUserDetails userDetails=AuthUtil.getUserDetails();
+
+        ExpLog expLog=expLogService.saveExpLogAndAddToUserExp(ExpLogRequest.from(
+            ActivityTypeEnum.VOCAQUIZ,
+            userDetails.getUserId(),
+            (double) (vocaQuizResult.getAnswerCount() / 10)
+        ));
+        return ResponseEntity.ok(new ExpResult(expLog));
+    }
 }

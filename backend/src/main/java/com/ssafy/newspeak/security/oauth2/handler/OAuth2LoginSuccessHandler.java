@@ -1,6 +1,7 @@
 package com.ssafy.newspeak.security.oauth2.handler;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.newspeak.security.jwt.service.JwtService;
 import com.ssafy.newspeak.security.oauth2.CustomOAuth2User;
 import com.ssafy.newspeak.security.util.CookieName;
@@ -27,6 +28,7 @@ import java.io.IOException;
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtService jwtService;
+    private final ObjectMapper objectMapper;
     private final String ACCESS_TOKEN="accessToken";
     private final String REFRESH_TOKEN="refreshToken";
 
@@ -67,6 +69,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                 jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
                 jwtService.updateRefreshToken(oAuth2User.getUserId(), refreshToken);
                 log.info("signUpUrl :{}",signUpUrl);
+
                 response.sendRedirect(signUpUrl);
             } else {
                 loginSuccess(response, oAuth2User); // 로그인에 성공한 경우 access, refresh 토큰 생성

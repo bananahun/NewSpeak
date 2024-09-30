@@ -7,12 +7,14 @@ import com.ssafy.newspeak.security.jwt.service.JwtService;
 import com.ssafy.newspeak.security.util.AuthUtil;
 import com.ssafy.newspeak.user.controller.dto.CategoryListDto;
 import com.ssafy.newspeak.user.controller.dto.DailyExpListDto;
+import com.ssafy.newspeak.user.controller.dto.MyInfo;
 import com.ssafy.newspeak.user.controller.dto.VocaListDto;
 import com.ssafy.newspeak.user.entity.userCategory.UserCategoryId;
 import com.ssafy.newspeak.user.repository.dto.ArticleInfoDto;
 import com.ssafy.newspeak.user.repository.dto.VocaInfoDto;
 import com.ssafy.newspeak.user.service.UserArticleService;
 import com.ssafy.newspeak.user.service.UserCategoryService;
+import com.ssafy.newspeak.user.service.UserService;
 import com.ssafy.newspeak.user.service.UserVocaService;
 import com.ssafy.newspeak.user.repository.dto.CategoryDto;
 import lombok.RequiredArgsConstructor;
@@ -36,10 +38,13 @@ public class MyPageController {
     private final UserVocaService userVocaService;
     private final JwtService jwtService;
     private final ExpLogService expLogService;
+    private final UserService userService;
 
-    @GetMapping("/test")
-    public ResponseEntity<Object> getVocaList() {
-        return ResponseEntity.ok(null);
+    @GetMapping("/info")
+    public ResponseEntity<MyInfo> getMyInfo() {
+        MyUserDetails userDetails=AuthUtil.getUserDetails();
+
+        return ResponseEntity.ok(new MyInfo(userDetails));
     }
 
     @GetMapping("/articles/cookie")
@@ -88,10 +93,12 @@ public class MyPageController {
     }
 
     @GetMapping("/exp-logs")
-    public ResponseEntity<DailyExpListDto> getExpLogs(@RequestParam int year, @RequestParam int month) {
+    public ResponseEntity<DailyExpListDto> getExpLogs(
+            @RequestParam(defaultValue = "2024") int year
+            , @RequestParam(defaultValue = "9") int month) {
         MyUserDetails userDetails=AuthUtil.getUserDetails();
-        YearMonth yearMonth = YearMonth.of(year, month);
-        List<DailyExpDto> dailyExpListDtoList=expLogService.getDailyExpsByMonth(userDetails.getUserId(),yearMonth);
+//        YearMonth yearMonth = YearMonth.of(year, month);
+        List<DailyExpDto> dailyExpListDtoList=expLogService.getDailyExpsByMonth(userDetails.getUserId());
         return ResponseEntity.ok().body(new DailyExpListDto(dailyExpListDtoList));
     }
 }

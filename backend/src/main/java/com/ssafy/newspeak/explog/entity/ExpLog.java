@@ -5,6 +5,7 @@ import com.ssafy.newspeak.explog.service.ExpLogRequest;
 import com.ssafy.newspeak.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -34,9 +35,10 @@ public class ExpLog{
     @CreatedDate
     private LocalDate createdDate; // 생성 날짜
 
-//    public ExpLog(ExpLogRequest expLogRequest){
-//        this.change = expLogRequest.getChange();
-//        this.user = expLogRequest.getUser();
-//        this.activityType = expLogRequest.getActivityType();
-//    }
+    @Builder
+    public ExpLog(Integer change,ActivityType activityType,User user){
+        this.activityType=activityType;
+        this.change=change;
+        this.user=user;
+    }
 }
