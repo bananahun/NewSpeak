@@ -8,6 +8,6 @@ public class ExpResult {
   private Integer change;
 
   public ExpResult(ExpLog expLog){
-    this.change=expLog.getChange();
+    this.change=expLog.getExpChange();
   }
 }

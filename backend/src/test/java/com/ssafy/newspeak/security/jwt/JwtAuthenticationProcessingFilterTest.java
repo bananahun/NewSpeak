@@ -170,21 +170,23 @@ class JwtAuthenticationProcessingFilterTest {
         // given
         Map<String, String> tokenMap = getTokenMap();
         String refreshToken = tokenMap.get(REFRESH_TOKEN);
-        MockCookie cookie = new MockCookie("refreshToken", refreshToken);
+        String accessToken = tokenMap.get(REFRESH_TOKEN);
+        MockCookie cookie1 = new MockCookie("accessToken", accessToken);
+        MockCookie cookie2 = new MockCookie("refreshToken", refreshToken);
 
         // when, then
-        MvcResult result = mockMvc.perform(get("/jwt-test") // "/login"이 아니고, 존재하는 주소를 보내기
-                            .cookie(cookie))
+        MvcResult result = mockMvc.perform(get("/api/v1/auth/jwt-test") // "/login"이 아니고, 존재하는 주소를 보내기
+                            .cookie(cookie1,cookie2))
                             .andExpect(status().isOk())
                             .andReturn();
 //        String accessToken = result.getResponse().getHeader(accessHeader); // accessToken 재발급
 //        String reIssuedRefreshToken = result.getResponse().getHeader(refreshHeader); // refreshToken 재발급
-        String accessToken = result.getResponse().getCookie(ACCESS_TOKEN).getValue();
+        String reIssuedAccessToken = result.getResponse().getCookie(ACCESS_TOKEN).getValue();
         String reIssuedRefreshToken = result.getResponse().getCookie(REFRESH_TOKEN).getValue();
 
 
         String accessTokenSubject = JWT.require(Algorithm.HMAC512(secretKey)).build()
-                .verify(accessToken).getSubject();
+                .verify(reIssuedAccessToken).getSubject();
         String refreshTokenSubject = JWT.require(Algorithm.HMAC512(secretKey)).build()
                 .verify(reIssuedRefreshToken).getSubject();
 

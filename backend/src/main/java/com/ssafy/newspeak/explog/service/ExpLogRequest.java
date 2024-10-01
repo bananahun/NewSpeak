@@ -26,11 +26,12 @@ public class ExpLogRequest {
 
     private Long actId;
 
-    public static ExpLogRequest from(ActivityTypeEnum actTypeEnum, Long userId, Double rate) {
+    public static ExpLogRequest from(ActivityTypeEnum actTypeEnum, Long userId, Double rate, Long actId) {
         return ExpLogRequest.builder()
             .userId(userId)
             .rate(rate)
             .actTypeId(actTypeEnum.getId()) // enum을 ID로 변환
+                .actId(actId)
             .build();
     }
 

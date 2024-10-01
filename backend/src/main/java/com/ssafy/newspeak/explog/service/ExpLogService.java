@@ -5,6 +5,7 @@ import com.ssafy.newspeak.activitytype.repo.ActivityTypeRepo;
 import com.ssafy.newspeak.explog.entity.ExpLog;
 import com.ssafy.newspeak.explog.repo.ExpLogRepo;
 import com.ssafy.newspeak.explog.repo.DailyExpDto;
+import com.ssafy.newspeak.security.jwt.service.JwtService;
 import com.ssafy.newspeak.user.entity.User;
 import com.ssafy.newspeak.user.repository.UserRepo;
 import jakarta.transaction.Transactional;
@@ -12,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -31,13 +31,9 @@ public class ExpLogService {
         ActivityType activityType=activityTypeRepo.findById(expLogRequest.getActTypeId())
             .orElseThrow(NoSuchElementException::new);
         Integer fullExp=activityType.getFullExp();
-        Double rate=fullExp * expLogRequest.getRate();
-        ExpLog expLog = ExpLog.builder()
-            .activityType(activityType)
-            .change((int) (fullExp * rate))
-            .build();
+        ExpLog expLog = new ExpLog((int)(fullExp*expLogRequest.getRate()),activityType,user,expLogRequest.getActId());
         expLogRepo.save(expLog);
-        user.addExp(expLog.getChange());
+        user.addExp(expLog.getExpChange());
         userRepo.save(user);
 
         return expLog;

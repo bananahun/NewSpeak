@@ -61,14 +61,16 @@ public class VocaController {
         return ResponseEntity.ok(new WordQuizs(wordQuizs));
     }
 
-    @PostMapping("/{vocaId}/quiz")
-    public ResponseEntity<ExpResult> postVocaQuizResult(@RequestBody VocaQuizResult vocaQuizResult){
+    @PostMapping("/{vocaId}/quiz/result")
+    public ResponseEntity<ExpResult> postVocaQuizResult(@PathVariable Long vocaId,
+                                                        @RequestBody VocaQuizResult vocaQuizResult){
         MyUserDetails userDetails=AuthUtil.getUserDetails();
 
+        int vocaQuizTotal = 10;
         ExpLog expLog=expLogService.saveExpLogAndAddToUserExp(ExpLogRequest.from(
             ActivityTypeEnum.VOCAQUIZ,
             userDetails.getUserId(),
-            (double) (vocaQuizResult.getAnswerCount() / 10)
+            (double) (vocaQuizResult.getAnswerCount() / vocaQuizTotal), vocaId
         ));
         return ResponseEntity.ok(new ExpResult(expLog));
     }
