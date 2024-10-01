@@ -4,6 +4,7 @@
   color: var(--font-color);
   height: 100%;
   overflow-y: hidden;
+  overflow-x: hidden;
 }
 
 .home1container {
@@ -13,7 +14,7 @@
 .wordCloudContainer {
   position: relative;
   width: 30vh;
-  // height: 60vh;
+  height: 60vh;
 }
 
 .articleListContainer {
@@ -31,6 +32,7 @@
   flex-direction: column;
   align-items: start;
   position: relative;
+  overflow-y: hidden;
 }
 
 /* 슬라이딩 텍스트 스타일 */
@@ -45,9 +47,13 @@
 }
 
 .articleListKeywordContainer {
+  display: flex;
+  width: fit-content;
+  justify-content: center;
+  align-content: center;
   top: 0;
-  overflow-y: auto;
-  padding-left: 10px;
+  overflow-y: hidden;
+  padding-left: 20px;
 }
 
 .slideText {
