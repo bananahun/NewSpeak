@@ -11,6 +11,7 @@ const About = () => {
         const scrollObserver = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
+                    console.log(entry);  // 로그 추가
                     if (entry.isIntersecting) {
                         entry.target.classList.add(styles.fadeIn);
                     }

@@ -15,6 +15,7 @@ import ReportList from './pages/MyPage/ReportList';
 import ScrapList from './pages/MyPage/ScrapList';
 import useThemeStore from './store/ThemeStore';
 import useAuthStore from './store/AuthStore';
+import About from './pages/About/About';
 import './App.scss';
 import { handleContextMenu } from './utils/AddWord'; // 유틸 함수 임포트
 import { useModalStore } from './store/ModalStore';
@@ -63,6 +64,7 @@ function App() {
           <Route path="/login/oauth2/code/kakao" element={<OAuthCallback />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/article" element={<Article />} />
+          <Route path="/about" element={<About />} />
           <Route path="/conversation" element={<Conversation />} />
           <Route path="/word" element={<Word />} />
           <Route path="/wordlist/test" element={<Test />} />
