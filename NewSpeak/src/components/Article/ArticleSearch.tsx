@@ -1,17 +1,16 @@
-import React, { useState } from "react";
-import useArticleApi from "../../apis/ArticleApi";
-import styles from "./ArticleSearch.module.scss";
+import React, { useState } from 'react';
+import useArticleApi from '../../apis/ArticleApi';
+import styles from './ArticleSearch.module.scss';
 
 interface Article {
   id: number;
   title: string;
   imageUrl: string;
-  date: string;
-  source: string;
+  publishedDate: string;
+  publisher: string;
 }
-
 const ArticleSearch: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState<string>(""); // 검색어 상태
+  const [searchQuery, setSearchQuery] = useState<string>(''); // 검색어 상태
   const [articles, setArticles] = useState<Article[]>([]); // 검색 결과 상태
   const [showResults, setShowResults] = useState<boolean>(false); // 결과 표시 여부
 
@@ -20,7 +19,7 @@ const ArticleSearch: React.FC = () => {
   };
 
   const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       handleSearch(); // 검색 함수 실행
     }
   };
@@ -42,7 +41,7 @@ const ArticleSearch: React.FC = () => {
     <div className={styles.searchSection}>
       <div
         className={`${styles.searchContainer} ${
-          showResults ? styles.moveUp : ""
+          showResults ? styles.moveUp : ''
         }`}
       >
         <input
@@ -61,7 +60,7 @@ const ArticleSearch: React.FC = () => {
       {showResults && (
         <div className={styles.searchResults}>
           {articles && articles.length > 0 ? (
-            articles.map((article) => (
+            articles.map(article => (
               <div key={article.id} className={styles.articleCard}>
                 <div className={styles.imageContainer}>
                   <img
@@ -73,8 +72,9 @@ const ArticleSearch: React.FC = () => {
                 <div className={styles.articleInfo}>
                   <h4 className={styles.title}>{article.title}</h4>
                   <p className={styles.meta}>
-                    {new Date(article.date).toLocaleDateString()} -{" "}
-                    {article.source}
+                    {new Date(article.publishedDate).toLocaleDateString()}{' '}
+                    <strong>|</strong>
+                    {article.publisher}
                   </p>
                 </div>
               </div>

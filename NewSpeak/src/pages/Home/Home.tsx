@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import styles from "./Home.module.scss";
-import WordCloud from "../../components/WordCloud/WordCloud";
-import WordSlider from "../../components/Slider/WordSlider";
-import ArticleList from "../../components/Article/ArticleList";
-import ArticleListKeyword from "../../components/WordCloud/ArticleListKeyword";
-import ArticleSearch from "../../components/Article/ArticleSearch";
-import { fullpageScroll } from "./ScrollUtils";
-import useArticleApi from "../../apis/ArticleApi";
+import React, { useEffect, useState } from 'react';
+import styles from './Home.module.scss';
+import WordCloud from '../../components/WordCloud/WordCloud';
+import WordSlider from '../../components/Slider/WordSlider';
+import ArticleList from '../../components/Article/ArticleList';
+import ArticleListKeyword from '../../components/WordCloud/ArticleListKeyword';
+import ArticleSearch from '../../components/Article/ArticleSearch';
+import { fullpageScroll } from './ScrollUtils';
+import useArticleApi from '../../apis/ArticleApi';
 
 interface WordCloudItem {
   content: string;
@@ -25,7 +25,7 @@ const Home = () => {
   const [words, setWords] = useState<FormattedWordData[]>([]);
   const [selectedWordId, setSelectedWordId] = useState<number | null>(null);
   const [selectedWordIndex, setSelectedWordIndex] = useState<number | null>(
-    null
+    null,
   );
   const [resetTrigger, setResetTrigger] = useState<number>(0);
 
@@ -42,10 +42,17 @@ const Home = () => {
             size: item.cnt,
             id: item.id,
           }));
+
         setWordData(formattedData);
         setWords(formattedData);
+
+        // 첫 번째 단어의 ID를 선택된 단어 ID로 설정
+        if (formattedData.length > 0) {
+          setSelectedWordId(formattedData[0].id);
+          setSelectedWordIndex(0); // 첫 번째 인덱스로 설정
+        }
       } catch (error) {
-        console.error("Error fetching word cloud data:", error);
+        console.error('Error fetching word cloud data:', error);
       }
     };
 
@@ -58,9 +65,9 @@ const Home = () => {
 
   const handleWordClick = (_word: string, id: number) => {
     setSelectedWordId(id);
-    const wordIndex = words.findIndex((item) => item.id === id);
+    const wordIndex = words.findIndex(item => item.id === id);
     setSelectedWordIndex(wordIndex);
-    setResetTrigger((prev) => prev + 1);
+    setResetTrigger(prev => prev + 1);
   };
 
   return (
@@ -81,7 +88,10 @@ const Home = () => {
             </div>
           </div>
           <div className={styles.articleListKeywordContainer}>
-            <ArticleListKeyword selectedWordId={selectedWordId} />
+            {/* selectedWordId가 null이 아닐 때 ArticleListKeyword 표시 */}
+            {selectedWordId && (
+              <ArticleListKeyword selectedWordId={selectedWordId} />
+            )}
           </div>
         </div>
       </div>

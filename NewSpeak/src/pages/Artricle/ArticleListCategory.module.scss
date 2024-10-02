@@ -1,35 +1,38 @@
 .container {
-  padding: 20px;
+  width: 100%;
+  padding: 0px 20px; /* 전체 컨테이너 패딩 조정 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .categoryNavbar {
   display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-}
-
-.categoryRow {
-  display: flex;
+  flex-wrap: wrap; /* 여러 줄의 버튼을 사용할 수 있도록 wrap */
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 10px; /* 하단 여백 추가 */
 }
 
 .categoryButton {
-  margin: 0 10px;
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  background: #f0f0f0;
+  width: 15vh;
+  height: 40px;
+  padding: 10px 15px;
+  margin: 5px; /* 각 버튼의 여백 */
+  border: 1px solid var(--backgound-color);
+  background-color: var(--main-color);
   cursor: pointer;
-  transition: background 0.3s ease;
-
-  &:hover {
-    background: #e0e0e0;
-  }
+  border-radius: 5px;
+  transition: background 0.3s ease, color 0.3s ease; /* 색상 전환 애니메이션 */
 
   &.active {
-    background: #007bff;
+    border-bottom: 4px solid var(--contrast-color);
+    background-color: var(--main-color);
+    color: var(--contrast-color);
+  }
+
+  &:hover {
+    background-color: var(--contrast-color); /* 호버 시 배경색 변경 */
     color: #fff;
-    border: 1px solid #007bff;
   }
 }
 
@@ -37,49 +40,92 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  width: 100%;
+  margin-top: 5vh;
+  overflow-y: auto;
+  z-index: 1;
 }
 
 .articleCard {
-  width: 250px;
-  border: 1px solid #ddd;
+  width: 28vh; /* 기존 카드 너비와 일치 */
+  height: 60vh;
+  margin: 15px; /* 카드 간격 */
+  border: 2px solid #ddd;
+  padding: 15px;
+  background: #fff;
   border-radius: 8px;
-  overflow: hidden;
-  margin: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 
   &:hover {
     transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 강조 */
   }
+}
+
+.imageContainer {
+  width: 100%;
+  height: 35vh;
+  margin-bottom: 15px;
 }
 
 .articleImage {
   width: 100%;
-  height: 150px;
+  height: 100%;
   object-fit: cover;
+  border-bottom: 1px solid #ddd;
+  border-radius: 5px;
 }
 
 .noImage {
   width: 100%;
-  height: 150px;
+  height: 35vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #f0f0f0;
+  color: #999;
+  font-size: 16px;
 }
 
 .articleInfo {
-  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 5px 0;
+  width: 100%;
 }
 
 .articleTitle {
-  font-size: 16px;
-  margin: 5px 0;
+  font-size: 1em;
+  font-weight: bold;
+  margin-bottom: 10px;
+  height: auto;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* 최대 3줄까지만 표시 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.3em;
+  max-height: calc(1.3em * 3); /* 최대 높이 */
 }
 
 .articleMeta {
-  font-size: 12px;
+  font-size: 0.85em;
   color: #555;
+  margin-top: auto; /* 아래쪽에 위치 */
+}
+
+.loading {
+  text-align: center;
+  font-size: 18px;
+  color: #666;
+  margin: 20px 0;
 }
 
 .noArticlesMessage {
@@ -89,7 +135,25 @@
   color: #666;
 }
 
-.loading {
+.noMore {
   text-align: center;
-  font-size: 18px;
+  font-size: 16px;
+  color: #999;
+  margin: 20px 0;
+}
+
+/* 카드가 나타날 때 애니메이션 */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.articleCard {
+  animation: fadeIn 0.5s ease-in-out; /* 카드가 나타날 때 애니메이션 */
 }

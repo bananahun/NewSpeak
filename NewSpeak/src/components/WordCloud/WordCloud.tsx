@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import cloud from 'd3-cloud';
+import styles from './WordCLoud.module.scss';
 
 const colors = [
   '#F56C00',
@@ -150,19 +151,21 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, onWordClick }) => {
   }, [data]);
 
   return (
-    <div
-      ref={containerRef}
-      id="word-cloud"
-      style={{
-        width: '35vh',
-        height: '80vh',
-        overflow: 'hidden',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'relative',
-      }}
-    />
+    <div className={styles.wordCloudContainer}>
+      <div
+        ref={containerRef}
+        id="word-cloud"
+        style={{
+          width: '35vh',
+          height: '80vh',
+          overflow: 'hidden',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'relative',
+        }}
+      />
+    </div>
   );
 };
 
