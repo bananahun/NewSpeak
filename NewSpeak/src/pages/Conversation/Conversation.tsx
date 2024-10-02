@@ -14,7 +14,7 @@ const Conversation = () => {
   const navigate = useNavigate();
   const articleMeta = useArticleStore.getState().articleMeta;
   const { createReportThread } = useConversationApi();
-  const { isGeneratingReport, reportCreated, clearConvData } =
+  const { isGeneratingResponse, isGeneratingReport, clearConvData } =
     useConversationStore();
   const [step, setStep] = useState(1);
   const [articleTitle, setArticleTitle] = useState('');
@@ -181,7 +181,10 @@ const Conversation = () => {
         <button onClick={leftButton}>{activeLeftButton}</button>
         <button onClick={rightButton}>{activeRightButton}</button>
         {isConvStarted && (
-          <button disabled={!isUserTurn} onClick={userResponse}>
+          <button
+            disabled={!isUserTurn || isGeneratingResponse}
+            onClick={userResponse}
+          >
             녹음하기
           </button>
         )}
@@ -194,7 +197,6 @@ const Conversation = () => {
           />
         </span>
       )}
-      {isGeneratingReport && <div>만드는중</div>}
     </>
   );
 };
