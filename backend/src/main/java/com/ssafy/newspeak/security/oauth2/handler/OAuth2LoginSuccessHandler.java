@@ -59,7 +59,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
                 String accessToken = jwtService.createAccessToken(oAuth2User.getEmail(), oAuth2User.getUserId());
                 Cookie cookie=setCookie(ACCESS_TOKEN,accessToken);
-                String refreshToken = jwtService.createRefreshToken();
+                String refreshToken = jwtService.createRefreshToken(oAuth2User.getUserId());
 //                response.addCookie(setCookie(REFRESH_TOKEN,refreshToken));
 //                response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
 ////                response.setHeader("Referrer Policy", "STRICT_ORIGIN_WHEN_CROSS_ORIGIN");
@@ -80,7 +80,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     // TODO : 소셜 로그인 시에도 무조건 토큰 생성하지 말고 JWT 인증 필터처럼 RefreshToken 유/무에 따라 다르게 처리해보기
     private void loginSuccess(HttpServletResponse response, CustomOAuth2User oAuth2User) throws IOException {
         String accessToken = jwtService.createAccessToken(oAuth2User.getEmail(),oAuth2User.getUserId());
-        String refreshToken = jwtService.createRefreshToken();
+        String refreshToken = jwtService.createRefreshToken(oAuth2User.getUserId());
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
         jwtService.updateRefreshToken(oAuth2User.getUserId(), refreshToken);

@@ -71,10 +71,11 @@ public class JwtService {
      * RefreshToken 생성
      * RefreshToken은 Claim에 email도 넣지 않으므로 withClaim() X
      */
-    public String createRefreshToken() {
+    public String createRefreshToken(Long userId) {
         Date now = new Date();
         return JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)
+                .withClaim(USER_ID,userId)
                 .withExpiresAt(new Date(now.getTime() + refreshTokenExpirationPeriod))
                 .sign(Algorithm.HMAC512(secretKey));
     }
@@ -190,7 +191,7 @@ public class JwtService {
         cookie.setHttpOnly(true); // XSS 공격 방지
         // cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
         cookie.setPath("/");      // 쿠키의 유효 경로 설정
-        cookie.setMaxAge(3600); // 7일 유효 기간 설정
+        cookie.setMaxAge(20); // 7일 유효 기간 설정
         // cookie.setDomain(".p.ssafy.io");
         // cookie.setAttribute("SameSite","None");
         response.addCookie(cookie);
@@ -208,7 +209,7 @@ public class JwtService {
         cookie.setHttpOnly(true); // XSS 공격 방지
         // cookie.setSecure(true);   // HTTPS에서만 전송되도록 설정
         cookie.setPath("/");      // 쿠키의 유효 경로 설정
-        cookie.setMaxAge(3600); // 7일 유효 기간 설정
+        cookie.setMaxAge(172800); // 7일 유효 기간 설정
         // cookie.setDomain(".p.ssafy.io");
         // cookie.setAttribute("SameSite","None");
         response.addCookie(cookie);
