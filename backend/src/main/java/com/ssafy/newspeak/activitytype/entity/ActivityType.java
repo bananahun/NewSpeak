@@ -13,5 +13,5 @@ public class ActivityType {
     @Column(name="act_type_id")
     private int id;
     private String actTypeName;
-    private Integer actExp;
+    private Integer fullExp;
 }

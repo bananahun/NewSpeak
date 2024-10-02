@@ -12,11 +12,13 @@ import lombok.RequiredArgsConstructor;
 public class ReportDto {
 
     private final Long id;
+    private final String title;
     private final String content;
 
     public static ReportDto from(Report report) {
         return ReportDto.builder()
                 .id(report.getId())
+                .title(report.getTitle())
                 .content(report.getContent())
                 .build();
     }

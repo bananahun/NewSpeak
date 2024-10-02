@@ -41,6 +41,15 @@ public class ArticleController {
         userArticleService.scrapArticle(userArticleId);
     }
 
+    @DeleteMapping("/{articleId}/scrap")
+    @ResponseStatus(HttpStatus.OK)
+    public void unscrapArticle(@PathVariable Long articleId) {
+        MyUserDetails userDetails= AuthUtil.getUserDetails();
+        userArticleService.unscrapArticle(UserArticleId.builder()
+                .userId(userDetails.getUserId())
+                .articleId(articleId).build());
+    }
+
     @PostMapping("/{articleId}/vocas")
     public void addWordFromArticle(@PathVariable Long articleId, @RequestBody AddWordRequest addWordRequest) {
         MyUserDetails userDetails= AuthUtil.getUserDetails();
@@ -48,8 +57,8 @@ public class ArticleController {
     }
 
     @GetMapping
-    public ResponseEntity<Result> findAll() {
-        List<ArticlesFindResponse> articlesFindResponses = articleService.findAll();
+    public ResponseEntity<Result> findAll(int page) {
+        List<ArticlesFindResponse> articlesFindResponses = articleService.findAll(page);
         int count = articlesFindResponses.size();
         Result<List<ArticlesFindResponse>> result = new Result<>(count, articlesFindResponses);
         return ResponseEntity.status(OK).body(result);

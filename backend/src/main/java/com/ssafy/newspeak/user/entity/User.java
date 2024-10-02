@@ -2,6 +2,7 @@ package com.ssafy.newspeak.user.entity;
 
 
 import com.ssafy.newspeak.explog.entity.ExpLog;
+import com.ssafy.newspeak.security.jwt.service.JwtService;
 import com.ssafy.newspeak.tier.Tier;
 import com.ssafy.newspeak.user.entity.userArticle.UserArticle;
 import com.ssafy.newspeak.voca.entity.Voca;

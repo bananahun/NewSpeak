@@ -1,15 +1,14 @@
 package com.ssafy.newspeak.conversation.dto.report;
 
-import com.ssafy.newspeak.conversation.dto.assistant.RunThreadResponse;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ReportCompleteRequest {
+public class ReportFinalRequest {
 
-    private List<RunThreadResponse> conversations;
+    @NotBlank
+    private String content;
 }

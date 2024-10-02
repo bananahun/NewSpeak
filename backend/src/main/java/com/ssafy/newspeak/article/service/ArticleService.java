@@ -20,8 +20,8 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
 
-    public List<ArticlesFindResponse> findAll() {
-        List<Article> articles = articleRepository.findAll();
+    public List<ArticlesFindResponse> findAll(int page) {
+        List<Article> articles = articleRepository.findAll(page, 5);
         List<ArticlesFindResponse> articlesFindResponses = new ArrayList<>();
         for (Article article : articles) {
             ArticlesFindResponse articlesFindResponse = ArticlesFindResponse.from(article);  // Article -> ArticlesFindResponse 변환
