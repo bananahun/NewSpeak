@@ -2,6 +2,7 @@ package com.ssafy.newspeak.exception;
 
 import jakarta.persistence.NoResultException;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -15,6 +16,7 @@ import java.util.NoSuchElementException;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionAdvice {
     // 4xx 예외 처리
