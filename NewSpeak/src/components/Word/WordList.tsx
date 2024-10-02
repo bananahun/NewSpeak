@@ -20,54 +20,23 @@ const WordList = () => {
     }[];
   }
 
-//   const words: Word[] = [
-//     {
-//         "wordId": 1,
-//         "content": "Innovation",
-//         "level": 5,
-//         "createdAt": null,
-//         "meaningDatas": [
-//             {
-//                 "meaning": "Innovation 1번째 뜻",
-//                 "example": "Innovation drives progress in various fields.",
-//                 "exampleKorean": "혁신은 다양한 분야에서 발전을 이끕니다."
-//             },
-//             {
-//                 "meaning": "Innovation 2번째 뜻",
-//                 "example": "Innovation 2번째 뜻 문장",
-//                 "exampleKorean": "Innovation 2번째 뜻 문장 한국어뜻"
-//             }
-//         ]
-//     },
-//     {
-//         "wordId": 2,
-//         "content": "Technology",
-//         "level": 4,
-//         "createdAt": null,
-//         "meaningDatas": [
-//             {
-//                 "meaning": "Technology 1번째 뜻",
-//                 "example": "Technology has revolutionized communication.",
-//                 "exampleKorean": "기술은 통신에 혁신을 가져왔습니다."
-//             }
-//         ]
-//     }
-// ]
-
   
   const [words, setWords] = useState<Word[]>([]);
   const [flipped, setFlipped] = useState<number | null>(null);
   const [isPronounceModalOpen, setPronounceModalOpen] = useState(false);
   const [selectedText, setSelectedText] = useState<string>('');
-  const {vocaId} = useVocaStore() //임시
+  const {vocaId,setVocaId} = useVocaStore() 
 
   useEffect(() => {
     const fetchWordDetails = async () => {
       try {
         if (vocaId != null) { // vocaId가 null이 아닐 경우에만 호출
           const fetchedWords = await userApi.getMyVocasDetail(vocaId); // API 호출
-          setWords(fetchedWords.wordDetails); // 받아온 데이터를 상태로 저장
+          console.log(fetchedWords)
+          setWords(fetchedWords); // 받아온 데이터를 상태로 저장
         } else {
+          const fetchedVocaId = await userApi.getMyVocas();
+          setVocaId(fetchedVocaId);
           console.error('[WordList] vocaId가 null입니다.');
         }
       } catch (error) {
@@ -77,7 +46,7 @@ const WordList = () => {
   
 
     fetchWordDetails(); // 컴포넌트가 처음 렌더링될 때 API 호출
-  }, [vocaId]);
+  }, [vocaId,setVocaId]);
 
   const handleExampleClick = (index: number) => {
     setFlipped(flipped === index ? null : index);
@@ -94,7 +63,7 @@ const WordList = () => {
 
   return (
     <div>
-      {words.length === 0 &&  (
+      {(!words || words.length === 0) &&  (
             <div>단어가 없습니다.</div>
           )}
       <div className={styles.wordlist}>

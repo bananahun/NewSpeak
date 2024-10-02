@@ -1,15 +1,22 @@
 import React, { useState } from 'react';
 import styles from './ArticleOriginal.module.scss';
 import SentenceDetailModal from '../Modal/SentenceDetailModal';
+import { useSelectedSentenceStore } from '../../store/selectedSentenceStore';
+interface Sentence {
+  id: number;
+  content: string;
+  translation: string;
+}
 import { useWordSelectorState } from '../../store/ModalStore';
 
 const ArticleOriginal = ({
   sentences,
   translatedSentences,
 }: {
-  sentences: string[];
+  sentences: Sentence[];
   translatedSentences: string[];
 }) => {
+  const {selectedSentenceId,setSelectedSentenceId} = useSelectedSentenceStore();
   const { isOpen } = useWordSelectorState();
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   const [sentenceDetailModalOpen, setSentenceDetailModalOpen] = useState(false);
@@ -20,6 +27,7 @@ const ArticleOriginal = ({
 
   const handleMouseEnter = (id: number) => {
     setHoveredId(id);
+    setSelectedSentenceId(sentences[id].id);
   };
 
   const handleMouseLeave = () => {
@@ -57,16 +65,17 @@ const ArticleOriginal = ({
             }`}
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeave}
-            onClick={() => openSentenceDetail(sentence)}
+            onClick={() => openSentenceDetail(sentence.content)}
             onContextMenu={e => toggleTranslate(e, index)}
           >
             <p className={styles.sentence}>
               {visibleTranslations[index]
                 ? translatedSentences[index]
-                : sentence}
+                : sentence.content }
             </p>
           </div>
         ))}
+        <p>{selectedSentenceId}</p>
       </div>
       <SentenceDetailModal
         isOpen={sentenceDetailModalOpen}
