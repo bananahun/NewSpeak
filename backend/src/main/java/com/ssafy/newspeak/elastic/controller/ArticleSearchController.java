@@ -1,6 +1,7 @@
 package com.ssafy.newspeak.elastic.controller;
 
-import com.ssafy.newspeak.elastic.entity.ArticleDocument;
+import com.ssafy.newspeak.elastic.document.ArticleDocument;
+import com.ssafy.newspeak.elastic.dto.ElasticArticlesResponse;
 import com.ssafy.newspeak.elastic.service.ArticleSearchService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,11 +28,34 @@ public class ArticleSearchController {
     public ResponseEntity<Result> searchByTitle(
             @RequestParam("keyword") String keyword
             ,@RequestParam("page") int page) {
-        Page<ArticleDocument> articles = articleSearchService.searchByTitle(keyword, page);
-        int count = articles.getSize();
-        Result<Page<ArticleDocument>> result = new Result<>(count, articles);
+        List<ElasticArticlesResponse> articles = articleSearchService.searchByTitle(keyword, page);
+        int count = articles.size();
+        Result<List<ElasticArticlesResponse>> result = new Result<>(count, articles);
         return ResponseEntity.status(OK).body(result);
     }
+
+    @GetMapping("/content")
+    public ResponseEntity<Result> searchByContent(
+            @RequestParam("keyword") String keyword,
+            @RequestParam("page") int page
+    ) {
+        List<ElasticArticlesResponse> articles = articleSearchService.searchByContent(keyword, page);
+        int count = articles.size();
+        Result<List<ElasticArticlesResponse>> result = new Result<>(count, articles);
+        return ResponseEntity.status(OK).body(result);
+    }
+
+    @GetMapping("/content/kr")
+    public ResponseEntity<Result> searchByTranslatedContent(
+            @RequestParam("keyword") String keyword,
+            @RequestParam("page") int page
+    ) {
+        List<ElasticArticlesResponse> articles = articleSearchService.searchByTranslatedContent(keyword, page);
+        int count = articles.size();
+        Result<List<ElasticArticlesResponse>> result = new Result<>(count, articles);
+        return ResponseEntity.status(OK).body(result);
+    }
+
 
     @Getter
     @AllArgsConstructor
