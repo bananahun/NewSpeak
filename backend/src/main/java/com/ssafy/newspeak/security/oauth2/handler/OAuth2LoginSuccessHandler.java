@@ -28,27 +28,12 @@ import java.io.IOException;
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtService jwtService;
-    private final ObjectMapper objectMapper;
-    private final String ACCESS_TOKEN="accessToken";
-    private final String REFRESH_TOKEN="refreshToken";
 
     @Value("${signUpUrl}")
     private String signUpUrl;
 
     @Value("${mainUrl}")
     private String mainUrl;
-
-    public Cookie setCookie(String name, String accessToken){
-        Cookie cookie = new Cookie(name, accessToken);
-        cookie.setHttpOnly(true); // JavaScript에서 접근 불가
-        // cookie.setHttpOnly(false);
-        // cookie.setSecure(true); // HTTPS에서만 전송
-        cookie.setPath("/"); // 쿠키가 유효한 경로
-        cookie.setMaxAge(3600); // 쿠키 유효 시간 (초)
-        // cookie.setDomain(".p.ssafy.io");
-        // cookie.setAttribute("SameSite","None");
-        return cookie;
-    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -60,12 +45,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             if(oAuth2User.getRole() == Role.GUEST) {
 
                 String accessToken = jwtService.createAccessToken(oAuth2User.getEmail(), oAuth2User.getUserId());
-                Cookie cookie=setCookie(ACCESS_TOKEN,accessToken);
-                String refreshToken = jwtService.createRefreshToken();
-//                response.addCookie(setCookie(REFRESH_TOKEN,refreshToken));
-//                response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
-////                response.setHeader("Referrer Policy", "STRICT_ORIGIN_WHEN_CROSS_ORIGIN");
-//                response.addCookie(cookie);
+                String refreshToken = jwtService.createRefreshToken(oAuth2User.getUserId());
+
                 jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
                 jwtService.updateRefreshToken(oAuth2User.getUserId(), refreshToken);
                 log.info("signUpUrl :{}",signUpUrl);
@@ -83,7 +64,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     // TODO : 소셜 로그인 시에도 무조건 토큰 생성하지 말고 JWT 인증 필터처럼 RefreshToken 유/무에 따라 다르게 처리해보기
     private void loginSuccess(HttpServletResponse response, CustomOAuth2User oAuth2User) throws IOException {
         String accessToken = jwtService.createAccessToken(oAuth2User.getEmail(),oAuth2User.getUserId());
-        String refreshToken = jwtService.createRefreshToken();
+        String refreshToken = jwtService.createRefreshToken(oAuth2User.getUserId());
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
         jwtService.updateRefreshToken(oAuth2User.getUserId(), refreshToken);

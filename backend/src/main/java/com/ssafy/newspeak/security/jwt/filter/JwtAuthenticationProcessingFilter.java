@@ -124,7 +124,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
      * DB에 재발급한 리프레시 토큰 업데이트 후 Flush
      */
     private String reIssueRefreshToken(User user) {
-        String reIssuedRefreshToken = jwtService.createRefreshToken();
+        String reIssuedRefreshToken = jwtService.createRefreshToken(user.getId());
         user.updateRefreshToken(reIssuedRefreshToken);
         userRepo.saveAndFlush(user);
         return reIssuedRefreshToken;

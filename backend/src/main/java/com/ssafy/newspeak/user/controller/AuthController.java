@@ -1,6 +1,7 @@
 package com.ssafy.newspeak.user.controller;
 
 import com.ssafy.newspeak.security.jwt.service.JwtService;
+import com.ssafy.newspeak.security.util.AuthUtil;
 import com.ssafy.newspeak.user.controller.dto.UserSignUpDto;
 import com.ssafy.newspeak.user.service.AuthService;
 import jakarta.servlet.http.Cookie;
@@ -37,8 +38,8 @@ public class AuthController {
     }
 
     @GetMapping("/jwt-test")
-    public String jwtTest(Principal principal) {
-        String email=principal.getName();
+    public String jwtTest() {
+        String email= AuthUtil.getUserDetails().getEmail();
         return "jwtTest 요청 성공 "+email;
     }
 
