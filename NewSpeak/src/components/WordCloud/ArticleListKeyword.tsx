@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import useArticleApi from '../../apis/ArticleApi';
-import useArticleStore from '../../store/ArticleStore';
-import styles from './ArticleListKeyword.module.scss';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import useArticleApi from "../../apis/ArticleApi";
+import useArticleStore from "../../store/ArticleStore";
+import styles from "./ArticleListKeyword.module.scss";
+import { MdImageNotSupported } from "react-icons/md";
 
 interface Article {
   id: number;
   title: string;
   content: string;
   imageUrl: string;
-  date: string;
-  source: string;
+  publishedDate: string;
+  publisher: string;
 }
 
 interface ArticleListKeywordProps {
@@ -30,11 +31,11 @@ const ArticleListKeyword: React.FC<ArticleListKeywordProps> = ({
         try {
           const result = await useArticleApi.getArticleWordCloud(
             selectedWordId,
-            0,
+            0
           );
           setArticles(result);
         } catch (error) {
-          console.error('Error fetching articles:', error);
+          console.error("Error fetching articles:", error);
         }
       }
     };
@@ -48,14 +49,25 @@ const ArticleListKeyword: React.FC<ArticleListKeywordProps> = ({
       title: article.title,
       imageUrl: article.imageUrl,
     });
-    navigate('/article');
+    navigate("/article");
+  };
+
+  // 날짜 형식을 변환하는 함수
+  const formatDate = (dateString: string) => {
+    try {
+      const dateObject = new Date(dateString);
+      return dateObject.toLocaleDateString(); // 기본 형식 (e.g., "9/15/2024")
+    } catch (error) {
+      console.error("Date format error:", error);
+      return "";
+    }
   };
 
   return (
     <div className={styles.articleListContainer}>
       <div className={styles.articleListContent}>
         {articles.length > 0 ? (
-          articles.map(article => (
+          articles.map((article) => (
             <div
               key={article.id}
               className={styles.articleCard}
@@ -64,19 +76,25 @@ const ArticleListKeyword: React.FC<ArticleListKeywordProps> = ({
               }}
             >
               <div className={styles.imageContainer}>
-                <img
-                  src={article.imageUrl}
-                  alt={article.title}
-                  className={styles.articleImage}
-                />
+                {/* 이미지 URL이 있으면 이미지, 없으면 아이콘 표시 */}
+                {article.imageUrl ? (
+                  <img
+                    src={article.imageUrl}
+                    alt={article.title || "Default News Image"}
+                    className={styles.articleImage}
+                  />
+                ) : (
+                  <MdImageNotSupported className={styles.noImageIcon} />
+                )}
               </div>
               <div className={styles.articleInfo}>
                 <p className={styles.title}>{article.title}</p>
-                <p className={styles.publishedDate}>
-                  {new Date(article.date).toLocaleDateString()} -{' '}
-                  {article.source}
-                </p>
               </div>
+              {/* 날짜 변환 함수 formatDate를 사용하여 표시 */}
+              <p className={styles.publishedDate}>
+                {formatDate(article.publishedDate)} <strong>|</strong>{" "}
+                {article.publisher}
+              </p>
             </div>
           ))
         ) : (

@@ -5,9 +5,8 @@
   justify-content: flex-start;
   width: 100%;
   height: 100vh;
-  background-color: #f9f9f9;
-  padding: 20px;
-  overflow: auto; /* 검색 결과가 많을 때 스크롤 가능하도록 설정 */
+  background-color: var(--background-color);
+  // padding: 20px;
 }
 
 .searchContainer {
@@ -15,86 +14,116 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-top: 30vh; /* 검색창이 처음 중앙에 위치 */
-  transition: margin-top 0.5s ease; /* 애니메이션 효과 적용 */
+  margin-top: 30vh;
+  transition: margin-top 0.5s ease;
   position: relative;
-  z-index: 2; /* 검색창이 결과보다 위에 표시되도록 설정 */
+  z-index: 2;
 }
 
 .moveUp {
-  margin-top: 5vh; /* 검색 결과가 표시되면 검색창이 위로 이동 */
+  margin-top: 1vh;
 }
 
 .searchInput {
   width: 300px;
   padding: 10px 15px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--main-color);
   border-radius: 5px;
   margin-right: 10px;
+}
+
+.searchInput:focus {
+  outline-color: var(--contrast-color);
 }
 
 .searchButton {
   padding: 10px 20px;
   border: none;
-  background-color: #007bff;
-  color: white;
+  background-color: var(--main-color);
+  color: var(--background-color);
   cursor: pointer;
   border-radius: 5px;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: var(--contrast-color);
   }
 }
 
 .searchResults {
-  margin-top: 20px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 20px;
-  width: 80%;
-  margin-top: 10vh; /* 검색창 아래에 결과가 표시되도록 설정 */
+  // gap: 10px;
+  width: 100%;
+  margin-top: 10vh;
   overflow-y: auto;
   z-index: 1;
 }
 
 .articleCard {
-  width: 300px;
-  padding: 15px;
+  width: 28vh; /* ArticleList의 카드와 동일한 너비 설정 */
+  height: 60vh; /* 동일한 높이 설정 */
+  margin: 10px;
   border: 1px solid #ddd;
+  padding: 15px;
+  // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  position: relative;
   transition: transform 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 
   &:hover {
     transform: scale(1.05);
   }
 }
 
+.imageContainer {
+  width: 100%;
+  height: 35vh; /* 이미지 크기 조정 */
+  margin-bottom: 15px;
+}
+
 .articleImage {
   width: 100%;
-  height: 180px;
+  height: 100%;
   object-fit: cover;
-  border-radius: 8px;
+  border-bottom: 1px solid #ddd;
+  border-radius: 5px;
 }
 
 .articleInfo {
-  margin-top: 15px;
-}
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 5px 0;
+  width: 100%;
 
-.title {
-  font-size: 1.25em;
-  margin-bottom: 10px;
+  .title {
+    font-size: 1em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    height: 40px;
+    text-overflow: ellipsis;
+  }
 }
 
 .meta {
-  font-size: 0.9em;
-  color: #777;
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  font-size: 0.85em;
+  color: #888;
 }
 
 .noArticlesMessage {
   text-align: center;
   font-size: 18px;
   color: #999;
+  padding: 20px;
+  width: 100%;
 }

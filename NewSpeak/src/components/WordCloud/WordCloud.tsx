@@ -1,18 +1,18 @@
-import React, { useEffect, useRef } from "react";
-import * as d3 from "d3";
-import cloud from "d3-cloud";
+import React, { useEffect, useRef } from 'react';
+import * as d3 from 'd3';
+import cloud from 'd3-cloud';
 
 const colors = [
-  "#F56C00",
-  "#F5B200",
-  "#F59400",
-  "#F54000",
-  "#F5D000",
-  "#F5B552",
-  "#CD9466",
-  "#CDB166",
-  "#CC8166",
-  "#CDBD66",
+  '#F56C00',
+  '#F5B200',
+  '#F59400',
+  '#F54000',
+  '#F5D000',
+  '#F5B552',
+  '#CD9466',
+  '#CDB166',
+  '#CC8166',
+  '#CDBD66',
 ];
 
 interface WordData {
@@ -37,36 +37,36 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, onWordClick }) => {
       const width = container.clientWidth;
       const height = container.clientHeight;
 
-      d3.select(container).select("svg").remove();
+      d3.select(container).select('svg').remove();
 
       const svg = d3
         .select(container)
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .append("g")
-        .attr("transform", `translate(${width / 2}, ${height / 2})`);
+        .append('svg')
+        .attr('width', width)
+        .attr('height', height)
+        .append('g')
+        .attr('transform', `translate(${width / 2}, ${height / 2})`);
 
       const draw = (words: cloud.Word[]) => {
         const texts = svg
-          .selectAll<SVGTextElement, cloud.Word>("text") // 제네릭 타입 명시
+          .selectAll<SVGTextElement, cloud.Word>('text') // 제네릭 타입 명시
           .data(words)
           .enter()
-          .append("text")
-          .style("font-size", (d: cloud.Word) => `${d.size}px`)
-          .style("font-family", "Impact")
+          .append('text')
+          .style('font-size', (d: cloud.Word) => `${d.size}px`)
+          .style('font-family', 'Impact')
           .style(
-            "fill",
-            () => colors[Math.floor(Math.random() * colors.length)]
+            'fill',
+            () => colors[Math.floor(Math.random() * colors.length)],
           )
-          .attr("text-anchor", "middle")
+          .attr('text-anchor', 'middle')
           .attr(
-            "transform",
-            (d: cloud.Word) => `translate(${d.x}, ${d.y}) rotate(${d.rotate})`
+            'transform',
+            (d: cloud.Word) => `translate(${d.x}, ${d.y}) rotate(${d.rotate})`,
           )
           .text((d: cloud.Word) => d.text as string)
-          .style("cursor", "pointer")
-          .on("click", (event, d) => {
+          .style('cursor', 'pointer')
+          .on('click', (event, d) => {
             if (onWordClick) {
               onWordClick(d.text as string, (d as WordData).id); // 클릭 시 단어와 ID 전달
             }
@@ -84,32 +84,69 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, onWordClick }) => {
           SVGGElement,
           unknown
         >,
-        d: cloud.Word
+        d: cloud.Word,
       ) {
-        // 이동 관련 로직...
+        let currentX = d.x;
+        let currentY = d.y;
+
+        function continuousMove() {
+          const targetX = currentX + (Math.random() * 30 - 15);
+          const targetY = currentY + (Math.random() * 30 - 15);
+
+          const bbox = textElement.node()?.getBBox();
+          const textWidth = bbox ? bbox.width : 0;
+          const textHeight = bbox ? bbox.height : 0;
+
+          const boundedTargetX = Math.max(
+            -width / 2 + textWidth / 2,
+            Math.min(targetX, width / 2 - textWidth / 2),
+          );
+          const boundedTargetY = Math.max(
+            -height / 2.1 + textHeight / 2,
+            Math.min(targetY, height / 2 - textHeight / 2),
+          );
+
+          textElement
+            .transition()
+            .duration(1000)
+            .ease(d3.easeLinear)
+            .attrTween('transform', function () {
+              return d3.interpolateString(
+                `translate(${currentX}, ${currentY}) rotate(${d.rotate})`,
+                `translate(${boundedTargetX}, ${boundedTargetY}) rotate(${d.rotate})`,
+              );
+            })
+            .on('end', function () {
+              currentX = boundedTargetX;
+              currentY = boundedTargetY;
+              continuousMove();
+            });
+        }
+
+        continuousMove();
       }
 
       cloud<WordData>()
         .size([width, height])
         .words(
-          data.map((d) => ({
+          data.map(d => ({
             text: d.text,
             size: d.size + 10,
             id: d.id,
-          }))
+          })),
         )
         .padding(7)
         .rotate(() => 0)
-        .font("Impact")
-        .fontSize((d) => d.size)
-        .on("end", draw)
+        .font('Impact')
+        .fontSize(d => d.size)
+        .on('end', draw)
         .start();
     };
 
     drawWordCloud();
-    window.addEventListener("resize", drawWordCloud);
+    window.addEventListener('resize', drawWordCloud);
 
-    return () => window.removeEventListener("resize", drawWordCloud);
+    return () => window.removeEventListener('resize', drawWordCloud);
   }, [data]);
 
   return (
@@ -117,13 +154,13 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, onWordClick }) => {
       ref={containerRef}
       id="word-cloud"
       style={{
-        width: "30vh",
-        height: "80vh",
-        overflow: "hidden",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        position: "relative",
+        width: '35vh',
+        height: '80vh',
+        overflow: 'hidden',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'relative',
       }}
     />
   );

@@ -16,57 +16,61 @@
   }
 }
 
-.searchBar {
-  position: absolute;
-  top: 0;
-  left: 12rem;
-  width: 50vw;
-  min-width: 400px;
-  max-width: 600px;
+.searchBarOverlay {
+  width: 100vw;
   height: 100vh;
-  padding: 12px;
-  background-color: var(--background-color);
-  color: var(--font-color);
-  transform: translateX(-100%);
-  border-right: 0.5px solid var(--font-color);
-  animation: 0.5s ease forwards;
+  .searchBar {
+    position: absolute;
+    top: 0;
+    left: 12rem;
+    width: 50vw;
+    min-width: 400px;
+    max-width: 600px;
+    height: 100vh;
+    padding: 12px;
+    background-color: var(--background-color);
+    color: var(--font-color);
+    transform: translateX(-100%);
+    border-right: 0.5px solid var(--font-color);
+    animation: 0.5s ease forwards;
 
-  .inputContainer {
-    width: 100%;
-    padding: 10px;
-    display: flex;
-    gap: 12px;
-    margin-bottom: 20px;
-    .inputBar {
-      flex-grow: 1;
-      width: 80%;
-      border-radius: 10px;
-      padding: 5px;
-      font-size: 16px;
-    }
-
-    button {
-      width: 20%;
-      padding: 5px;
-      border-radius: 10px;
-    }
-  }
-
-  .searchedWords {
-    width: 100%;
-
-    li {
-      word-break: whitespace;
+    .inputContainer {
       width: 100%;
-      overflow-x: hidden;
+      padding: 10px;
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      .inputBar {
+        flex-grow: 1;
+        width: 80%;
+        border-radius: 10px;
+        padding: 5px;
+        font-size: 16px;
+      }
+
+      button {
+        width: 20%;
+        padding: 5px;
+        border-radius: 10px;
+      }
     }
-  }
 
-  &.open {
-    animation: slideIn 0.5s ease forwards;
-  }
+    .searchedWords {
+      width: 100%;
 
-  &.close {
-    animation: slideOut 0.5s ease forwards;
+      li {
+        word-break: whitespace;
+        width: 100%;
+        overflow-x: hidden;
+      }
+    }
+
+    &.open {
+      animation: slideIn 0.5s ease forwards;
+    }
+
+    &.close {
+      animation: slideOut 0.5s ease forwards;
+    }
   }
 }

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import useThemeStore from '../../store/ThemeStore';
-import useAuthStore from '../../store/AuthStore';
 import { loginWithOAuth } from '../../apis/AuthApi';
 import styles from './Login.module.scss';
 import logo from '../../assets/NewSpeak.png';
@@ -11,8 +10,6 @@ import kakaoLogo from '../../assets/kakao_login_medium_narrow.png';
 
 const Login = () => {
   const { theme } = useThemeStore();
-  const { login } = useAuthStore();
-  const navigate = useNavigate();
   const [mainLogo, setMainLogo] = useState(logo);
 
   useEffect(() => {

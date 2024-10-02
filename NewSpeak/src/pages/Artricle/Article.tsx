@@ -113,9 +113,8 @@ const Article = () => {
   
       // API 호출
       const response = await userApi.getMyArticles(0,10000);
-  
       // 응답 데이터에서 content 배열을 추출
-      const scrappedArticles = response.content;  // 여기서 content 배열을 할당
+      const scrappedArticles = response.data;  // 여기서 content 배열을 할당
   
       // some() 메서드를 사용하여 해당 articleId가 있는지 확인
       const isAlreadyScrapped = scrappedArticles.some(

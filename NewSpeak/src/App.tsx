@@ -1,29 +1,28 @@
-import React, { useEffect } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
-import Home from "./pages/Home/Home";
-import Register from "./pages/Register/Register";
-import Login from "./pages/Login/Login";
-import MyPage from "./pages/MyPage/MyPage";
-import Article from "./pages/Artricle/Article";
-import Conversation from "./pages/Conversation/Conversation";
-import Word from "./pages/Word/Word";
-import Test from "./pages/Word/Test";
-import Nav from "./components/Nav/Nav";
-import ArticleListDetail from "./pages/Artricle/ArticleListDetail";
-import ArticleListCategory from "./pages/Artricle/ArticleListCategory";
-import Report from "./components/Conversation/Report";
-import ReportList from "./pages/MyPage/ReportList";
-import ScrapList from "./pages/MyPage/ScrapList";
-import useThemeStore from "./store/ThemeStore";
-import "./App.scss";
-import { handleContextMenu } from "./utils/AddWord"; // 유틸 함수 임포트
-import { useModalStore } from "./store/ModalStore";
-import AddWordModal from "./components/Modal/AddWordModal";
-import OAuthCallback from "./utils/OAuthCallback";
-import About from './pages/About/About';
+import React, { useEffect } from 'react';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import Home from './pages/Home/Home';
+import Register from './pages/Register/Register';
+import Login from './pages/Login/Login';
+import MyPage from './pages/MyPage/MyPage';
+import Article from './pages/Artricle/Article';
+import Conversation from './pages/Conversation/Conversation';
+import Word from './pages/Word/Word';
+import Test from './pages/Word/Test';
+import Nav from './components/Nav/Nav';
+import ArticleListDetail from './pages/Artricle/ArticleListDetail';
+import Report from './components/Conversation/Report';
+import ReportList from './pages/MyPage/ReportList';
+import ScrapList from './pages/MyPage/ScrapList';
+import useThemeStore from './store/ThemeStore';
+import useAuthStore from './store/AuthStore';
+import './App.scss';
+import { handleContextMenu } from './utils/AddWord'; // 유틸 함수 임포트
+import { useModalStore } from './store/ModalStore';
+import AddWordModal from './components/Modal/AddWordModal';
+import OAuthCallback from './utils/OAuthCallback';
 
 ///
-import TestApiComponent from "./pages/Test";
+import TestApiComponent from './pages/Test';
 ///
 
 function App() {
@@ -31,27 +30,32 @@ function App() {
   const location = useLocation();
 
   const isAuthPage =
-    location.pathname === "/register" || location.pathname === "/login";
+    location.pathname === '/register' || location.pathname === '/login';
 
   const { isOpen, selectedWord, openModal, closeModal } = useModalStore();
+  const { checkAuth } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, [location]);
 
   useEffect(() => {
     const contextMenuHandler = (event: MouseEvent) =>
       handleContextMenu(event, openModal);
 
     // 우클릭 이벤트를 전역적으로 등록
-    document.addEventListener("contextmenu", contextMenuHandler);
+    document.addEventListener('contextmenu', contextMenuHandler);
 
     // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
-      document.removeEventListener("contextmenu", contextMenuHandler);
+      document.removeEventListener('contextmenu', contextMenuHandler);
     };
   }, [openModal]);
 
   return (
     <div className={`theme ${theme}`}>
       {!isAuthPage && <Nav />}
-      <main className={`${isAuthPage ? "authMain" : "main"}`}>
+      <main className={`${isAuthPage ? 'authMain' : 'main'}`}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
@@ -60,14 +64,9 @@ function App() {
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/article" element={<Article />} />
           <Route path="/conversation" element={<Conversation />} />
-          <Route path="/about" element={<About />} />
           <Route path="/word" element={<Word />} />
           <Route path="/wordlist/test" element={<Test />} />
           <Route path="/articlelist" element={<ArticleListDetail />} />
-          <Route
-            path="/articlelist/category"
-            element={<ArticleListCategory />}
-          />
           <Route path="/log" element={<Test />} />
           <Route path="/report" element={<Report />} />
           <Route path="/reportlist" element={<ReportList />} />
@@ -78,12 +77,12 @@ function App() {
         </Routes>
 
         <div className="modal">
-          {" "}
-          <AddWordModal
+          {' '}
+          {/* <AddWordModal
             word={selectedWord}
             isOpen={isOpen}
             onClose={closeModal}
-          />
+          /> */}
         </div>
       </main>
     </div>
