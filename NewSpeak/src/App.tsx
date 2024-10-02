@@ -13,9 +13,10 @@ import ArticleListDetail from './pages/Artricle/ArticleListDetail';
 import Report from './pages/MyPage/Report';
 import ReportList from './pages/MyPage/ReportList';
 import ScrapList from './pages/MyPage/ScrapList';
+import About from './pages/About/About';
+import ArticleListCategory from './pages/Artricle/ArticleListCategory';
 import useThemeStore from './store/ThemeStore';
 import useAuthStore from './store/AuthStore';
-import About from './pages/About/About';
 import './App.scss';
 import OAuthCallback from './utils/OAuthCallback';
 
@@ -56,6 +57,11 @@ function App() {
           <Route path="/report" element={<Report />} />
           <Route path="/reportlist" element={<ReportList />} />
           <Route path="/scraplist" element={<ScrapList />} />
+          <Route path="/about" element={<About />} />
+          <Route
+            path="/articlelist/category"
+            element={<ArticleListCategory />}
+          />
           ///
           <Route path="/test/api" element={<TestApiComponent />} />
           ///

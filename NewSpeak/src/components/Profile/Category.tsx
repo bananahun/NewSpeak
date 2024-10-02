@@ -1,57 +1,60 @@
   import React,{useEffect, useState} from 'react';
   import styles from './Category.module.scss';
   import { usePreferredCategoryStore } from '../../store/CategoryStore';
-
+  import { categories } from '../../utils/Categories';
   // const Category: React.FC<CategoryProps> = ({ preferredCategories, updatePreferredCategory }) => {
     const Category: React.FC = () => {
       const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
       // 최대 선택 가능한 카테고리 수
       const maxSelectable = 3;
       // const { preferredCategories, getPreferredCategory, updatePreferredCategory } = usePreferredCategoryStore();
-      const { preferredCategories, getPreferredCategory} = usePreferredCategoryStore();
-      const [selectedCategories, setSelectedCategories] = useState<string[]|null>( preferredCategories)
+      const { preferredCategories, getPreferredCategory, updatePreferredCategory} = usePreferredCategoryStore();
+      const [selectedCategories, setSelectedCategories] = useState<number[]>( preferredCategories)
       // 설정된 카테고리들
       
-    const categories = [
-      'Category 1',
-      'Category 2',
-      'Category 3',
-      'Category 4',
-      'Category 5',
-      'Category 6',
-      'Category 7',
-      'Category 8',
-      'Category 9',
-    ];
+    // const categories = [
+    //   'Category 1',
+    //   'Category 2',
+    //   'Category 3',
+    //   'Category 4',
+    //   'Category 5',
+    //   'Category 6',
+    //   'Category 7',
+    //   'Category 8',
+    //   'Category 9',
+    // ];
   
     useEffect(()=> {
       const fetchPreferredCategories = async () => {
-        if (preferredCategories === null) { // 값이 없으면
+        if (preferredCategories.length === 0) { // 값이 없으면
           await getPreferredCategory(); // 서버에 요청
         } 
       };
   
       fetchPreferredCategories(); // 선호 카테고리 요청
-    }, [preferredCategories, getPreferredCategory]
+    }, []
   )
 
-  const handleCategoryClick = (category: string) => {
+  const handleCategoryClick = (category: number) => {
     setSelectedCategories(prev => {
       const currentCategories = prev || []; // prev가 null일 경우 빈 배열로 초기화
-  
+      
       // 이미 선택된 경우, 선택 해제
       if (currentCategories.includes(category)) {
-        return currentCategories.filter(c => c !== category);
+        const updatedCategories = currentCategories.filter(c => c !== category);
+        updatePreferredCategory(updatedCategories); // 서버에 변경된 데이터 업데이트
+        return updatedCategories;
       }
       // 새로 선택하려는 경우, 최대 선택 수를 초과하지 않으면 추가
       else if (currentCategories.length < maxSelectable) {
-        return [...currentCategories, category];
+        const updatedCategories = [...currentCategories, category];
+        updatePreferredCategory(updatedCategories); // 서버에 변경된 데이터 업데이트
+        return updatedCategories;
       }
       // 최대 선택 수를 초과하면 현재 상태 유지
       return currentCategories;
     });
   };
-  
   
   
     const toggleDropdown = () => {
@@ -73,13 +76,13 @@
             </button>
             {isDropdownOpen && (
               <div className={styles.dropdownContent}>
-                {categories.map((category, index) => (
+                {categories.slice(1).map((category, index) => (
                   <div
-                    key={index}
+                    key={index+1}
                     className={`${styles.dropdownItem} ${
-                      selectedCategories?.includes(category) ? styles.selected : ''
+                      selectedCategories?.includes(index+1) ? styles.selected : ''
                     }`}
-                    onClick={() => handleCategoryClick(category)}
+                    onClick={() => handleCategoryClick(index+1)}
                   >
                     {category}
                   </div>
@@ -90,9 +93,9 @@
   
           {/* 드롭다운 우측에 선택된 카테고리 태그 표시 */}
           <div className={styles.selectedCategories}>
-            {selectedCategories?.map((category, index) => (
+            {selectedCategories?.map((categoryIndex, index) => (
               <span key={index} className={styles.selectedCategory}>
-                {category}
+                {categories[categoryIndex]} {/* 선택된 카테고리 인덱스를 사용해 해당 카테고리 이름을 가져옴 */}
               </span>
             ))}
           </div>

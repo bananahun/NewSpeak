@@ -4,6 +4,7 @@ import { useModalStore } from '../../store/ModalStore';
 import AddWordModal from './AddWordModal';
 import styles from './WordSelector.module.scss';
 import { FiSearch } from 'react-icons/fi';
+import useArticleStore from "../../store/ArticleStore";
 
 const isEnglishWord = (word: string) => {
   const englishWordPattern = /^[a-zA-Z]+$/;
@@ -36,6 +37,7 @@ const WordSelector = ({
 }: {
   closeWordSelector: () => void;
 }) => {
+  const articleMeta = useArticleStore.getState().articleMeta;
   const { isOpen, selectedWord, openModal, closeModal } = useModalStore();
   const [cursorPosition, setCursorPosition] = useState<{
     x: number;
@@ -96,7 +98,7 @@ const WordSelector = ({
           </div>
         )}
       </div>
-      <AddWordModal word={selectedWord} isOpen={isOpen} onClose={closeModal} />
+      <AddWordModal word={selectedWord} articleId={articleMeta?articleMeta.id:0} isOpen={isOpen} onClose={closeModal} />
     </>,
     document.body,
   );

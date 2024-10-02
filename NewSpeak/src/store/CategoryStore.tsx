@@ -4,20 +4,20 @@ import axiosInstance from '../apis/axiosConfig';
 
 interface CategoryState {
   id: number;  // 카테고리 ID
-  setCategory: (id: number, category: string) => void;
+  setCategory: (id: number, category: number) => void;
 }
 
 // 선호 카테고리 상태 정의
 interface PreferredCategoryState {
-  preferredCategories: string[]|null; // 선호 카테고리 배열
+  preferredCategories: number[]; // 선호 카테고리 배열
   getPreferredCategory: () => Promise<void>; // 선호 카테고리 추가 함수
-  updatePreferredCategory: (categoris: string[]) => Promise<void>; // 선호 카테고리 제거 함수
+  updatePreferredCategory: (categoris: number[]) => Promise<void>; // 선호 카테고리 제거 함수
 }
 
 const usePreferredCategoryStore = create(
   persist<PreferredCategoryState>(
     set => ({
-      preferredCategories: null, // 초기값을 빈 배열로 설정
+      preferredCategories: [], // 초기값을 빈 배열로 설정
       getPreferredCategory: async () => {
         try {
           // 서버에 카테고리 추가 요청 보내기
@@ -31,10 +31,10 @@ const usePreferredCategoryStore = create(
           console.error('[API] getPreferredCategory 에러:', error);
         }
       },
-      updatePreferredCategory: async (categories: string[]) => {
+      updatePreferredCategory: async (categories: number[]) => {
         try {
           // 서버에 카테고리 제거 요청 보내기
-          await axiosInstance.put(`/my/categories`);
+          await axiosInstance.post('/my/categories',categories);
           // 요청이 성공하면 상태 업데이트
           set({
             preferredCategories: categories, // 카테고리 제거
