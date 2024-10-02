@@ -129,7 +129,7 @@ public class GptAssistantService {
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
         RunThreadResponse dialog = objectMapper.readValue(response.getLast(), RunThreadResponse.class);
         String result =  objectMapper.readValue(response.getLast(), RunThreadResponse.class).getAssistant();
-        ResponseEntity<ByteArrayResource> audioFile = responseAudio(result);
+        ResponseEntity<String> audioFile = responseAudio(result);
         try {
             return ThreadResult.of(dialog, audioFile);
         } catch (Exception e) {
@@ -138,7 +138,7 @@ public class GptAssistantService {
     }
 
 
-    public ResponseEntity<ByteArrayResource> responseAudio(String result) throws IOException {
+    public ResponseEntity<String> responseAudio(String result) throws IOException {
 
         OpenAiAudioSpeechOptions speechOptions = OpenAiAudioSpeechOptions.builder()
                 .withModel("tts-1")
@@ -149,14 +149,13 @@ public class GptAssistantService {
 
         SpeechPrompt speechPrompt = new SpeechPrompt(result, speechOptions);
         SpeechResponse response = openAiAudioSpeechClient.call(speechPrompt);
-        System.out.println("response = " + response);
         byte[] audioDataBytes = response.getResult().getOutput();
-        System.out.println("response.getResult().getMetadata() = " + response.getResult().getMetadata());
-        ThreadAudio byteArrayResource = new ThreadAudio(audioDataBytes);
+        String base64EncodedAudio = Base64.getEncoder().encodeToString(audioDataBytes);
+//        ThreadAudio byteArrayResource = new ThreadAudio(audioDataBytes);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("audio/mpeg"))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"output.mp3\"")
-                .body(byteArrayResource);
+                .body(base64EncodedAudio);
     }
 
     public AfterReportCompleteResponse reportCompleteResponse(String threadId, String runId) throws JsonProcessingException {

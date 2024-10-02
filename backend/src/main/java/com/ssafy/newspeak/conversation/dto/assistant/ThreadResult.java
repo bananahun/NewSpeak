@@ -18,5 +18,5 @@ public class ThreadResult {
     private RunThreadResponse dialog;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private ResponseEntity<ByteArrayResource> audio;
+    private ResponseEntity<String> audio;
 }
