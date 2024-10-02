@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ArticleOriginal from '../../components/Article/ArticleOriginal';
 import ArticleTranslation from '../../components/Article/ArticleTranslation';
@@ -6,9 +6,10 @@ import useArticleStore from '../../store/ArticleStore';
 import useConversationStore from '../../store/ConversationStore';
 import useArticleApi from '../../apis/ArticleApi';
 import { getLogo } from '../../store/ThemeStore';
-import { FaRegCircleQuestion, FaRegBookmark } from 'react-icons/fa6';
+import { FaRegBookmark,FaBookmark } from 'react-icons/fa6';
 import styles from './Article.module.scss';
 import { IconButton } from '@mui/material';
+import userApi from '../../apis/UserApi'; // API 파일 임포트
 
 interface ArticleDetail {
   id: number;
@@ -47,6 +48,7 @@ const Article = () => {
   const [isTranslateOpen, setIsTranslateOpen] = useState(false);
   const [activeTranslateMessage, setActiveTranslateMessage] =
     useState('전문 번역');
+  const [isScrapped, setIsScrapped] = useState(false); // 스크랩 상태 관리
 
   const getOrDefault = (value: any, defaultValue: string = 'Loading..') => {
     if (typeof value === 'string' && !isNaN(Date.parse(value))) {
@@ -65,9 +67,28 @@ const Article = () => {
     }
   };
 
-  const toggleScrap = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const toggleScrap = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    // 스크랩 api -> articleMeta.id
+
+    if (articleMeta) {
+      const articleId = articleMeta.id;
+
+      try {
+        if (isScrapped) {
+          // 스크랩 해제
+          await userApi.deleteMyArticles(articleId);
+        } else {
+          // 스크랩 추가
+          await userApi.createMyArticles(articleId);
+        }
+
+        // DB의 상태를 다시 확인
+        checkIfScrapped(articleId);
+
+      } catch (error) {
+        console.error('스크랩 처리 중 오류 발생:', error);
+      }
+    }
   };
 
   const handleGetArticleDetail = async (articleId: number) => {
@@ -85,6 +106,32 @@ const Article = () => {
       setArticleSentences({ sentences, translatedSentences });
     }
   };
+
+  const checkIfScrapped = async () => {
+    if (articleMeta) {
+      const articleId = articleMeta.id;
+  
+      // API 호출
+      const response = await userApi.getMyArticles(0,10000);
+      // 응답 데이터에서 content 배열을 추출
+      const scrappedArticles = response.data;  // 여기서 content 배열을 할당
+  
+      // some() 메서드를 사용하여 해당 articleId가 있는지 확인
+      const isAlreadyScrapped = scrappedArticles.some(
+        (article: { id: number }) => article.id === articleId
+      );
+  
+      setIsScrapped(isAlreadyScrapped);
+    }
+  };
+  
+ // 페이지 로드 시 스크랩 상태 확인
+  useEffect(() => {
+    if (articleMeta && articleMeta.id) {
+      checkIfScrapped(articleMeta.id); // DB에서 스크랩 상태 확인
+    }
+  }, [articleMeta]);
+
 
   useEffect(() => {
     if (articleMeta) {
@@ -107,6 +154,7 @@ const Article = () => {
   return (
     <>
       <div className={styles.articleHeader}>
+          
         <div className={styles.articlePublishInfo}>
           <p>
             Publisher <strong> | </strong>
@@ -128,8 +176,8 @@ const Article = () => {
           {getOrDefault(articleMeta?.title)}
         </span>
         <IconButton onClick={e => toggleScrap(e)} className={styles.bookmark}>
-          <FaRegBookmark />
-        </IconButton>
+            {isScrapped ? <FaBookmark /> : <FaRegBookmark />} {/* 스크랩 상태에 따라 아이콘 변경 */}
+          </IconButton>
       </div>
       <div className={styles.articleContainer}>
         <div className={styles.articleBackground}>

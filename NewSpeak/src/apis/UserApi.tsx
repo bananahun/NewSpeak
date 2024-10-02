@@ -126,9 +126,9 @@ const getMyArticles = async (page: number, size: number) => {
   try {
     const response = await axiosInstance.get('/my/articles', {
       params: {
-        page: page,
-        size: size,
-      },
+        page: page,  // 페이지 번호
+        size: size   // 페이지 당 기사 개수
+      }
     });
     console.log(response.data, '[API] getMyArticles 호출 결과');
 
@@ -136,10 +136,10 @@ const getMyArticles = async (page: number, size: number) => {
     const articles = content.map((article:Article ) => ({
       id: article.id,
       title: article.title,
-      publishedDate: new Date(article.publishedDate)
+      publishedDate: new Date(article.publishedDate),
       
-      // imageUrl:article.imageUrl,
-      // publisher: article.publisher, 
+      imageUrl:article.imageUrl,
+      publisher: article.publisher, 
     }));
 
     const filteredData = {
@@ -155,6 +155,26 @@ const getMyArticles = async (page: number, size: number) => {
   }
 };
 
+
+const createMyArticles = async (articleId: number) => {
+  try {
+    const response = await axiosInstance.post(`/articles/${articleId}/scrap`);
+    console.log(response.data, '[API] createMyArticles 호출 결과');
+    return response.data;
+  } catch (error) {
+    console.error('[API] createMyArticles 에러:', error);
+  }
+};
+
+const deleteMyArticles = async (articleId: number) => {
+  try {
+    const response = await axiosInstance.delete(`/articles/${articleId}/scrap`);
+    console.log(response.data, '[API] deleteMyArticles 호출 결과');
+    return response.data;
+  } catch (error) {
+    console.error('[API] deleteMyArticles 에러:', error);
+  }
+};
 
 const fetchPronounce = async (audioFile: File) => {
   try {
@@ -255,7 +275,8 @@ const userApi = {
     getMyArticles,
     getUserStreaks,
     fetchPronounce,
-    createMyVocas,
+    createMyArticles,
+    deleteMyArticles
 }
 
 export default userApi;
