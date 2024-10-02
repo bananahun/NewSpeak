@@ -5,7 +5,7 @@ import ProfileImage from '../../components/Profile/ProfileImage';
 import Category from '../../components/Profile/Category';
 import Streak from '../../components/Profile/Streak';
 import userApi from '../../apis/UserApi';
-import { usePreferredCategoryStore } from '../../store/CategoryStore';
+import { useVocaStore } from '../../store/VocaStore';
 
 interface User {
   id: number;
@@ -30,9 +30,8 @@ const MyPage = () => {
   // };
 
   const [streaks, setStreaks] = useState<Streaks>({});
-  // const { preferredCategories, getPreferredCategory, updatePreferredCategory } = usePreferredCategoryStore();
-  const { preferredCategories, getPreferredCategory} = usePreferredCategoryStore();
 
+  const {vocaId, setVocaId} = useVocaStore();
   
   useEffect(() => {
     const fetchStreaks = async () => {
@@ -47,16 +46,22 @@ const MyPage = () => {
     fetchStreaks(); // API 요청
 
     // 선호 카테고리 가져오기
-    const fetchPreferredCategories = async () => {
-      if (!preferredCategories) { // 값이 없으면
-        await getPreferredCategory(); // 서버에 요청
-      }
-    };
+},[]); // 의존성 배열에 추가
 
-    fetchPreferredCategories(); // 선호 카테고리 요청
-  }, [preferredCategories, getPreferredCategory]); // 의존성 배열에 추가
+  useEffect(() => {
+    if(!vocaId) {
+      const fetchVocaIds = async () => {
+        try {
+          const fetchedVocaId = await userApi.getMyVocas();
+          setVocaId(fetchedVocaId); // 가져온 데이터를 상태에 저장
+        } catch (error) {
+          console.error('Error fetching vocaIds:', error);
+        }
+      };
 
-
+      fetchVocaIds();      
+    }
+  })
 
   return (
     <div className={styles.mypage}>
@@ -70,9 +75,7 @@ const MyPage = () => {
             내 정보 변경
           </button>
         </div>
-        <Category 
-          preferredCategories={preferredCategories} 
-          // updatePreferredCategory={updatePreferredCategory} 
+        <Category  
         />
       </div>
       <div className={styles.streakSection}>
