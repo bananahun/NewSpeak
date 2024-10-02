@@ -5,7 +5,7 @@ import {useCategoryStore} from '../../store/CategoryStore';
 import { categories } from '../../utils/Categories';
 import useArticleStore from '../../store/ArticleStore'; // ArticleStore import
 
-const ArticleListDetail: React.FC<{ articles: any[] }> = ({ articles = [] }) => {
+const ArticleListDetail: React.FC<{ articles: any[], onArticleClick: (article: any) => void }> = ({ articles = [], onArticleClick }) => {
   const { id } = useCategoryStore(); // Zustand로부터 카테고리 ID 가져오기
   const location = useLocation(); // 현재 경로 정보 가져오기
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,7 +18,7 @@ const ArticleListDetail: React.FC<{ articles: any[] }> = ({ articles = [] }) => 
   // 페이지에 맞는 기사를 선택하여 보여줍니다.
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = articles.content?.slice(indexOfFirstItem, indexOfLastItem) || [];
+  const currentItems = articles.slice(indexOfFirstItem, indexOfLastItem) || [];
 8
   // 타임스탬프를 날짜로 변환하는 함수
   const formatDate = (publishedDate: string) => {
@@ -35,12 +35,12 @@ const ArticleListDetail: React.FC<{ articles: any[] }> = ({ articles = [] }) => 
       imageUrl: item.imageUrl,
     };
     setArticleMeta(articleMeta); // articleMeta 저장
-    navigate(`/article/${item.id}`); // 해당 기사 상세 페이지로 이동
+    navigate(`/article/`); // 해당 기사 상세 페이지로 이동
   };
 
   // 페이지네이션 버튼 핸들러
   const handleNextPage = () => {
-    if (currentPage < Math.ceil(articles.content.length / itemsPerPage)) {
+    if (currentPage < Math.ceil(articles.length / itemsPerPage)) {
       setCurrentPage(currentPage + 1);
     }
   };
@@ -62,7 +62,7 @@ const ArticleListDetail: React.FC<{ articles: any[] }> = ({ articles = [] }) => 
       <div className={styles['article-list']}>
         {currentItems.map((item) => (
           <div key={item.id} onClick={() => handleArticleClick(item)}>
-            <a href={`/article/${item.id}`} className={styles['article-card']}>
+            <a href={`/article/`} className={styles['article-card']}>
               <img
                 src={item.imageUrl}
                 alt={item.title}
