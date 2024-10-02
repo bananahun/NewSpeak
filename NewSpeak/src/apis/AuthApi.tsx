@@ -47,3 +47,13 @@ export const getUserInfo = async () => {
     return false;
   }
 };
+
+export const logoutWithOAuth = async (navigate: any) => {
+  try {
+    await axiosInstance.get('/auth/logout');
+    // 로그아웃 후 로그인 페이지로 이동
+    navigate('/login');
+  } catch (error) {
+    console.error('Logout error:', error);
+  }
+};

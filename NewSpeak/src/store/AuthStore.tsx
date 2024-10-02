@@ -1,10 +1,11 @@
 import { create } from 'zustand';
-import { fetchEmail, getUserInfo } from '../apis/AuthApi';
+import { fetchEmail, getUserInfo,logoutWithOAuth } from '../apis/AuthApi';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthState {
   isLoggedIn: boolean;
   user: null | any;
-  logout: () => void;
+  logout: (navigate:any) => void;
   checkAuth: () => void;
 }
 
@@ -12,34 +13,29 @@ const useAuthStore = create<AuthState>(set => ({
   isLoggedIn: false,
   user: null,
 
-  logout: () => {
+  logout: (navigate) => {
+    console.log("로그아웃에 성공했어요")
     set({ isLoggedIn: false, user: null });
+    logoutWithOAuth(navigate); // provider 없이 호출
   },
 
   checkAuth: async () => {
     try {
-      const userEmail = await fetchEmail();
-      console.log(userEmail.status);
-      if (userEmail) {
-        if (userEmail.status === 403) {
-          set({ isLoggedIn: true });
-        }
+      // 유저 정보를 가져와서 로그인 상태를 확인
+      const userInfo = await getUserInfo();
+      if (userInfo) {
+        // 유저 정보가 있으면 로그인 상태로 설정
+        console.log('로그인에 성공했어요!',userInfo);
+        set({ isLoggedIn: true, user: userInfo });
+      } else {
+        console.log('로그인에 실패!',userInfo);
+        // 유저 정보가 없으면 로그아웃 상태로 설정
+        set({ isLoggedIn: false, user: null });
       }
     } catch (error) {
-      console.error(error);
+      console.error('로그인에 실패하였습니다.', error);
+      set({ isLoggedIn: false, user: null });
     }
-    // try {
-    //   const userInfo = await getUserInfo();
-    //   console.log(userInfo);
-    // } catch (error) {
-    //   console.error('Failed to fetch user info:', error);
-    //   set({ isLoggedIn: false });
-    // }
-    // if (token) {
-    //   set({ isLoggedIn: true });
-    // } else {
-    //   set({ isLoggedIn: false });
-    // }
   },
 }));
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink,useNavigate } from 'react-router-dom';
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import useThemeStore from '../../store/ThemeStore';
 import useAuthStore from '../../store/AuthStore';
@@ -20,6 +20,7 @@ const Nav = () => {
   const [overlayHide, setOverlayHide] = useState(false);
   const [isFirstWordRender, setIsFirstWordRender] = useState(true);
   const [wordSelectorMode, setWordSelectorMode] = useState(false);
+  const navigate = useNavigate(); // 추가된 navigate
 
   const toggleWordSearchBar = () => {
     if (isOpenedWordSearchBar) {
@@ -150,8 +151,10 @@ const Nav = () => {
                     </div>
                   </MenuItem>
                   <MenuItem>
-                    <div className={styles.logout} onClick={logout}>
-                      Logout
+                  <div
+                      className={styles.logout}
+                      onClick={() => logout(navigate)} // navigate 전달
+                    >Logout
                     </div>
                   </MenuItem>
                 </>
