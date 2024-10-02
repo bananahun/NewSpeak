@@ -57,20 +57,24 @@ const Conversation = () => {
           footer: '완료될때까지 시간이 조금 걸릴 수 있어요.',
           icon: 'info',
           showCancelButton: false,
-          confirmButtonText: '확인',
-        }).then(() => {
-          // 로딩중 띄우기
-          createReportThread();
+          showConfirmButton: false,
+          didOpen: () => {
+            createReportThread();
+            Swal.showLoading();
+          },
+          didClose: () => {
+            navigate('/reportlist');
+          },
         });
       }
     });
   };
 
   useEffect(() => {
-    if (reportCreated) {
-      navigate('/mypage');
+    if (!isGeneratingReport) {
+      Swal.close();
     }
-  }, [reportCreated]);
+  }, [isGeneratingReport]);
 
   const leftButton = () => {
     if (step === 2) {
@@ -101,7 +105,6 @@ const Conversation = () => {
     if (step === 2) {
       reportAlert();
     } else {
-      // 레포트 생성 실패했을때, 강제중단하는 로직
       if (isGeneratingReport) {
         return;
       }
@@ -191,6 +194,7 @@ const Conversation = () => {
           />
         </span>
       )}
+      {isGeneratingReport && <div>만드는중</div>}
     </>
   );
 };

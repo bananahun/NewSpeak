@@ -267,6 +267,7 @@ const useConversationApi = () => {
 
       if (i === count - 1) {
         console.error('generateReport: 모든 시도 실패');
+        setIsGeneratingReport(false);
       } else {
         console.log(`재시도 ${i + 2}/${count} 대기 중... ${delay / 1000}초`);
         await new Promise(resolve => setTimeout(resolve, delay));
@@ -277,15 +278,11 @@ const useConversationApi = () => {
   useEffect(() => {
     if (reportCreated) {
       console.log('완료');
-
-      const timer = setTimeout(() => {
-        setReportCreated(false);
-        setIsGeneratingReport(false);
-      }, 3000);
-
-      return () => clearTimeout(timer);
+      setIsGeneratingReport(false);
+      setReportCreated(false);
+      return;
     }
-  });
+  }, [reportCreated]);
 
   return {
     convRunId,

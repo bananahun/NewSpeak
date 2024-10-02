@@ -6,7 +6,7 @@ import useArticleStore from '../../store/ArticleStore';
 import useConversationStore from '../../store/ConversationStore';
 import useArticleApi from '../../apis/ArticleApi';
 import { getLogo } from '../../store/ThemeStore';
-import { FaRegBookmark,FaBookmark } from 'react-icons/fa6';
+import { FaRegBookmark, FaBookmark } from 'react-icons/fa6';
 import styles from './Article.module.scss';
 import { IconButton } from '@mui/material';
 import userApi from '../../apis/UserApi'; // API 파일 임포트
@@ -84,7 +84,6 @@ const Article = () => {
 
         // DB의 상태를 다시 확인
         checkIfScrapped(articleId);
-
       } catch (error) {
         console.error('스크랩 처리 중 오류 발생:', error);
       }
@@ -110,28 +109,27 @@ const Article = () => {
   const checkIfScrapped = async () => {
     if (articleMeta) {
       const articleId = articleMeta.id;
-  
+
       // API 호출
-      const response = await userApi.getMyArticles(0,10000);
+      const response = await userApi.getMyArticles(0, 10000);
       // 응답 데이터에서 content 배열을 추출
-      const scrappedArticles = response.data;  // 여기서 content 배열을 할당
-  
+      const scrappedArticles = response.data; // 여기서 content 배열을 할당
+
       // some() 메서드를 사용하여 해당 articleId가 있는지 확인
       const isAlreadyScrapped = scrappedArticles.some(
-        (article: { id: number }) => article.id === articleId
+        (article: { id: number }) => article.id === articleId,
       );
-  
+
       setIsScrapped(isAlreadyScrapped);
     }
   };
-  
- // 페이지 로드 시 스크랩 상태 확인
+
+  // 페이지 로드 시 스크랩 상태 확인
   useEffect(() => {
     if (articleMeta && articleMeta.id) {
       checkIfScrapped(articleMeta.id); // DB에서 스크랩 상태 확인
     }
   }, [articleMeta]);
-
 
   useEffect(() => {
     if (articleMeta) {
@@ -153,41 +151,45 @@ const Article = () => {
 
   return (
     <>
-      <div className={styles.articleHeader}>
-          
-        <div className={styles.articlePublishInfo}>
-          <p>
-            Publisher <strong> | </strong>
-            {getOrDefault(articleData?.publisher)}
-          </p>
-          <h1 className={styles.articleTitle}>
-            {getOrDefault(articleMeta?.title)}
-          </h1>
-          <div className={styles.publishDetail}>
-            <p>{getOrDefault(articleData?.writer)}</p>
-            <strong>|</strong>
-            <p>{getOrDefault(articleData?.publishedDate)}</p>
-          </div>
-          <p>
-            Lv <strong>|</strong> {getOrDefault(articleData?.level)}
-          </p>
-        </div>
-        <span className={styles.overallTitleTooltip}>
-          {getOrDefault(articleMeta?.title)}
-        </span>
-        <IconButton onClick={e => toggleScrap(e)} className={styles.bookmark}>
-            {isScrapped ? <FaBookmark /> : <FaRegBookmark />} {/* 스크랩 상태에 따라 아이콘 변경 */}
-          </IconButton>
-      </div>
-      <div className={styles.articleContainer}>
-        <div className={styles.articleBackground}>
-          <div className={styles.articleDetail}>
-            <div className={styles.articleImageContainer}>
-              <img
-                className={styles.articleImage}
-                src={articleMeta?.imageUrl || logo}
-              />
+      <div className={styles.articlePage}>
+        <div className={styles.articleHeader}>
+          <div className={styles.articlePublishInfo}>
+            <p>
+              Publisher <strong> | </strong>
+              {getOrDefault(articleData?.publisher)}
+            </p>
+            <div className={styles.articleTitleWrapper}>
+              <h1 className={styles.articleTitle}>
+                {getOrDefault(articleMeta?.title)}
+              </h1>
+              <span className={styles.overallTitleTooltip}>
+                {getOrDefault(articleMeta?.title)}
+              </span>
+              <div className={styles.publishDetail}>
+                <p>{getOrDefault(articleData?.writer)}</p>
+                <strong>|</strong>
+                <p>{getOrDefault(articleData?.publishedDate)}</p>
+              </div>
+              <p>
+                Lv <strong>|</strong> {getOrDefault(articleData?.level)}
+              </p>
             </div>
+          </div>
+          <IconButton onClick={e => toggleScrap(e)} className={styles.bookmark}>
+            {isScrapped ? <FaBookmark /> : <FaRegBookmark />}{' '}
+            {/* 스크랩 상태에 따라 아이콘 변경 */}
+          </IconButton>
+        </div>
+        <div className={styles.articleBackground}>
+          <div className={styles.articleContainer}>
+            {!isTranslateOpen && (
+              <div className={styles.articleImageContainer}>
+                <img
+                  className={styles.articleImage}
+                  src={articleMeta?.imageUrl || logo}
+                />
+              </div>
+            )}
             {isTranslateOpen ? (
               <ArticleTranslation
                 sentences={articleSentences?.sentences || []}

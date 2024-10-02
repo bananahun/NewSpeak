@@ -1,8 +1,8 @@
-@import './styles/variables';
+@import "./styles/variables";
 
 @font-face {
-  font-family: 'NanumBarunpen';
-  src: url('./assets/font/NanumBarunpenR.ttf');
+  font-family: "NanumBarunpen";
+  src: url("./assets/font/NanumBarunpenR.ttf");
 }
 
 * {
@@ -19,7 +19,6 @@ h4 {
   font-size: inherit;
 }
 
-
 html,
 body {
   margin: 0;
@@ -31,7 +30,7 @@ body {
 }
 
 body * {
-  font-family: 'NanumBarunpen', sans-serif;
+  font-family: "NanumBarunpen", sans-serif;
   font-size: 18px;
 }
 
@@ -49,9 +48,9 @@ body * {
 
 button {
   /* 고스트 버튼 스타일 */
-  background: transparent;
-  color: rgb(249, 110, 50);
-  border: 2px solid rgb(249, 110, 50);
+  background: var(--background-color);
+  color: var(--font-color);
+  border: 2px solid var(--main-color);
   border-radius: 3ch;
   position: relative;
   overflow: hidden;
@@ -69,5 +68,5 @@ button {
 }
 
 strong {
-  color: var(--accent-color);
+  color: var(--main-color);
 }

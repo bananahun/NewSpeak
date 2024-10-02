@@ -35,7 +35,7 @@ const ConversationSession = ({
   useEffect(() => {
     if (isFirstRender) {
       clearConversation();
-      createThread();
+      // createThread();
       setIsFirstRender(false);
       setIsFirstMessage(true);
       return;
@@ -97,14 +97,6 @@ const ConversationSession = ({
     return bytes.buffer;
   };
 
-  useEffect(() => {
-    if (activeResponse) {
-      addConversation('assistant', activeResponse);
-      setConversationCount(prev => prev + 1);
-    }
-    setActiveAnswer('');
-  }, [activeResponse]);
-
   const byteToMp3 = (byteData: string) => {
     const arrayBuffer = base64ToArrayBuffer(byteData);
     const blob = new Blob([arrayBuffer], { type: 'audio/mpeg' });
@@ -130,13 +122,25 @@ const ConversationSession = ({
     setIsEditing(false);
   };
 
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    const hasKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(value);
+
+    if (hasKorean) {
+      alert('한글은 입력할 수 없습니다.');
+      const englishOnly = value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '');
+      setEditedAnswer(englishOnly);
+    } else {
+      setEditedAnswer(value);
+    }
+  };
+
   // TODO: 추천받은 문장 어디 띄우지
   // TODO: 녹음다하고 수정할 때 영어만 적을 수 있게 + 255자 제한
   // TODO: mp3 플레이될 때 녹음하기 비활성화 찍기
   // TODO: ai 응답 스크립트 on / off
-  // TODO: 수정할 때, 너무 길어지면 CSS 이상해짐
   return (
-    <div>
+    <>
       <div className={styles.converSationSession}>
         {conversation.map((conv, index) => {
           return (
@@ -154,13 +158,13 @@ const ConversationSession = ({
           );
         })}
       </div>
-      <div className={styles.userMessage}>
+      <div className={styles.userMessageInput}>
         {activeAnswer && (
           <>
             {isEditing ? (
               <button onClick={handleSaveEdit}>완료</button>
             ) : (
-              <>
+              <div className={styles.buttonContainer}>
                 <LiaEdit
                   size={25}
                   onClick={handleEdit}
@@ -171,17 +175,17 @@ const ConversationSession = ({
                   onClick={submitAnswer}
                   className={styles.submitButton}
                 />
-              </>
+              </div>
             )}
             <div className={styles.messageContent}>
               {!isEditing ? (
-                <div>{editedAnswer}</div>
+                <>{editedAnswer}</>
               ) : (
                 <textarea
                   value={editedAnswer}
-                  onChange={e => setEditedAnswer(e.target.value)}
+                  onChange={e => handleTextChange(e)}
                   className={styles.editInput}
-                  cols={Math.min(120, Math.max(editedAnswer.length, 40))}
+                  cols={Math.min(60, Math.max(editedAnswer.length, 40))}
                   rows={Math.max(2, editedAnswer.length / 120)}
                   maxLength={255}
                 />
@@ -190,7 +194,7 @@ const ConversationSession = ({
           </>
         )}
       </div>
-    </div>
+    </>
   );
 };
 
