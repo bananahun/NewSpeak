@@ -42,7 +42,8 @@ public class User {
 
     private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인인 경우 null)
 
-    private Integer exp;
+    @Builder.Default
+    private Integer exp=0;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="tier_id")

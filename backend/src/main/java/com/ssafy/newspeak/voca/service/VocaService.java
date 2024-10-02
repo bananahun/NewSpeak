@@ -38,6 +38,11 @@ public class VocaService {
         return voca.getId();
     }
 
+    /**
+     * 회원가입 시 사용
+     * @param vocaPostDto
+     * @param user
+     */
     public void makeVoca(VocaPostDto vocaPostDto,User user) {
         Voca voca = new Voca(vocaPostDto,user);
         vocaRepo.save(voca);
