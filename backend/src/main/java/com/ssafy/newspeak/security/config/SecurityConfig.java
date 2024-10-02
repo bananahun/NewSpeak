@@ -98,6 +98,8 @@ public class SecurityConfig {
                         .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
                         .requestMatchers("/api/v1/auth/signUp","/api/v1/auth/email").hasRole("GUEST")
                         .requestMatchers("/api/**").hasRole("USER")
+                        .requestMatchers("/api/v1/keywords").permitAll()
+                        .requestMatchers("/api/v1/articles/keyword/{keywordId}/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oAuth2LoginSuccessHandler)

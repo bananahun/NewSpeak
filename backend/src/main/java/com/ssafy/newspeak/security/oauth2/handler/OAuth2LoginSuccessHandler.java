@@ -28,27 +28,12 @@ import java.io.IOException;
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtService jwtService;
-    private final ObjectMapper objectMapper;
-    private final String ACCESS_TOKEN="accessToken";
-    private final String REFRESH_TOKEN="refreshToken";
 
     @Value("${signUpUrl}")
     private String signUpUrl;
 
     @Value("${mainUrl}")
     private String mainUrl;
-
-    public Cookie setCookie(String name, String accessToken){
-        Cookie cookie = new Cookie(name, accessToken);
-        cookie.setHttpOnly(true); // JavaScript에서 접근 불가
-        // cookie.setHttpOnly(false);
-        // cookie.setSecure(true); // HTTPS에서만 전송
-        cookie.setPath("/"); // 쿠키가 유효한 경로
-        cookie.setMaxAge(3600); // 쿠키 유효 시간 (초)
-        // cookie.setDomain(".p.ssafy.io");
-        // cookie.setAttribute("SameSite","None");
-        return cookie;
-    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -60,12 +45,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             if(oAuth2User.getRole() == Role.GUEST) {
 
                 String accessToken = jwtService.createAccessToken(oAuth2User.getEmail(), oAuth2User.getUserId());
-                Cookie cookie=setCookie(ACCESS_TOKEN,accessToken);
                 String refreshToken = jwtService.createRefreshToken(oAuth2User.getUserId());
-//                response.addCookie(setCookie(REFRESH_TOKEN,refreshToken));
-//                response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
-////                response.setHeader("Referrer Policy", "STRICT_ORIGIN_WHEN_CROSS_ORIGIN");
-//                response.addCookie(cookie);
+
                 jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
                 jwtService.updateRefreshToken(oAuth2User.getUserId(), refreshToken);
                 log.info("signUpUrl :{}",signUpUrl);
