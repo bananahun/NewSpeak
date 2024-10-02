@@ -44,19 +44,29 @@
   animation: fadeIn 3s forwards;
 }
 
-.userMessage {
+.userMessageInput {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 15px;
+  gap: 10px;
+
   .messageContent {
     background-color: var(--sub-color);
     max-width: 100%;
+    color: var(--background-color);
   }
 
-  .editButton,
-  .submitButton,
-  button {
-    margin-right: 10px;
-    border-radius: 10px;
-    width: fit-content;
-    cursor: pointer;
+  .buttonContainer {
+    width: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    .editButton,
+    .submitButton {
+      cursor: pointer;
+    }
   }
 
   .editInput {
@@ -66,5 +76,6 @@
     resize: none;
     padding: 5px;
     border-radius: 10px;
+    ime-mode: disabled;
   }
 }

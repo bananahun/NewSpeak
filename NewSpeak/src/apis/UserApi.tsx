@@ -1,7 +1,7 @@
 import axiosInstance from './axiosConfig';
 
 // 회원 정보 수정
-const updateUserInfo = async (userData:string) => {
+const updateUserInfo = async (userData: string) => {
   try {
     const response = await axiosInstance.put('/user', userData);
     console.log(response.data, '[API] updateUserInfo 호출 결과');
@@ -12,7 +12,7 @@ const updateUserInfo = async (userData:string) => {
 };
 
 // 로그인
-const loginUser = async (credentials:string) => {
+const loginUser = async (credentials: string) => {
   try {
     const response = await axiosInstance.post('/login', credentials);
     console.log(response.data, '[API] loginUser 호출 결과');
@@ -44,11 +44,9 @@ interface VocaListResponse {
   totalCount: number;
 }
 
-
-
 // 나만의 단어장 목록 가져오기
 // pagination으로 수정가능
-const getMyVocas = async (): Promise<number|null> => {
+const getMyVocas = async (): Promise<number | null> => {
   try {
     const response = await axiosInstance.get<VocaListResponse>('/my/vocas');
 
@@ -66,11 +64,10 @@ const getMyVocas = async (): Promise<number|null> => {
   }
 };
 
-
-const createMyVocas = async (title:string) => {
+const createMyVocas = async (title: string) => {
   try {
     const response = await axiosInstance.post('/vocas', {
-      title
+      title,
     });
 
     console.log(response.data, '[API] createMyVocas 호출 결과');
@@ -81,7 +78,7 @@ const createMyVocas = async (title:string) => {
 };
 
 // 나만의 단어장 상세 가져오기
-const getMyVocasDetail = async (vocaId:number) => {
+const getMyVocasDetail = async (vocaId: number) => {
   try {
     const response = await axiosInstance.get(`/vocas/${vocaId}`);
     console.log(response.data, '[API] getMyVocasDetail 호출 결과');
@@ -92,7 +89,7 @@ const getMyVocasDetail = async (vocaId:number) => {
 };
 
 // 단어 문제 풀기
-const getMyVocasQuiz = async (vocaId:number) => {
+const getMyVocasQuiz = async (vocaId: number) => {
   try {
     const response = await axiosInstance.get(`/my/vocas/${vocaId}/quiz`);
     console.log(response.data, '[API] getMyVocasQuiz 호출 결과');
@@ -104,9 +101,11 @@ const getMyVocasQuiz = async (vocaId:number) => {
 
 // 단어 문제 채점
 // 단어 문제 채점에서 quizId 가 필요하지 않나?
-const gradeMyVocasQuiz = async (answerCount:number) => {
+const gradeMyVocasQuiz = async (answerCount: number) => {
   try {
-    const response = await axiosInstance.post('/my/vocas/quiz/result',{answerCount});
+    const response = await axiosInstance.post('/my/vocas/quiz/result', {
+      answerCount,
+    });
     console.log(response.data, '[API] gradeMyVocasQuiz 호출 결과');
     return response.data;
   } catch (error) {
@@ -126,26 +125,26 @@ const getMyArticles = async (page: number, size: number) => {
   try {
     const response = await axiosInstance.get('/my/articles', {
       params: {
-        page: page,  // 페이지 번호
-        size: size   // 페이지 당 기사 개수
-      }
+        page: page, // 페이지 번호
+        size: size, // 페이지 당 기사 개수
+      },
     });
     console.log(response.data, '[API] getMyArticles 호출 결과');
 
-    const { content,totalPages } = response.data; // content 필드만 추출
-    const articles = content.map((article:Article ) => ({
+    const { content, totalPages } = response.data; // content 필드만 추출
+    const articles = content.map((article: Article) => ({
       id: article.id,
       title: article.title,
       publishedDate: new Date(article.publishedDate),
-      
-      imageUrl:article.imageUrl,
-      publisher: article.publisher, 
+
+      imageUrl: article.imageUrl,
+      publisher: article.publisher,
     }));
 
     const filteredData = {
       count: articles.length,
       data: articles,
-      totalPages
+      totalPages,
     };
 
     console.log(filteredData, '[API] getMyArticles 호출 결과');
@@ -154,7 +153,6 @@ const getMyArticles = async (page: number, size: number) => {
     console.error('[API] getMyArticles 에러:', error);
   }
 };
-
 
 const createMyArticles = async (articleId: number) => {
   try {
@@ -187,14 +185,13 @@ const fetchPronounce = async (audioFile: File) => {
       headers: {
         'Content-Type': 'multipart/form-data', // multipart/form-data 형식으로 요청
       },
-    });    
+    });
     console.log(response.data, '[API] fetchPronounce 호출 결과');
     return response.data;
   } catch (error) {
     console.error('[API] fetchPronounce 에러:', error);
   }
 };
-
 
 // 사용자 스트릭 조회
 const getUserStreaks = async () => {
@@ -207,14 +204,19 @@ const getUserStreaks = async () => {
         year: year,
         month: month,
       },
-    
-  });
+    });
 
     console.log(response.data, '[API] getUserStreaks 호출 결과');
-    const expData = response.data.dailyExpList.reduce((acc: Record<string, number>, exp: { date: string; totalExp: number }) => {
-      acc[exp.date] = exp.totalExp;
-      return acc;
-    }, {});
+    const expData = response.data.dailyExpList.reduce(
+      (
+        acc: Record<string, number>,
+        exp: { date: string; totalExp: number },
+      ) => {
+        acc[exp.date] = exp.totalExp;
+        return acc;
+      },
+      {},
+    );
     return expData;
   } catch (error) {
     console.error('[API] getUserStreaks 에러:', error);
@@ -264,19 +266,30 @@ const getUserStreaks = async () => {
 //   }
 // };
 
+const getReportDetails = async (reportId: number) => {
+  try {
+    const response = await axiosInstance.get(`/conversation/${reportId}`);
+    console.log(response.data, '[API] getReportDetails 호출 결과');
+    return response.data;
+  } catch (error) {
+    console.error('[API] getReportDetails 에러:', error);
+  }
+};
+
 const userApi = {
-    updateUserInfo,
-    loginUser,
-    getMyPage,
-    getMyVocas,
-    getMyVocasDetail,
-    getMyVocasQuiz,
-    gradeMyVocasQuiz,
-    getMyArticles,
-    getUserStreaks,
-    fetchPronounce,
-    createMyArticles,
-    deleteMyArticles
-}
+  updateUserInfo,
+  loginUser,
+  getMyPage,
+  getMyVocas,
+  getMyVocasDetail,
+  getMyVocasQuiz,
+  gradeMyVocasQuiz,
+  getMyArticles,
+  getUserStreaks,
+  getReportDetails,
+  fetchPronounce,
+  createMyArticles,
+  deleteMyArticles,
+};
 
 export default userApi;

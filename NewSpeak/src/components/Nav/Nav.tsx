@@ -3,6 +3,7 @@ import { Link, NavLink } from 'react-router-dom';
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import useThemeStore from '../../store/ThemeStore';
 import useAuthStore from '../../store/AuthStore';
+import { useWordSelectorState } from '../../store/ModalStore';
 import WordSelector from '../Modal/WordSelector';
 import logo from '../../assets/NewSpeak.png';
 import logoWhite from '../../assets/NewSpeakWhite.png';
@@ -13,26 +14,34 @@ import styles from './Nav.module.scss';
 const Nav = () => {
   const { theme } = useThemeStore();
   const { isLoggedIn, logout } = useAuthStore();
+  const { isOpen, setIsOpen } = useWordSelectorState();
   const [mainLogo, setMainLogo] = useState(logo);
   const [isOpenedWordSearchBar, setIsOpenedWordSearchBar] = useState(false);
+  const [overlayHide, setOverlayHide] = useState(false);
   const [isFirstWordRender, setIsFirstWordRender] = useState(true);
   const [wordSelectorMode, setWordSelectorMode] = useState(false);
 
   const toggleWordSearchBar = () => {
     if (isOpenedWordSearchBar) {
       setIsOpenedWordSearchBar(false);
+      setTimeout(() => {
+        setOverlayHide(false);
+      }, 500);
     } else {
       setIsOpenedWordSearchBar(true);
       setIsFirstWordRender(false);
+      setOverlayHide(true);
     }
   };
 
   const openWordSelector = () => {
     setWordSelectorMode(true);
+    setIsOpen(true);
   };
 
   const closeWordSelector = () => {
     setWordSelectorMode(false);
+    setIsOpen(false);
   };
 
   const renderLinks = () => {
@@ -151,7 +160,7 @@ const Nav = () => {
           </nav>
         </Menu>
       </Sidebar>
-      {isOpenedWordSearchBar && (
+      {overlayHide && (
         <div className={styles.searchBar}>
           <WordSearch
             isOpen={isOpenedWordSearchBar}

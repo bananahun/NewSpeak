@@ -1,3 +1,9 @@
+.articlePage {
+  overflow-y: scroll;
+  position: relative;
+  height: 100%;
+}
+
 .articleHeader {
   display: flex;
   flex-wrap: wrap;
@@ -6,6 +12,7 @@
   align-items: center;
   position: relative;
   padding-bottom: 20px;
+  height: fit-content;
 
   .articlePublishInfo {
     display: flex;
@@ -14,39 +21,48 @@
     gap: 10px;
     width: calc(100% - 50px);
 
+    .articleTitleWrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: left;
+      gap: 10px;
+    }
+
+    .articleTitle {
+      font-size: 24px;
+      font-weight: bold;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+      cursor: default;
+    }
+
+    .articleTitle:hover + .overallTitleTooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .overallTitleTooltip {
+      visibility: hidden;
+      opacity: 0;
+      border: 1px solid var(--font-color);
+      border-radius: 10px;
+      background-color: rgba(var(--main-rgb), 0.78);
+      padding: 5px;
+      position: absolute;
+      bottom: 30px;
+      z-index: 500;
+      left: 0;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
     .publishDetail {
       display: flex;
       gap: 10px;
     }
-  }
-
-  .articleTitle {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-    cursor: default;
-  }
-
-  .articleTitle:hover + .overallTitleTooltip {
-    visibility: visible;
-    opacity: 1;
-  }
-
-  .overallTitleTooltip {
-    visibility: hidden;
-    opacity: 0;
-    border: 1px solid var(--font-color);
-    border-radius: 10px;
-    background-color: rgba(var(--main-rgb), 0.78);
-    padding: 5px;
-    position: absolute;
-    bottom: -12px;
-    z-index: 500;
-    left: 0;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
   }
 
   .bookmark {
@@ -60,12 +76,9 @@
   }
 }
 
-.articleTitle {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.articleContainer {
+.articleBackground {
+  position: sticky;
+  top: 25px;
   filter: brightness(85%);
   background-color: var(--background-color);
   border-radius: 6px;
@@ -73,30 +86,31 @@
   box-sizing: border-box;
   overflow-y: scroll;
 
-  .articleDetail {
-    display: flex;
-    flex-direction: column;
-  }
+  .articleContainer {
+    overflow-y: scroll;
 
-  .articleImageContainer {
-    border: 1px solid var(--font-color);
-    border-radius: 12px;
-    margin-bottom: 14px;
-    padding: 12px;
-
-    .articleImage {
-      width: 100%;
-      height: auto;
+    .articleImageContainer {
+      // border: 1px solid var(--font-color);
       border-radius: 12px;
+      margin-bottom: 14px;
+      // padding: 12px;
+
+      .articleImage {
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+      }
     }
   }
 }
 
-.articleBackground {
-  overflow-y: scroll;
-
-  > img {
-    width: 100%;
+@media (min-width: 1024px) {
+  .articleImageContainer {
+    display: inline-block;
+    width: 50%;
+    .articleImage {
+      width: 50%;
+    }
   }
 }
 
@@ -107,9 +121,9 @@
   margin-top: 12px;
 
   button {
-    cursor: pointer;
-    background-color: var(--font-color);
-    color: var(--background-color);
+    // cursor: pointer;
+    // background-color: var(--font-color);
+    // color: var(--background-color);
     padding: 8px 12px;
     border-radius: 6px;
     width: 30%;

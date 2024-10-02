@@ -14,3 +14,13 @@ export const useModalStore = create<ModalState>(set => ({
   openModal: (word: string) => set({ isOpen: true, selectedWord: word }), // 모달을 열고 단어 설정
   closeModal: () => set({ isOpen: false, selectedWord: '' }), // 모달 닫기 및 선택된 단어 초기화
 }));
+
+interface WordSelectorState {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+export const useWordSelectorState = create<WordSelectorState>(set => ({
+  isOpen: false,
+  setIsOpen: (isOpen: boolean) => set({ isOpen: isOpen }),
+}));

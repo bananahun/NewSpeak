@@ -13,20 +13,24 @@
 .conversationModal {
   display: flex;
   flex-direction: column;
+  gap: 20px;
   justify-self: center;
   align-items: center;
   position: relative;
+  width: 300px;
+  height: 300px;
+  padding: 20px;
 
   button {
     width: fit-content;
   }
 
   .modalHeader {
-    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     height: 40px;
-    padding: 0 50px;
-    top: 20px;
 
     .title {
       width: 100%;
@@ -40,9 +44,13 @@
       span {
         font-size: 24px;
       }
-      img {
+      .spacebar {
         display: inline-block;
+        width: 150px;
         animation: accent 1s linear infinite;
+        > img {
+          width: 100%;
+        }
       }
     }
 
@@ -55,6 +63,7 @@
       border: none;
       text-align: center;
       padding: 0;
+      background-color: inherit;
     }
   }
 
@@ -64,23 +73,15 @@
     align-items: center;
   }
 
-  .buttonContainer {
+  .footer {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
     justify-content: center;
     align-items: center;
-
-    .sttButtons,
-    .activeButtons {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .activeButtons {
-      flex-wrap: nowrap;
-    }
+    gap: 10px;
+    flex-wrap: nowrap;
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
   }
 }
 

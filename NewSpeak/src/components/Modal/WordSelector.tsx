@@ -42,10 +42,6 @@ const WordSelector = ({
     y: number;
   } | null>(null);
 
-  // const handleMouseEnter = (e: React.MouseEvent) => {
-  //   setCursorPosition({ x: e.clientX, y: e.clientY });
-  // };
-
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setCursorPosition({ x: e.clientX, y: e.clientY });
@@ -60,13 +56,17 @@ const WordSelector = ({
       const selectedText = getSelectedText();
       if (selectedText) {
         handleOpenModal(e, openModal);
+        window.getSelection()?.removeAllRanges();
       }
     };
+
+    document.body.style.cursor = 'none';
 
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('contextmenu', handleContextMenu);
     document.addEventListener('mouseup', handleMouseUp);
     return () => {
+      document.body.style.cursor = 'default';
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('contextmenu', handleContextMenu);
       document.removeEventListener('mouseup', handleMouseUp);
@@ -79,8 +79,11 @@ const WordSelector = ({
 
   return ReactDOM.createPortal(
     <>
-      <div className={styles.overlay} onClick={handleClick}>
-        <div>단어 선택 하는 모드</div>
+      <div
+        className={styles.overlay}
+        onClick={handleClick}
+        style={{ cursor: 'none' }}
+      >
         {cursorPosition && (
           <div
             className={styles.cursorPosition}

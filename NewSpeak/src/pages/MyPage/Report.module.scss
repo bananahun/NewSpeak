@@ -4,7 +4,7 @@
   align-items: center;
   width: 100%;
   height: 100%;
-  background-color: #fdfdfd;
+  background-color: var(--background-color);
   font-family: 'Arial, sans-serif';
 }
 
@@ -20,17 +20,12 @@
   grid-template-columns: 1fr 1fr; /* Left and right sections */
   width: 95%;
   height: 95%;
-  border: 1px solid #000;
+  border: 1px solid var(--font-color);
 }
 
-.leftSide,
-.rightSide {
-  padding: 20px;
-  border-left: 1px solid #000;
-}
-
-.leftSide {
-  border-right: 1px solid #000;
+.page {
+  // border-left: 1px solid var(--font-color);
+  overflow-y: scroll;
 }
 
 .feedbackTable {
@@ -41,11 +36,12 @@
 
 .feedbackTable th,
 .feedbackTable td {
-  border: 1px solid #000;
+  border: 1px solid var(--font-color);
   padding: 20px 10px;
   text-align: center;
   font-size: 14px;
   white-space: normal;
+  min-width: 60px;
   height: 60px;
   line-height: 1.2;
 }
@@ -71,7 +67,7 @@
 
 .message {
   margin-bottom: 10px;
-  width: 100%; /* Ensure message container takes full width */
+  width: 100%;
 }
 
 .assistantMessage {
@@ -83,7 +79,8 @@
   border-radius: 10px 10px 10px 0;
   border: 1px solid #00796b;
   position: relative;
-  margin-right: auto; /* Align to the left by pushing right margin */
+  margin-right: auto;
+  color: black;
 }
 
 .assistantMessage::after {
@@ -105,7 +102,8 @@
   border-radius: 10px 10px 0 10px;
   border: 1px solid #8bc34a;
   position: relative;
-  margin-left: auto; /* Align to the right by pushing left margin */
+  margin-left: auto;
+  color: black;
 }
 
 .userMessage::after {

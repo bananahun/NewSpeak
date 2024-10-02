@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './ArticleOriginal.module.scss';
 import SentenceDetailModal from '../Modal/SentenceDetailModal';
+import { useWordSelectorState } from '../../store/ModalStore';
 
 const ArticleOriginal = ({
   sentences,
@@ -9,6 +10,7 @@ const ArticleOriginal = ({
   sentences: string[];
   translatedSentences: string[];
 }) => {
+  const { isOpen } = useWordSelectorState();
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   const [sentenceDetailModalOpen, setSentenceDetailModalOpen] = useState(false);
   const [selectedSentence, setSelectedSentence] = useState<string>('');
@@ -33,11 +35,13 @@ const ArticleOriginal = ({
   };
 
   const openSentenceDetail = (text: string) => {
+    if (isOpen) return;
     setSelectedSentence(text);
     setSentenceDetailModalOpen(true);
   };
 
   const closeSentenceDetail = () => {
+    if (isOpen) return;
     setSelectedSentence('');
     setSentenceDetailModalOpen(false);
   };
