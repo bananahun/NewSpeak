@@ -2,6 +2,15 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import styles from './About.module.scss';
+import news1Img from '../../assets/news2.jpg';
+import news2Img from '../../assets/news4.jpg';
+import newspeakImg from '../../assets/new+speak.jpg';
+import mypageImg from '../../assets/mypage.jpg';
+import wordAddImg from '../../assets/word_add.jpg';
+import conversationsImg from '../../assets/conversations.jpg';
+import conversations2Img from '../../assets/conversations2.jpg';
+import Word from '../Word/Word';
+
 
 const About = () => {
     const navigate = useNavigate();
@@ -31,7 +40,7 @@ const About = () => {
     return (
         <div className={styles.aboutContainer}>
             <p className={`${styles.introText} ${styles.chapter} ${styles.chapterDescription}`} style={{ backgroundColor: 'white', color:'black'}}>
-            <img src="/src/assets/new+speak.jpg" alt="합성어" className={styles.chapterImage} />
+            <img src={newspeakImg} alt="합성어" className={styles.chapterImage} />
                 Newspeak 서비스는 News와 Speak의 합성어로, 최신 영어 뉴스를 통해 실시간으로 영어 듣기와 말하기 능력을 향상시키는 혁신적인 학습 플랫폼입니다!
                 지금 Newspeak에서 새로운 방식의 영어 학습을 경험해 보세요.
             </p>
@@ -46,8 +55,8 @@ const About = () => {
                     <button onClick={() => navigate('/')} className={styles.button}>기사 보러가기</button>
                 </div>
                 <div className={styles.imageWrapper}>
-                    <img src="/src/assets/news2.jpg" alt="뉴스" className={styles.chapterImage} />
-                    <img src="/src/assets/news4.jpg" alt="뉴스" className={styles.chapterImage} />
+                    <img src={news1Img} alt="뉴스" className={styles.chapterImage} />
+                    <img src={news2Img} alt="뉴스" className={styles.chapterImage} />
                 </div>
             </div>
 
@@ -61,8 +70,8 @@ const About = () => {
                     <button onClick={() => navigate('/mypage')} className={styles.button}>Mypage로 가기</button>
                 </div>
                 <div className={styles.imageWrapper}>
-                    <img src="/src/assets/mypage.jpg" alt="단어장" className={styles.chapterImage} />
-                    <img src="/src/assets/word_add.jpg" alt="단어장 추가" className={styles.chapterImage} />
+                    <img src={mypageImg} alt="단어장" className={styles.chapterImage} />
+                    <img src={wordAddImg} alt="단어장 추가" className={styles.chapterImage} />
                 </div>
             </div>
 
@@ -75,8 +84,8 @@ const About = () => {
                     </p>
                 </div>
                 <div className={styles.imageWrapper}>
-                    <img src="/src/assets/conversations.jpg" alt="회화" className={styles.chapterImage} />
-                    <img src="/src/assets/conversations2.jpg" alt="회화" className={styles.chapterImage} />
+                    <img src={conversationsImg} alt="회화" className={styles.chapterImage} />
+                    <img src={conversations2Img} alt="회화" className={styles.chapterImage} />
                 </div>
             </div>
         </div>
