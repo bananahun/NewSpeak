@@ -95,6 +95,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(authorize -> authorize
+                        .requestMatchers("/api/v1/keywords").permitAll()
+                        .requestMatchers("/api/v1/articles/category/{categoryId}/**").permitAll()
+                        .requestMatchers("/api/v1/articles/keyword/{keywordId}/**").permitAll()
                         .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
                         .requestMatchers("/api/v1/auth/signUp","/api/v1/auth/email").hasRole("GUEST")
                         .requestMatchers("/api/**").hasRole("USER")

@@ -1,6 +1,7 @@
 package com.ssafy.newspeak.security.login.handler;
 
 
+import com.ssafy.newspeak.security.jwt.MyUserDetails;
 import com.ssafy.newspeak.security.jwt.service.JwtService;
 import com.ssafy.newspeak.security.util.AuthUtil;
 import com.ssafy.newspeak.security.util.UserAuthDto;
@@ -33,12 +34,11 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) {
-        User userDetails = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
-
+        MyUserDetails userDetails=(MyUserDetails)authentication.getPrincipal();
 
         String email = userDetails.getUsername(); // 인증 정보에서 Username(email) 추출
-        String accessToken = jwtService.createAccessToken(email,1L); // JwtService의 createAccessToken을 사용하여 AccessToken 발급
-        String refreshToken = jwtService.createRefreshToken(); // JwtService의 createRefreshToken을 사용하여 RefreshToken 발급
+        String accessToken = jwtService.createAccessToken(email,userDetails.getUserId()); // JwtService의 createAccessToken을 사용하여 AccessToken 발급
+        String refreshToken = jwtService.createRefreshToken(userDetails.getUserId()); // JwtService의 createRefreshToken을 사용하여 RefreshToken 발급
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken); // 응답 헤더에 AccessToken, RefreshToken 실어서 응답
 

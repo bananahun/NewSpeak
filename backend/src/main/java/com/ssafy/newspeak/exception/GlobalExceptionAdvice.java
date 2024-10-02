@@ -1,12 +1,15 @@
 package com.ssafy.newspeak.exception;
 
 import jakarta.persistence.NoResultException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.NoSuchElementException;
 
@@ -14,6 +17,23 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @RestControllerAdvice
 public class GlobalExceptionAdvice {
+    // 4xx 예외 처리
+    @ExceptionHandler(HttpClientErrorException.class)
+    public ResponseEntity<String> handleClientError(HttpClientErrorException ex) {
+        return ResponseEntity.status(ex.getStatusCode()).body("클라이언트 오류: " + ex.getMessage());
+    }
+
+    // 특정 4xx 예외 처리
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<String> handleResponseStatusException(ResponseStatusException ex) {
+        return ResponseEntity.status(ex.getStatusCode()).body("응답 상태 오류: " + ex.getReason());
+    }
+
+    // 5xx 예외 처리
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleServerError(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류: " + ex.getMessage());
+    }
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {

@@ -1,5 +1,8 @@
 package com.ssafy.newspeak.voca.controller;
 
+import com.ssafy.newspeak.activitytype.entity.ActivityTypeEnum;
+import com.ssafy.newspeak.explog.controller.ExpResult;
+import com.ssafy.newspeak.explog.entity.ExpLog;
 import com.ssafy.newspeak.explog.service.ExpLogRequest;
 import com.ssafy.newspeak.explog.service.ExpLogService;
 import com.ssafy.newspeak.security.jwt.MyUserDetails;
@@ -23,9 +26,10 @@ public class VocaController {
     private final ExpLogService expLogService;
 
     @PostMapping("")
-    public void makeVoca(@RequestBody VocaPostDto vocaPostDto) {
+    public ResponseEntity<MakeVocaResponse> makeVoca(@RequestBody VocaPostDto vocaPostDto) {
         MyUserDetails userDetails=AuthUtil.getUserDetails();
-        vocaService.makeVoca(vocaPostDto,userDetails.getUserId());
+        Long vocaId=vocaService.makeVoca(vocaPostDto,userDetails.getUserId());
+        return ResponseEntity.ok(new MakeVocaResponse(vocaId));
     }
 
     @GetMapping("")
@@ -57,12 +61,17 @@ public class VocaController {
         return ResponseEntity.ok(new WordQuizs(wordQuizs));
     }
 
-//    @PostMapping("/{vocaId}/quiz")
-//    public ResponseEntity<ExpResult> postVocaQuizResult(@RequestBody VocaQuizResult vocaQuizResult){
-//        MyUserDetails userDetails=AuthUtil.getUserDetails();
-//
-//        expLogService.saveExpLogAndAddToUserExp(new ExpLogRequest(,userDetails.getUserId(),));
-//
-//        return ResponseEntity.ok().build();
-//    }
+    @PostMapping("/{vocaId}/quiz/result")
+    public ResponseEntity<ExpResult> postVocaQuizResult(@PathVariable Long vocaId,
+                                                        @RequestBody VocaQuizResult vocaQuizResult){
+        MyUserDetails userDetails=AuthUtil.getUserDetails();
+
+        int vocaQuizTotal = 10;
+        ExpLog expLog=expLogService.saveExpLogAndAddToUserExp(ExpLogRequest.from(
+            ActivityTypeEnum.VOCAQUIZ,
+            userDetails.getUserId(),
+            (double) (vocaQuizResult.getAnswerCount() / vocaQuizTotal), vocaId
+        ));
+        return ResponseEntity.ok(new ExpResult(expLog));
+    }
 }
