@@ -23,7 +23,7 @@ interface ArticleDetail {
   publishedDate: string;
   publisher: string;
   writer: string;
-  sentences: string[];
+  sentences: ArticleSentences[];
 }
 
 interface Sentence {
@@ -33,7 +33,7 @@ interface Sentence {
 }
 
 interface ArticleSentences {
-  sentences: string[];
+  sentences: Sentence[];
   translatedSentences: string[];
 }
 
@@ -95,9 +95,7 @@ const Article = () => {
     setArticleData(response);
 
     if (response && response.sentences) {
-      const sentences = response.sentences.map(
-        (sentence: Sentence) => sentence.content,
-      );
+      const sentences = response.sentences
       const translatedSentences = response.sentences.map(
         (sentence: Sentence) => sentence.translation,
       );

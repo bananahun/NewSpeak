@@ -17,7 +17,6 @@ import About from './pages/About/About';
 import ArticleListCategory from './pages/Artricle/ArticleListCategory';
 import useThemeStore from './store/ThemeStore';
 import useAuthStore from './store/AuthStore';
-import About from './pages/About/About';
 import './App.scss';
 import OAuthCallback from './utils/OAuthCallback';
 

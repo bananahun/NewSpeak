@@ -19,7 +19,6 @@ const ArticleListDetail: React.FC<{ articles: any[], onArticleClick: (article: a
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = articles.slice(indexOfFirstItem, indexOfLastItem) || [];
-8
   // 타임스탬프를 날짜로 변환하는 함수
   const formatDate = (publishedDate: string) => {
     const date = new Date(publishedDate); // number 타입으로 처리
