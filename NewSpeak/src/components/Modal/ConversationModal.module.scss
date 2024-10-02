@@ -1,3 +1,15 @@
+@keyframes accent {
+  0% {
+    transform: translateY(0%);
+  }
+  50% {
+    transform: translateY(10%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
 .conversationModal {
   display: flex;
   flex-direction: column;
@@ -30,17 +42,6 @@
       }
       img {
         display: inline-block;
-        @keyframes accent {
-          0% {
-            transform: translateY(0%);
-          }
-          50% {
-            transform: translateY(10%);
-          }
-          100% {
-            transform: translateY(0%);
-          }
-        }
         animation: accent 1s linear infinite;
       }
     }

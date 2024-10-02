@@ -21,21 +21,12 @@ const getArticleLevel = async (level: number) => {
   }
 };
 
-const getArticleCategory = async (categoryid: number) => {
+const getArticleSearch = async (title: string, page: number) => {
   try {
-    const response = await axiosInstance.get(
-      `/articles/category/${categoryid}`,
-    );
-    console.log(response.data, '[API] getArticleCategory 호출 결과');
-    return response.data.data;
-  } catch (error) {
-    console.error('[API] getArticleCategory 에러:', error);
-  }
-};
-
-const getArticleSearch = async (title: string) => {
-  try {
-    const response = await axiosInstance.get(`/articles/search/${title}`);
+    // `params`를 객체 형태로 전달하여 쿼리 파라미터를 설정
+    const response = await axiosInstance.get(`/articles/search/${title}`, {
+      params: { page }, // page를 객체로 전달
+    });
     console.log(response.data, '[API] getArticleSearch 호출 결과');
     return response.data.data;
   } catch (error) {
@@ -53,9 +44,29 @@ const getWordCloud = async () => {
   }
 };
 
-const getArticleWordCloud = async (keyword_id: number) => {
+const getArticleCategory = async (categoryid: number, page: number) => {
   try {
-    const response = await axiosInstance.get(`/keywords/${keyword_id}`);
+    const response = await axiosInstance.get(
+      `/articles/category/${categoryid}`,
+      {
+        params: { page },
+      },
+    );
+    console.log(response.data, '[API] getArticleCategory 호출 결과');
+    return response.data.data;
+  } catch (error) {
+    console.error('[API] getArticleCategory 에러:', error);
+  }
+};
+
+const getArticleWordCloud = async (keyword_id: number, page: number) => {
+  try {
+    const response = await axiosInstance.get(
+      `/articles/keyword/${keyword_id}`,
+      {
+        params: { page }, // 쿼리 파라미터를 객체로 전달
+      },
+    );
     console.log(response.data, '[API] getArticleWordCloud 호출 결과');
     return response.data.data;
   } catch (error) {
@@ -67,9 +78,19 @@ const getArticleDetail = async (articleid: number) => {
   try {
     const response = await axiosInstance.get(`/articles/${articleid}`);
     console.log(response.data, '[API] getArticleDetail 호출 결과');
+    return response.data;
+  } catch (error) {
+    console.error('[API] getArticleListCategory 에러:', error);
+  }
+};
+
+const getArticleListCategory = async () => {
+  try {
+    const response = await axiosInstance.get(`/articles/main`);
+    console.log(response.data, '[API] getArticleListCategory 호출 결과');
     return response.data.data;
   } catch (error) {
-    console.error('[API] getArticleDetail 에러:', error);
+    console.error('[API] getArticleListCategory 에러:', error);
   }
 };
 
@@ -81,6 +102,7 @@ const useArticleApi = {
   getWordCloud,
   getArticleWordCloud,
   getArticleDetail,
+  getArticleListCategory,
 };
 
 export default useArticleApi;

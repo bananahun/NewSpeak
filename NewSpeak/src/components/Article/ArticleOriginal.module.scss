@@ -2,52 +2,29 @@
   border: var(--font-color) 1px solid;
   border-radius: 6px;
   padding: 2px 15px;
-}
 
-.sentence {
-  position: relative;
-  display: inline;
-  vertical-align: middle;
+  .tooltip {
+    position: fixed;
+    background-color: rgba(var(--main-rgb), 0.77);
+    color: var(--font-color);
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    pointer-events: none;
+    z-index: 1000;
+  }
 }
 
 .sentenceContainer {
   position: relative;
   display: inline-block;
-  margin-bottom: 36px;
+  margin-bottom: 10px;
+
+  .sentence {
+    cursor: default;
+  }
 }
 
-.sentenceButtonContainer {
-  position: absolute;
-  bottom: -30px;
-  left: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background-color: var(--background-color);
-  filter: brightness(85%);
-  padding: 2px 12px;
-  border-radius: 20px;
-}
-
-.translateButton {
-  display: inline-block;
-  vertical-align: middle;
-  width: 18px;
-  color: var(--font-color);
-  margin-left: 5px;
-  cursor: pointer;
-}
-
-.translateDetail {
-  width: fit-content;
-  background-color: var(--font-color);
-  color: var(--background-color);
-  border-radius: 6px;
-  padding: 15px;
-  padding-right: 20px;
-  position: absolute;
-  z-index: 1;
-  top: 140%;
-  left: 100px;
-  margin-left: -100px;
+.accent {
+  font-weight: bold;
 }

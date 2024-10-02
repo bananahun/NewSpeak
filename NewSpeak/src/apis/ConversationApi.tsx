@@ -1,12 +1,24 @@
 import axiosInstance from './axiosConfig';
 import useArticleStore from '../store/ArticleStore';
 import useConversationStore from '../store/ConversationStore';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface message {
   sender: 'user' | 'assistant';
   content: string;
 }
+
+interface RecommendItem {
+  [key: string]: string;
+}
+
+interface GetRecommend {
+  dialog: {
+    recommend: RecommendItem[];
+  };
+}
+
+const initMessage = 'I need a recommendation question for this article.';
 
 const useConversationApi = () => {
   const { articleMeta } = useArticleStore();
@@ -15,16 +27,27 @@ const useConversationApi = () => {
     convRunId,
     reportThreadId,
     reportRunId,
-    isAudioReceived,
+    recommendedAnswers,
+    conversation,
+    reportCreated,
+    isGeneratingReport,
     setConvThreadId,
     setConvRunId,
     setReportThreadId,
     setReportRunId,
-    setIsAudioReceived,
+    setRecommendedAnswers,
+    setReportCreated,
+    setIsGeneratingReport,
     clearConvData,
+    clearConversation,
   } = useConversationStore();
+  const isFirstRender = useRef(false);
+  const isFirstRecommend = useRef(false);
+  const reportThreadCreated = useRef(false);
+  const reportRunCreated = useRef(false);
 
   const createThread = async () => {
+    if (isGeneratingReport) return;
     const articleId = articleMeta?.id;
     if (!articleId) {
       console.error('No article is selected');
@@ -36,11 +59,52 @@ const useConversationApi = () => {
       });
       console.log('createThread:', response.data);
       setConvThreadId(response.data.id);
+      isFirstRender.current = true;
       return response.data;
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    if (!convThreadId) return;
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      const recommendation = async () => {
+        if (convThreadId) {
+          try {
+            await postSpeechToThread(initMessage);
+          } catch (error) {
+            console.error('Failed to get recommendation', error);
+          }
+        }
+      };
+      recommendation();
+    }
+  }, [convThreadId, isFirstRender.current]);
+
+  useEffect(() => {
+    if (!convThreadId) return;
+    if (isFirstRecommend.current) {
+      isFirstRecommend.current = false;
+      const recommendation = async () => {
+        if (convRunId) {
+          try {
+            const response: GetRecommend = await getResponseAudio();
+            const recommendedSentences: string[] =
+              response.dialog.recommend.map(item => {
+                return Object.values(item)[0];
+              });
+            setRecommendedAnswers(recommendedSentences);
+            setConvRunId('');
+          } catch (error) {
+            console.error('Failed to set recommendation', error);
+          }
+        }
+      };
+      recommendation();
+    }
+  }, [convRunId, isFirstRecommend.current]);
 
   const postSpeechToThread = async (answer: string) => {
     if (!convThreadId) {
@@ -55,6 +119,9 @@ const useConversationApi = () => {
         },
       );
       console.log('postSpeechToThread:', response.data);
+      if (answer === initMessage) {
+        isFirstRecommend.current = true;
+      }
       setConvRunId(response.data.id);
       return response.data;
     } catch (error) {
@@ -62,7 +129,7 @@ const useConversationApi = () => {
     }
   };
 
-  const getResponseAudio = async () => {
+  const getResponseAudio = async (count = 3, delay = 3000) => {
     if (!convThreadId) {
       console.error('No thread is selected for response audio');
       return;
@@ -72,30 +139,62 @@ const useConversationApi = () => {
       return;
     }
     try {
+      await new Promise(res => {
+        setTimeout(res, delay);
+      });
       const response = await axiosInstance.get(
         `/conversation/dialog/${convThreadId}/${convRunId}`,
       );
       console.log('getResponseAudio:', response.data);
-      setConvRunId('');
-      setIsAudioReceived(true);
-      return response.data;
+      if (response && response.data && response.data.dialog) {
+        const recommendedSentences = response.data.dialog.recommend.map(
+          (item: any) => {
+            return Object.values(item)[0];
+          },
+        );
+        setRecommendedAnswers(recommendedSentences);
+        setConvRunId('');
+        return response.data;
+      }
     } catch (error) {
-      console.error(error);
+      if (count > 0) {
+        console.warn(`audio 호출 실패, ${count}번 더 시도`);
+        await new Promise(res => {
+          setTimeout(res, delay);
+        });
+        return await getResponseAudio(count - 1, delay);
+      } else {
+        console.error(error);
+      }
     }
   };
 
   const createReportThread = async () => {
+    setIsGeneratingReport(true);
     try {
       const response = await axiosInstance.post('/conversation/report', {});
       console.log('createReportThread:', response.data);
       setReportThreadId(response.data.id);
+      reportThreadCreated.current = true;
       return response.data;
     } catch (error) {
       console.error(error);
+      setIsGeneratingReport(false);
     }
   };
 
-  const postReportDetail = async (conversation: message[]) => {
+  useEffect(() => {
+    if (reportThreadId) {
+      if (reportThreadCreated.current) {
+        reportThreadCreated.current = false;
+        postReportDetail();
+      }
+    }
+  }, [reportThreadId]);
+
+  const postReportDetail = async () => {
+    if (!reportThreadId) return;
+
     const conversations = conversation
       .map((msg, index, arr) => {
         if (msg.sender === 'user') {
@@ -118,15 +217,26 @@ const useConversationApi = () => {
         `/conversation/report/${reportThreadId}`,
         { conversations },
       );
-      console.log('Report generated:', response.data);
+      console.log('Report Run Id generated:', response.data);
       setReportRunId(response.data.id);
+      reportRunCreated.current = true;
       return response.data;
     } catch (error) {
       console.error('Failed to post report details:', error);
+      setIsGeneratingReport(false);
     }
   };
 
-  const generateReport = async () => {
+  useEffect(() => {
+    if (reportRunId) {
+      if (reportRunCreated.current) {
+        reportRunCreated.current = false;
+        generateReport();
+      }
+    }
+  }, [reportRunId]);
+
+  const generateReport = async (count = 10, delay = 10000) => {
     if (!reportThreadId) {
       console.error('No report thread is selected');
       return;
@@ -135,22 +245,51 @@ const useConversationApi = () => {
       console.error('No run is selected for report');
       return;
     }
-    try {
-      const response = await axiosInstance.get(
-        `/conversation/report/${reportThreadId}/${reportRunId}`,
-      );
-      console.log('generateReport:', response.data);
-      clearConvData();
-      // 보고서는 return하는거보다, 어디 저장을 바로 해야될거같은데 ?
-      return response.data;
-    } catch (error) {
-      console.error(error);
+    await new Promise(res => {
+      setTimeout(res, delay);
+    });
+    for (let i = 0; i < count; i++) {
+      try {
+        const response = await axiosInstance.get(
+          `/conversation/report/${reportThreadId}/${reportRunId}`,
+        );
+        console.log('generateReport:', response.data);
+        clearConvData();
+        clearConversation();
+        setReportCreated(true);
+        return response.data;
+      } catch (error) {
+        console.error(
+          `generateReport failed, attempt ${i + 1}/${count}:`,
+          error,
+        );
+      }
+
+      if (i === count - 1) {
+        console.error('generateReport: 모든 시도 실패');
+      } else {
+        console.log(`재시도 ${i + 2}/${count} 대기 중... ${delay / 1000}초`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
     }
   };
 
+  useEffect(() => {
+    if (reportCreated) {
+      console.log('완료');
+
+      const timer = setTimeout(() => {
+        setReportCreated(false);
+        setIsGeneratingReport(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  });
+
   return {
     convRunId,
-    isAudioReceived,
+    recommendedAnswers,
     createThread,
     postSpeechToThread,
     getResponseAudio,

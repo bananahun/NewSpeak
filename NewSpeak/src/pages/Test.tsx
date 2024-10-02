@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import useArticleApi from '../apis/ArticleApi';
+import React, { useState } from "react";
+import useArticleApi from "../apis/ArticleApi";
 
 const TestApiComponent = () => {
   const [data, setData] = useState(null);
@@ -9,9 +9,9 @@ const TestApiComponent = () => {
     try {
       const result = await useArticleApi.getCategory();
       setData(result);
-      console.log(result, '[컴포넌트] 카테고리 데이터');
+      console.log(result, "[컴포넌트] 카테고리 데이터");
     } catch (error) {
-      console.error('[컴포넌트] 카테고리 데이터 가져오기 에러:', error);
+      console.error("[컴포넌트] 카테고리 데이터 가져오기 에러:", error);
     }
   };
 
@@ -19,9 +19,9 @@ const TestApiComponent = () => {
     try {
       const result = await useArticleApi.getArticleList();
       setData(result);
-      console.log(result, '[컴포넌트] 기사 리스트 데이터');
+      console.log(result, "[컴포넌트] 기사 리스트 데이터");
     } catch (error) {
-      console.error('[컴포넌트] 기사 리스트 가져오기 에러:', error);
+      console.error("[컴포넌트] 기사 리스트 가져오기 에러:", error);
     }
   };
 
@@ -34,7 +34,7 @@ const TestApiComponent = () => {
     } catch (error) {
       console.error(
         `[컴포넌트] 레벨 ${level}에 따른 기사 가져오기 에러:`,
-        error,
+        error
       );
     }
   };
@@ -42,30 +42,30 @@ const TestApiComponent = () => {
   const handleGetArticleCategory = async () => {
     try {
       const categoryId = 1; // 임의의 category_id 값
-      const result = await useArticleApi.getArticleCategory(categoryId);
+      const result = await useArticleApi.getArticleCategory(categoryId, 0);
       setData(result);
       console.log(
         result,
-        `[컴포넌트] 카테고리 ${categoryId}에 따른 기사 데이터`,
+        `[컴포넌트] 카테고리 ${categoryId}에 따른 기사 데이터`
       );
     } catch (error) {
       console.error(
         `[컴포넌트] 카테고리 ${categoryId}에 따른 기사 가져오기 에러:`,
-        error,
+        error
       );
     }
   };
 
   const handleGetArticleSearch = async () => {
     try {
-      const title = 'example'; // 임의의 검색어
+      const title = "example"; // 임의의 검색어
       const result = await useArticleApi.getArticleSearch(title);
       setData(result);
       console.log(result, `[컴포넌트] "${title}"로 검색한 기사 데이터`);
     } catch (error) {
       console.error(
         `[컴포넌트] "${title}"로 검색한 기사 가져오기 에러:`,
-        error,
+        error
       );
     }
   };
@@ -74,25 +74,25 @@ const TestApiComponent = () => {
     try {
       const result = await useArticleApi.getWordCloud();
       setData(result);
-      console.log(result, '[컴포넌트] 워드 클라우드 데이터');
+      console.log(result, "[컴포넌트] 워드 클라우드 데이터");
     } catch (error) {
-      console.error('[컴포넌트] 워드 클라우드 데이터 가져오기 에러:', error);
+      console.error("[컴포넌트] 워드 클라우드 데이터 가져오기 에러:", error);
     }
   };
 
-  const handleGetArticleWordCloud = async () => {
+  const handleGetArticleWordCloud = async (page: number) => {
     try {
       const keywordId = 1; // 임의의 keyword_id 값
-      const result = await useArticleApi.getArticleWordCloud(keywordId);
+      const result = await useArticleApi.getArticleWordCloud(keywordId, page);
       setData(result);
       console.log(
         result,
-        `[컴포넌트] 키워드 ${keywordId}에 따른 워드 클라우드 데이터`,
+        `[컴포넌트] 키워드 ${keywordId}, 페이지 ${page}에 따른 워드 클라우드 데이터`
       );
     } catch (error) {
       console.error(
-        `[컴포넌트] 키워드 ${keywordId}에 따른 워드 클라우드 가져오기 에러:`,
-        error,
+        `[컴포넌트] 키워드 ${keywordId}, 페이지 ${page}에 따른 워드 클라우드 가져오기 에러:`,
+        error
       );
     }
   };
@@ -106,7 +106,7 @@ const TestApiComponent = () => {
     } catch (error) {
       console.error(
         `[컴포넌트] 기사 ${articleId}의 상세 데이터 가져오기 에러:`,
-        error,
+        error
       );
     }
   };
@@ -120,8 +120,14 @@ const TestApiComponent = () => {
       <button onClick={handleGetArticleCategory}>카테고리별 기사 조회</button>
       <button onClick={handleGetArticleSearch}>기사 검색</button>
       <button onClick={handleGetWordCloud}>워드 클라우드 조회</button>
-      <button onClick={handleGetArticleWordCloud}>
-        키워드별 워드 클라우드 조회
+      <button onClick={() => handleGetArticleWordCloud(1)}>
+        페이지 0 워드 클라우드 조회
+      </button>
+      <button onClick={() => handleGetArticleWordCloud(2)}>
+        페이지 1 워드 클라우드 조회
+      </button>
+      <button onClick={() => handleGetArticleWordCloud(3)}>
+        페이지 2 워드 클라우드 조회
       </button>
       <button onClick={handleGetArticleDetail}>기사 상세 조회</button>
 

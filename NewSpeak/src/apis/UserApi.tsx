@@ -85,9 +85,14 @@ const gradeMyVocasQuiz = async (answerCount:number) => {
 };
 
 // 스크랩한 기사 목록 가져오기
-const getMyArticles = async () => {
+const getMyArticles = async (page: number, size: number) => {
   try {
-    const response = await axiosInstance.get('/my/articles');
+    const response = await axiosInstance.get('/my/articles', {
+      params: {
+        page: page,  // 페이지 번호
+        size: size   // 페이지 당 기사 개수
+      }
+    });
     console.log(response.data, '[API] getMyArticles 호출 결과');
     return response.data;
   } catch (error) {
@@ -95,9 +100,10 @@ const getMyArticles = async () => {
   }
 };
 
+
 const createMyArticles = async (articleId: number) => {
   try {
-    const response = await axiosInstance.post(`/my/articles/${articleId}`);
+    const response = await axiosInstance.post(`/articles/${articleId}/scrap`);
     console.log(response.data, '[API] createMyArticles 호출 결과');
     return response.data;
   } catch (error) {
@@ -107,7 +113,7 @@ const createMyArticles = async (articleId: number) => {
 
 const deleteMyArticles = async (articleId: number) => {
   try {
-    const response = await axiosInstance.delete(`/my/articles/${articleId}`);
+    const response = await axiosInstance.delete(`/articles/${articleId}/scrap`);
     console.log(response.data, '[API] deleteMyArticles 호출 결과');
     return response.data;
   } catch (error) {

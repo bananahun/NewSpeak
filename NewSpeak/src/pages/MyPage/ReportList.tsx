@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './ReportList.module.scss';
+import axiosInstance from '../../apis/axiosConfig';
 
 // 임시 데이터
 const reportData = {
@@ -19,9 +20,23 @@ const reportData = {
 };
 
 const ReportList = () => {
+  // report랑 userId 매칭이 안되는듯 ?
+  const [reportData, setReportData] = useState([]);
+  useEffect(() => {
+    const test = async () => {
+      try {
+        const response = await axiosInstance.get('/conversation');
+        console.log(response);
+        setReportData(response.data.reports);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    test();
+  }, []);
   return (
     <div className={styles.reportList}>
-      {reportData.data.map(report => (
+      {reportData.map(report => (
         <div key={report.id} className={styles.reportItem}>
           <h3>Report {report.id}</h3>
           <p>{report.content}</p>
