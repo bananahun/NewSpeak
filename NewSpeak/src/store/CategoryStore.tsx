@@ -9,7 +9,7 @@ interface CategoryState {
 
 // 선호 카테고리 상태 정의
 interface PreferredCategoryState {
-  preferredCategories: string[]; // 선호 카테고리 배열
+  preferredCategories: string[]|null; // 선호 카테고리 배열
   getPreferredCategory: () => Promise<void>; // 선호 카테고리 추가 함수
   updatePreferredCategory: (categoris: string[]) => Promise<void>; // 선호 카테고리 제거 함수
 }
@@ -17,7 +17,7 @@ interface PreferredCategoryState {
 const usePreferredCategoryStore = create(
   persist<PreferredCategoryState>(
     set => ({
-      preferredCategories: [], // 초기값을 빈 배열로 설정
+      preferredCategories: null, // 초기값을 빈 배열로 설정
       getPreferredCategory: async () => {
         try {
           // 서버에 카테고리 추가 요청 보내기

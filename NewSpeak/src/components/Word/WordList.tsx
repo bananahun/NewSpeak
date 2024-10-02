@@ -5,6 +5,7 @@ import { FaMicrophone, FaBook } from 'react-icons/fa';
 import { GiSpeaker } from 'react-icons/gi';
 import PronounceModal from '../Modal/PronounceModal';
 import userApi from '../../apis/UserApi'; 
+import { useVocaStore } from '../../store/VocaStore';
 
 const WordList = () => {
   interface Word {
@@ -58,17 +59,22 @@ const WordList = () => {
   const [flipped, setFlipped] = useState<number | null>(null);
   const [isPronounceModalOpen, setPronounceModalOpen] = useState(false);
   const [selectedText, setSelectedText] = useState<string>('');
-  const vocaId = 0 //임시
+  const {vocaId} = useVocaStore() //임시
 
   useEffect(() => {
     const fetchWordDetails = async () => {
       try {
-        const fetchedWords = await userApi.getMyVocasDetail(vocaId); // API 호출
-        setWords(fetchedWords); // 받아온 데이터를 상태로 저장
+        if (vocaId != null) { // vocaId가 null이 아닐 경우에만 호출
+          const fetchedWords = await userApi.getMyVocasDetail(vocaId); // API 호출
+          setWords(fetchedWords.wordDetails); // 받아온 데이터를 상태로 저장
+        } else {
+          console.error('[WordList] vocaId가 null입니다.');
+        }
       } catch (error) {
         console.error('[WordList] 단어 데이터를 가져오는 중 오류:', error);
       }
     };
+  
 
     fetchWordDetails(); // 컴포넌트가 처음 렌더링될 때 API 호출
   }, [vocaId]);
@@ -88,6 +94,9 @@ const WordList = () => {
 
   return (
     <div>
+      {words.length === 0 &&  (
+            <div>단어가 없습니다.</div>
+          )}
       <div className={styles.wordlist}>
         <Link to="/wordlist/test">
           <button className={styles.testButton}>테스트</button>
@@ -98,7 +107,7 @@ const WordList = () => {
       </div>
       <div className={styles.container}>
         <div className={styles.wordlist2}>
-          {words.map((word, index) => (
+          {words && words.length !== 0 && words.map((word, index) => (
             <div key={index} className={styles.card}>
               <div className={styles.cardInner}>
                 <div className={styles.cardContent}>
@@ -155,6 +164,7 @@ const WordList = () => {
               </div>
             </div>
           ))}
+          
         </div>
       </div>
       {/* 발음 평가 모달창 */}

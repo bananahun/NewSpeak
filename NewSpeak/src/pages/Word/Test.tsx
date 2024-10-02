@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import WordTest from '../../components/Word/WordTest';
 import Result from '../../components/Word/Result';
 import userApi from '../../apis/UserApi';
-
+import { useVocaStore } from '../../store/VocaStore';
 const Test = () => {
   
   interface Word {
@@ -20,13 +20,15 @@ const Test = () => {
   const [score, setScore] = useState<number | null>(null);
   const [answers, setAnswers] = useState<string[]>([]);
   const [words,setWords] = useState<Word[]>([]);
-  const vocaId = 0 // 임시
+  const {vocaId} = useVocaStore() // 임시
 
   useEffect(() => {
     const fetchTestWords = async () => {
       try {
+        if(vocaId !== null) {
         const fetchedTestWords = await userApi.getMyVocasQuiz(vocaId);
         setWords(fetchedTestWords || []); // 가져온 데이터를 상태에 저장
+        }
       } catch (error) {
         console.error('Error fetching streaks:', error);
       }

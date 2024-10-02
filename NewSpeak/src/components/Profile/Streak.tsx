@@ -5,6 +5,14 @@ interface StreakProps {
   streaks: { [key: string]: number }; // 날짜를 키로 하는 스트릭 상태 객체 (0~4의 값)
 }
 
+const getColorForExp = (exp: number) => {
+  if (exp >= 80) return 'rgb(255, 99, 71)'; // 높은 경험치: 빨간색
+  if (exp >= 60) return 'rgb(255, 140, 0)'; // 중간 높은 경험치: 오렌지색
+  if (exp >= 40) return 'rgb(255, 172, 90)'; // 중간 경험치: 주황색
+  if (exp >= 20) return 'rgb(255, 215, 0)'; // 낮은 경험치: 노란색
+  return 'lightgray'; // 기본값: 회색
+};
+
 const weekdays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 function Streak({ streaks }: StreakProps) {
@@ -46,12 +54,12 @@ function Streak({ streaks }: StreakProps) {
               <div
                 key={date}
                 className={`${styles.streakDay} ${
-                  streaks[date] !== undefined ? styles.active : ''
+                  (streaks[date] !== undefined && streaks[date] !== 0) ? styles.active : ''
                 }`}
                 style={{
                   backgroundColor:
-                    streaks[date] !== undefined
-                      ? 'rgb(255, 172, 90)'
+                  (streaks[date] !== undefined && streaks[date] !== 0)
+                      ? getColorForExp(streaks[date])
                       : 'lightgray', // 색상 통일
                 }}
               >
