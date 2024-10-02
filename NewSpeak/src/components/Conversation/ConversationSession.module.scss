@@ -1,6 +1,3 @@
-.conversationSession {
-}
-
 .botMessage,
 .userMessage {
   display: flex;
@@ -12,14 +9,6 @@
   justify-content: flex-start;
 }
 
-.userMessage {
-  justify-content: flex-end;
-}
-
-.botIcon {
-  margin-right: 10px;
-}
-
 .messageContent {
   background-color: var(--main-color);
   padding: 10px 15px;
@@ -28,6 +17,22 @@
   font-size: 1rem;
   line-height: 1.5;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.userMessage {
+  justify-content: flex-end;
+  .messageContent {
+    background-color: var(--sub-color);
+    color: var(--font-color);
+  }
+}
+
+.botIcon {
+  margin-right: 10px;
+  .messageContent {
+    background-color: var(--main-color);
+    color: var(--font-color);
+  }
 }
 
 @keyframes fadeIn {
@@ -49,12 +54,13 @@
   justify-content: flex-end;
   align-items: center;
   margin-bottom: 15px;
+  color: var(--font-color);
   gap: 10px;
 
-  .messageContent {
+  > .messageContent {
     background-color: var(--sub-color);
     max-width: 100%;
-    color: var(--background-color);
+    color: var(--font-color);
   }
 
   .buttonContainer {

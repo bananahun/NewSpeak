@@ -145,10 +145,8 @@ const Nav = () => {
               {renderLinks()}
               {isLoggedIn && (
                 <>
-                  <MenuItem>
-                    <div className={styles.addWord} onClick={openWordSelector}>
-                      Add Word
-                    </div>
+                  <MenuItem onClick={openWordSelector}>
+                    <div className={styles.addWord}>Add Word</div>
                   </MenuItem>
                   <MenuItem>
                   <div

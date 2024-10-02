@@ -37,6 +37,7 @@ const useConversationApi = () => {
     setReportRunId,
     setRecommendedAnswers,
     setReportCreated,
+    setIsGeneratingResponse,
     setIsGeneratingReport,
     clearConvData,
     clearConversation,
@@ -53,6 +54,7 @@ const useConversationApi = () => {
       console.error('No article is selected');
       return;
     }
+    setIsGeneratingResponse(true);
     try {
       const response = await axiosInstance.post('/conversation/dialog', {
         articleId,
@@ -63,6 +65,7 @@ const useConversationApi = () => {
       return response.data;
     } catch (error) {
       console.error(error);
+      setIsGeneratingResponse(false);
     }
   };
 
@@ -81,7 +84,7 @@ const useConversationApi = () => {
       };
       recommendation();
     }
-  }, [convThreadId, isFirstRender.current]);
+  }, [convThreadId]);
 
   useEffect(() => {
     if (!convThreadId) return;
@@ -99,6 +102,8 @@ const useConversationApi = () => {
             setConvRunId('');
           } catch (error) {
             console.error('Failed to set recommendation', error);
+            setIsGeneratingReport(false);
+            return;
           }
         }
       };
@@ -111,6 +116,7 @@ const useConversationApi = () => {
       console.error('No thread is selected');
       return;
     }
+    setIsGeneratingResponse(true);
     try {
       const response = await axiosInstance.post(
         `/conversation/dialog/${convThreadId}`,
@@ -126,6 +132,7 @@ const useConversationApi = () => {
       return response.data;
     } catch (error) {
       console.error(error);
+      setIsGeneratingResponse(false);
     }
   };
 
@@ -146,6 +153,7 @@ const useConversationApi = () => {
         `/conversation/dialog/${convThreadId}/${convRunId}`,
       );
       console.log('getResponseAudio:', response.data);
+      setIsGeneratingResponse(false);
       if (response && response.data && response.data.dialog) {
         const recommendedSentences = response.data.dialog.recommend.map(
           (item: any) => {
@@ -154,6 +162,7 @@ const useConversationApi = () => {
         );
         setRecommendedAnswers(recommendedSentences);
         setConvRunId('');
+        setIsGeneratingResponse(false);
         return response.data;
       }
     } catch (error) {
@@ -165,6 +174,7 @@ const useConversationApi = () => {
         return await getResponseAudio(count - 1, delay);
       } else {
         console.error(error);
+        setIsGeneratingResponse(false);
       }
     }
   };
@@ -286,7 +296,6 @@ const useConversationApi = () => {
 
   return {
     convRunId,
-    recommendedAnswers,
     createThread,
     postSpeechToThread,
     getResponseAudio,
