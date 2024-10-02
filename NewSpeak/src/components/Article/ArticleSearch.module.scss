@@ -107,8 +107,14 @@
     font-size: 1em;
     font-weight: bold;
     margin-bottom: 15px;
-    height: 40px;
+    height: auto;
     text-overflow: ellipsis;
+    display: -webkit-box; /* Flexbox를 사용하여 ellipsis 적용 */
+    -webkit-line-clamp: 4; /* 4줄을 초과하면 말줄임 표시 */
+    -webkit-box-orient: vertical;
+    overflow: hidden; /* 텍스트가 넘칠 경우 숨김 */
+    line-height: 1.3em; /* 줄 간격 조정 */
+    max-height: calc(1.3em * 4); /* 최대 높이 = line-height * 줄 수 */
   }
 }
 
