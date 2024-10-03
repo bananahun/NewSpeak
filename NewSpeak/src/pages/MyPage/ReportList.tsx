@@ -9,6 +9,7 @@ import {
 import styles from './ReportList.module.scss';
 import axiosInstance from '../../apis/axiosConfig';
 import { useNavigate } from 'react-router-dom';
+import LoadingModal from '../../components/Modal/LoadingModal';
 
 interface Report {
   id: number;
@@ -160,29 +161,45 @@ const ReportList = () => {
   }, [parsedReportData]);
 
   return (
-    <div className={styles.reportList}>
-      {isLoading ? (
-        <div>Loading</div>
-      ) : (
-        <>
-          {parsedReportData.map(report => (
-            <div
-              className={styles.reportCard}
-              key={report.id}
-              onClick={() => handleClick(report.id)}
-            >
-              <div className={styles.reportCardHeader}>
-                <p>{report.title}</p>
-                <p>Total Score: {report.score}</p>
-              </div>
-              <div className={styles.chartContainer}>
-                {renderRadarChart(report)}
-              </div>
-            </div>
-          ))}
-        </>
+    <>
+      <div className={styles.reportList}>
+        {isLoading ? (
+          <LoadingModal />
+        ) : (
+          <>
+            {parsedReportData.length > 0 && (
+              <>
+                {parsedReportData.map(report => (
+                  <div
+                    className={styles.reportCard}
+                    key={report.id}
+                    onClick={() => handleClick(report.id)}
+                  >
+                    <div className={styles.reportCardHeader}>
+                      <p>{report.title}</p>
+                      <p>Total Score: {report.score}</p>
+                    </div>
+                    <div className={styles.chartContainer}>
+                      {renderRadarChart(report)}
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
+          </>
+        )}
+      </div>
+      {parsedReportData.length <= 0 && !isLoading && (
+        <div className={styles.blankList}>
+          <LoadingModal />
+          <h1 className={styles.blankTitle}>아직 생성된 보고서가 없어요!</h1>
+          <div className={styles.blankContent}>
+            <p>마음에 드는 기사를 주제로 SPEAKO와 회화를 진행해보세요!</p>
+            <p>회화가 모두 종료되면, SPEAKO가 보고서를 제작해 줄거에요</p>
+          </div>
+        </div>
       )}
-    </div>
+    </>
   );
 };
 
