@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useArticleApi from "../../apis/ArticleApi";
 import useArticleStore from "../../store/ArticleStore";
 import styles from "./ArticleList.module.scss";
+import noImage from "../../assets/NewSpeak.png";
 
 interface Article {
   id: number;
@@ -103,8 +104,8 @@ const ArticleList = () => {
             >
               <div className={styles.imageContainer}>
                 <img
-                  src={article.imageUrl}
-                  alt={article.title}
+                  src={article.imageUrl ? article.imageUrl : noImage} // 이미지가 없을 때 noImage 사용
+                  alt={article.title || "Default News Image"}
                   className={styles.articleImage}
                 />
               </div>

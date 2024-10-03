@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useArticleApi from "../../apis/ArticleApi";
 import useArticleStore from "../../store/ArticleStore";
 import styles from "./ArticleListKeyword.module.scss";
-import { MdImageNotSupported } from "react-icons/md";
+import noImage from "../../assets/NewSpeak.png";
 
 interface Article {
   id: number;
@@ -84,7 +84,7 @@ const ArticleListKeyword: React.FC<ArticleListKeywordProps> = ({
                     className={styles.articleImage}
                   />
                 ) : (
-                  <MdImageNotSupported className={styles.noImageIcon} />
+                  <img src={noImage} alt="" className={styles.noImageIcon} />
                 )}
               </div>
               <div className={styles.articleInfo}>
