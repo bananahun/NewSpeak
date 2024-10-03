@@ -25,7 +25,7 @@ spring:
       api-key : ${gpt.api-key}
 
   elasticsearch:
-    uris: http://j11e103.p.ssafy.io:9200
+    uris: https://j11e103.p.ssafy.io:9200
 #  # H2 데이터베이스 설정 추가
 #  datasource:
 #    url: jdbc:h2:tcp://localhost/~/newSpeak  # 메모리 모드
