@@ -12,25 +12,13 @@
       const [selectedCategories, setSelectedCategories] = useState<number[]>( preferredCategories)
       // 설정된 카테고리들
       
-    // const categories = [
-    //   'Category 1',
-    //   'Category 2',
-    //   'Category 3',
-    //   'Category 4',
-    //   'Category 5',
-    //   'Category 6',
-    //   'Category 7',
-    //   'Category 8',
-    //   'Category 9',
-    // ];
-  
     useEffect(()=> {
       const fetchPreferredCategories = async () => {
         if (preferredCategories.length === 0) { // 값이 없으면
           await getPreferredCategory(); // 서버에 요청
         } 
       };
-  
+      console.log(preferredCategories)
       fetchPreferredCategories(); // 선호 카테고리 요청
     }, []
   )

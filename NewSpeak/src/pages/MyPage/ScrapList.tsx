@@ -14,7 +14,11 @@ const ScrapList = () => {
     const fetchScrapList = async () => {
       try {
         const fetchedScrapList = await userApi.getMyArticles(0,100);
-        setScrapList(fetchedScrapList.data); // 가져온 데이터를 상태에 저장
+        let articles = [];
+        if (fetchedScrapList) {
+          articles = fetchedScrapList.data;
+        }
+        setScrapList(articles); // 가져온 데이터를 상태에 저장
       } catch (error) {
         console.error('Error fetching streaks:', error);
       }

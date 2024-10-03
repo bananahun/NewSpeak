@@ -83,7 +83,7 @@ const Article = () => {
         }
 
         // DB의 상태를 다시 확인
-        checkIfScrapped(articleId);
+        checkIfScrapped();
       } catch (error) {
         console.error('스크랩 처리 중 오류 발생:', error);
       }
@@ -108,24 +108,32 @@ const Article = () => {
     if (articleMeta) {
       const articleId = articleMeta.id;
 
-      // API 호출
-      const response = await userApi.getMyArticles(0, 10000);
-      // 응답 데이터에서 content 배열을 추출
-      const scrappedArticles = response.data; // 여기서 content 배열을 할당
-
-      // some() 메서드를 사용하여 해당 articleId가 있는지 확인
-      const isAlreadyScrapped = scrappedArticles.some(
-        (article: { id: number }) => article.id === articleId,
-      );
-
-      setIsScrapped(isAlreadyScrapped);
+      try {
+        // API 호출
+        const response = await userApi.getMyArticles(0, 10000);
+        
+        let scrappedArticles = [];
+  
+        if (response && response.data) {
+          scrappedArticles = response.data; 
+        }
+  
+        // some() 메서드를 사용하여 해당 articleId가 있는지 확인
+        const isAlreadyScrapped = scrappedArticles.some(
+          (article: { id: number }) => article.id === articleId
+        );
+  
+        setIsScrapped(isAlreadyScrapped);
+      } catch (error) {
+        console.error("스크랩 확인 중 오류:", error);
+      }
     }
   };
 
   // 페이지 로드 시 스크랩 상태 확인
   useEffect(() => {
     if (articleMeta && articleMeta.id) {
-      checkIfScrapped(articleMeta.id); // DB에서 스크랩 상태 확인
+      checkIfScrapped(); // DB에서 스크랩 상태 확인
     }
   }, [articleMeta]);
 

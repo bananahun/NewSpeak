@@ -98,7 +98,10 @@ const WordSelector = ({
           </div>
         )}
       </div>
-      <AddWordModal word={selectedWord} articleId={articleMeta?articleMeta.id:0} isOpen={isOpen} onClose={closeModal} />
+      <AddWordModal word={selectedWord} articleId={articleMeta?articleMeta.id:0} isOpen={isOpen} onClose={() => { 
+    closeModal();  // 모달 닫기
+    closeWordSelector(); // WordSelector 닫기
+  }}  />
     </>,
     document.body,
   );

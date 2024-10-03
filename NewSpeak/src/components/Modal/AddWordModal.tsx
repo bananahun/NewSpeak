@@ -34,18 +34,25 @@ const AddWordModal = ({ word,articleId, isOpen, onClose }: AddWordModalProps) =>
 
   const handleAddWord = async () => {
     if (!selectedSentenceId) {
-      alert(selectedSentenceId);
+      alert('단어 추가에 실패했습니다. 다시 시도해주세요');
+      console.log('sentenceId 가져오기 실패')
       return;
     } 
 
     if (!vocaId) {
-      alert('단어장이 선택되지 않았습니다.'); // vocaId가 없을 때 알림 추가
+      alert('단어 추가에 실패했습니다. 다시 시도해주세요');
+      console.log('vocaId 가져오기 실패')
       return;
     }
 
     try {
-      await userApi.fetchMyWord(articleId, vocaId, word, selectedSentenceId);
+      const response = await userApi.fetchMyWord(articleId, vocaId, word, selectedSentenceId);
+      console.log(response);
+      if (response && response.status === 200) {
       alert('단어가 성공적으로 추가되었습니다.'); // 성공 메시지
+      } else {
+        alert('단어가 추가되지 않았습니다.');
+      }
       onClose(); // 모달 닫기
     } catch (error) {
       console.error('Error adding word:', error);
