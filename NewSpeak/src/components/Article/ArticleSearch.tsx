@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import useArticleApi from '../../apis/ArticleApi';
 import styles from './ArticleSearch.module.scss';
+import { useNavigate } from 'react-router-dom';
+import useAuthStore from '../../store/AuthStore'; // AuthStore에서 로그인 상태를 가져오기 위해 추가
 
 interface Article {
   id: number;
@@ -14,6 +16,9 @@ const ArticleSearch: React.FC = () => {
   const [articles, setArticles] = useState<Article[]>([]); // 검색 결과 상태
   const [showResults, setShowResults] = useState<boolean>(false); // 결과 표시 여부
 
+  const { isLoggedIn } = useAuthStore(); // 로그인 상태를 가져옴
+  const navigate = useNavigate(); // 라우팅을 위한 네비게이션 훅
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
@@ -25,8 +30,14 @@ const ArticleSearch: React.FC = () => {
   };
 
   const handleSearch = async () => {
+    if (!isLoggedIn) {
+      alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      navigate('/login'); // 로그인 페이지로 리다이렉트
+      return; // 로그인되지 않은 경우 검색 함수 중단
+    }
+    
     if (!searchQuery.trim()) return; // 빈 검색어는 무시
-
+    
     try {
       const result = await useArticleApi.getArticleSearch(searchQuery, 0);
       setArticles(result || []); // 결과 설정

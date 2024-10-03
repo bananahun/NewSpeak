@@ -10,11 +10,14 @@ interface AuthState {
 }
 
 const useAuthStore = create<AuthState>(set => ({
-  isLoggedIn: false,
-  user: null,
+  isLoggedIn: localStorage.getItem('isLoggedIn') === 'true' || false, // 새로고침 시 로그인 상태 유지
+  user: JSON.parse(localStorage.getItem('user') || 'null'), // 새로고침 시 유저 정보 유지
+
 
   logout: (navigate) => {
     console.log("로그아웃에 성공했어요")
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('user');
     set({ isLoggedIn: false, user: null });
     logoutWithOAuth(navigate); // provider 없이 호출
   },
@@ -27,14 +30,20 @@ const useAuthStore = create<AuthState>(set => ({
         // 유저 정보가 있으면 로그인 상태로 설정
         console.log('로그인에 성공했어요!',userInfo);
         set({ isLoggedIn: true, user: userInfo });
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('user', JSON.stringify(userInfo));
       } else {
         console.log('로그인에 실패!',userInfo);
         // 유저 정보가 없으면 로그아웃 상태로 설정
         set({ isLoggedIn: false, user: null });
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('user');
       }
     } catch (error) {
       console.error('로그인에 실패하였습니다.', error);
       set({ isLoggedIn: false, user: null });
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('user');
     }
   },
 }));

@@ -19,6 +19,7 @@ import useThemeStore from './store/ThemeStore';
 import useAuthStore from './store/AuthStore';
 import './App.scss';
 import OAuthCallback from './utils/OAuthCallback';
+import PrivateRoute from './components/Login/PrivateRoute'; // PrivateRoute 가져오기
 
 ///
 import TestApiComponent from './pages/Test';
@@ -46,24 +47,25 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/login/oauth2/code/kakao" element={<OAuthCallback />} />
-          <Route path="/mypage" element={<MyPage />} />
-          <Route path="/article" element={<Article />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/conversation" element={<Conversation />} />
-          <Route path="/word" element={<Word />} />
-          <Route path="/wordlist/test" element={<Test />} />
-          <Route path="/articlelist" element={<ArticleListDetail />} />
-          <Route path="/log" element={<Test />} />
-          <Route path="/report" element={<Report />} />
-          <Route path="/reportlist" element={<ReportList />} />
-          <Route path="/scraplist" element={<ScrapList />} />
+          
+          <Route path="/mypage" element={<PrivateRoute><MyPage /></PrivateRoute>} />
+          <Route path="/article" element={<PrivateRoute><Article /></PrivateRoute>} />
+          <Route path="/about" element={<PrivateRoute><About /></PrivateRoute>} />
+          <Route path="/conversation" element={<PrivateRoute><Conversation /></PrivateRoute>} />
+          <Route path="/word" element={<PrivateRoute><Word /></PrivateRoute>} />
+          <Route path="/wordlist/test" element={<PrivateRoute><Test /></PrivateRoute>} />
+          <Route path="/articlelist" element={<PrivateRoute><ArticleListDetail /></PrivateRoute>} />
+          <Route path="/log" element={<PrivateRoute><Test /></PrivateRoute>} />
+          <Route path="/report" element={<PrivateRoute><Report /></PrivateRoute>} />
+          <Route path="/reportlist" element={<PrivateRoute><ReportList /></PrivateRoute>} />
+          <Route path="/scraplist" element={<PrivateRoute><ScrapList /></PrivateRoute>} />
           <Route path="/about" element={<About />} />
           <Route
             path="/articlelist/category"
-            element={<ArticleListCategory />}
+            element={<PrivateRoute><ArticleListCategory /></PrivateRoute>}
           />
           ///
-          <Route path="/test/api" element={<TestApiComponent />} />
+          <Route path="/test/api" element={<PrivateRoute><TestApiComponent /></PrivateRoute>} />
           ///
         </Routes>
       </main>

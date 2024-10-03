@@ -65,11 +65,11 @@ const username = user?.nickname || '뉴진스';
         <ProfileImage username={username} />
         <div className={styles.profileInfo}>
           <div className={styles.username}>{username}님의 프로필</div>
-          <button
+          {/* <button
             className={`${styles['btn-ghost']} ${styles.changeInfoButton}`}
           >
             내 정보 변경
-          </button>
+          </button> */}
         </div>
         <Category  
         />

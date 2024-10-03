@@ -2,6 +2,9 @@
   import styles from './Category.module.scss';
   import { usePreferredCategoryStore } from '../../store/CategoryStore';
   import { categories } from '../../utils/Categories';
+  import { useNavigate } from 'react-router-dom'; // 로그인 페이지로 리다이렉트 하기 위해
+  import useAuthStore from '../../store/AuthStore'; // 로그인 상태를 가져오기 위한 훅
+
   // const Category: React.FC<CategoryProps> = ({ preferredCategories, updatePreferredCategory }) => {
     const Category: React.FC = () => {
       const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
@@ -12,31 +15,43 @@
       const [selectedCategories, setSelectedCategories] = useState<number[]>( preferredCategories)
       // 설정된 카테고리들
       
+      const { isLoggedIn } = useAuthStore(); // 로그인 상태 가져오기
+      const navigate = useNavigate(); // 로그인 페이지로 이동하기 위한 훅
+
     useEffect(()=> {
       const fetchPreferredCategories = async () => {
         if (preferredCategories.length === 0) { // 값이 없으면
-          await getPreferredCategory(); // 서버에 요청
+          await getPreferredCategory(handleAuthError); // 서버에 요청
         } 
       };
       console.log(preferredCategories)
       fetchPreferredCategories(); // 선호 카테고리 요청
-    }, []
-  )
+    }, [])
+
+  // 로그인 오류 처리 함수
+  const handleAuthError = () => {
+    alert('로그인이 필요합니다. 확인을 누르면 로그인 페이지로 이동합니다.');
+    navigate('/login'); // 로그인 페이지로 이동
+  };
 
   const handleCategoryClick = (category: number) => {
+    if (!isLoggedIn) {
+      handleAuthError();
+      return;
+    }
     setSelectedCategories(prev => {
       const currentCategories = prev || []; // prev가 null일 경우 빈 배열로 초기화
       
       // 이미 선택된 경우, 선택 해제
       if (currentCategories.includes(category)) {
         const updatedCategories = currentCategories.filter(c => c !== category);
-        updatePreferredCategory(updatedCategories); // 서버에 변경된 데이터 업데이트
+        updatePreferredCategory(updatedCategories,handleAuthError); // 서버에 변경된 데이터 업데이트
         return updatedCategories;
       }
       // 새로 선택하려는 경우, 최대 선택 수를 초과하지 않으면 추가
       else if (currentCategories.length < maxSelectable) {
         const updatedCategories = [...currentCategories, category];
-        updatePreferredCategory(updatedCategories); // 서버에 변경된 데이터 업데이트
+        updatePreferredCategory(updatedCategories,handleAuthError); // 서버에 변경된 데이터 업데이트
         return updatedCategories;
       }
       // 최대 선택 수를 초과하면 현재 상태 유지
@@ -46,6 +61,10 @@
   
   
     const toggleDropdown = () => {
+      if (!isLoggedIn) {
+        handleAuthError();
+        return;
+      }
       setIsDropdownOpen(!isDropdownOpen);
     };
   
