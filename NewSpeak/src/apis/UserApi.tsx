@@ -166,7 +166,6 @@ const fetchPronounce = async (audioFile: File) => {
     // FormData 객체 생성
     const formData = new FormData();
     formData.append('audioFile', audioFile); // "file" 필드에 음성 파일 추가
-    formData.append('audioFile', audioFile); // "file" 필드에 음성 파일 추가
 
     // POST 요청 보내기
     const response = await axiosInstance.post('/pronounce', formData);    
