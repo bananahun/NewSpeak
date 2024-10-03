@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, NavLink,useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import useThemeStore from '../../store/ThemeStore';
 import useAuthStore from '../../store/AuthStore';
@@ -21,6 +21,7 @@ const Nav = () => {
   const [isFirstWordRender, setIsFirstWordRender] = useState(true);
   const [wordSelectorMode, setWordSelectorMode] = useState(false);
   const navigate = useNavigate(); // 추가된 navigate
+  const location = useLocation();
 
   const toggleWordSearchBar = () => {
     if (isOpenedWordSearchBar) {
@@ -36,8 +37,13 @@ const Nav = () => {
   };
 
   const openWordSelector = () => {
-    setWordSelectorMode(true);
-    setIsOpen(true);
+    console.log(location);
+    if (location.pathname === '/article') {
+      setWordSelectorMode(true);
+      setIsOpen(true);
+    } else {
+      alert('기사 페이지에서만 선택할 수 있어요');
+    }
   };
 
   const closeWordSelector = () => {
@@ -148,11 +154,12 @@ const Nav = () => {
                   <MenuItem onClick={openWordSelector}>
                     <div className={styles.addWord}>Add Word</div>
                   </MenuItem>
-                  <MenuItem>
-                  <div
+                  <MenuItem onClick={() => logout(navigate)}>
+                    <div
                       className={styles.logout}
-                      onClick={() => logout(navigate)} // navigate 전달
-                    >Logout
+                      // navigate 전달
+                    >
+                      Logout
                     </div>
                   </MenuItem>
                 </>

@@ -30,15 +30,6 @@
   overflow-y: scroll;
   position: relative;
   width: 100%;
-
-  .articleOriginal {
-    position: absolute;
-    z-index: 1;
-    padding-right: 25px;
-    padding-bottom: 25px;
-    left: 50%;
-    top: 30px;
-  }
 }
 
 .recordModal {
@@ -84,4 +75,15 @@
   justify-content: end;
   padding-right: 20px;
   padding-bottom: 10px;
+}
+
+.articleOriginal {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: end;
 }

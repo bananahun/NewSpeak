@@ -1,8 +1,8 @@
-@import "./styles/variables";
+@import './styles/variables';
 
 @font-face {
-  font-family: "NanumBarunpen";
-  src: url("./assets/font/NanumBarunpenR.ttf");
+  font-family: 'NanumBarunpen';
+  src: url('./assets/font/NanumBarunpenR.ttf');
 }
 
 * {
@@ -30,7 +30,7 @@ body {
 }
 
 body * {
-  font-family: "NanumBarunpen", sans-serif;
+  font-family: 'NanumBarunpen', sans-serif;
   font-size: 18px;
 }
 
