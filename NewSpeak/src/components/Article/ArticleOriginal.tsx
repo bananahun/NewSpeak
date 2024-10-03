@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './ArticleOriginal.module.scss';
 import SentenceDetailModal from '../Modal/SentenceDetailModal';
+import useArticleStore from '../../store/ArticleStore';
 import { useSelectedSentenceStore } from '../../store/selectedSentenceStore';
 import { useWordSelectorState } from '../../store/ModalStore';
 
@@ -17,6 +18,7 @@ const ArticleOriginal = ({
   sentences: Sentence[];
   translatedSentences: string[];
 }) => {
+  const { articleMeta } = useArticleStore();
   const { selectedSentenceId, setSelectedSentenceId } =
     useSelectedSentenceStore();
   const { isOpen } = useWordSelectorState();
@@ -59,6 +61,7 @@ const ArticleOriginal = ({
   return (
     <>
       <div className={styles.articleContent}>
+        <img src={articleMeta?.imageUrl} className={styles.articleImage} />
         {sentences.map((sentence, index) => (
           <div
             key={index}

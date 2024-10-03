@@ -3,8 +3,6 @@ import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import useThemeStore from '../../store/ThemeStore';
 import useAuthStore from '../../store/AuthStore';
-import { useWordSelectorState } from '../../store/ModalStore';
-import WordSelector from '../Modal/WordSelector';
 import logo from '../../assets/NewSpeak.png';
 import logoWhite from '../../assets/NewSpeakWhite.png';
 import ThemeSwitcher from '../ThemeSwitcher/ThemeSwitcher';
@@ -14,12 +12,10 @@ import styles from './Nav.module.scss';
 const Nav = () => {
   const { theme } = useThemeStore();
   const { isLoggedIn, logout } = useAuthStore();
-  const { isOpen, setIsOpen } = useWordSelectorState();
   const [mainLogo, setMainLogo] = useState(logo);
   const [isOpenedWordSearchBar, setIsOpenedWordSearchBar] = useState(false);
   const [overlayHide, setOverlayHide] = useState(false);
   const [isFirstWordRender, setIsFirstWordRender] = useState(true);
-  const [wordSelectorMode, setWordSelectorMode] = useState(false);
   const navigate = useNavigate(); // 추가된 navigate
   const location = useLocation();
 
@@ -34,21 +30,6 @@ const Nav = () => {
       setIsFirstWordRender(false);
       setOverlayHide(true);
     }
-  };
-
-  const openWordSelector = () => {
-    console.log(location);
-    if (location.pathname === '/article') {
-      setWordSelectorMode(true);
-      setIsOpen(true);
-    } else {
-      alert('기사 페이지에서만 선택할 수 있어요');
-    }
-  };
-
-  const closeWordSelector = () => {
-    setWordSelectorMode(false);
-    setIsOpen(false);
   };
 
   const renderLinks = () => {
@@ -151,9 +132,6 @@ const Nav = () => {
               {renderLinks()}
               {isLoggedIn && (
                 <>
-                  <MenuItem onClick={openWordSelector}>
-                    <div className={styles.addWord}>Add Word</div>
-                  </MenuItem>
                   <MenuItem onClick={() => logout(navigate)}>
                     <div
                       className={styles.logout}
@@ -176,9 +154,6 @@ const Nav = () => {
             toggleWordSearchBar={toggleWordSearchBar}
           />
         </div>
-      )}
-      {wordSelectorMode && (
-        <WordSelector closeWordSelector={closeWordSelector} />
       )}
     </>
   );

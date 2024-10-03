@@ -4,15 +4,19 @@ import ArticleOriginal from '../../components/Article/ArticleOriginal';
 import ArticleTranslation from '../../components/Article/ArticleTranslation';
 import useArticleStore from '../../store/ArticleStore';
 import useConversationStore from '../../store/ConversationStore';
+import { useWordSelectorState } from '../../store/ModalStore';
+import WordSelector from '../../components/Modal/WordSelector';
+import ArticleAbout from '../../components/Article/ArticleAbout';
+import WSHelpAbout from '../../components/Article/WSHelpAbout';
 import useArticleApi from '../../apis/ArticleApi';
-import { getLogo } from '../../store/ThemeStore';
 import {
   FaRegBookmark,
   FaBookmark,
   FaRegCircleQuestion,
 } from 'react-icons/fa6';
-import styles from './Article.module.scss';
+import { IoSearch } from 'react-icons/io5';
 import { IconButton } from '@mui/material';
+import styles from './Article.module.scss';
 import userApi from '../../apis/UserApi'; // API 파일 임포트
 
 interface ArticleDetail {
@@ -43,9 +47,10 @@ interface ArticleSentences {
 
 const Article = () => {
   const navigate = useNavigate();
-  const articleMeta = useArticleStore.getState().articleMeta;
+  const { articleMeta, setArticleMeta } = useArticleStore();
   const { clearConvData } = useConversationStore();
-  const logo = getLogo();
+  const { isOpen, setIsOpen } = useWordSelectorState();
+  const [wordSelectorMode, setWordSelectorMode] = useState(false);
   const [articleData, setArticleData] = useState<ArticleDetail | null>(null);
   const [articleSentences, setArticleSentences] =
     useState<ArticleSentences | null>(null);
@@ -55,12 +60,23 @@ const Article = () => {
   const [isScrapped, setIsScrapped] = useState(false); // 스크랩 상태 관리
   const [isAnimating, setIsAnimating] = useState(false);
   const [isOpenHelpModal, setIsOpenHelpModal] = useState(false);
+  const [isOpenWSHelpModal, setIsOpenWSHelpModal] = useState(false);
 
   const getOrDefault = (value: any, defaultValue: string = 'Loading..') => {
     if (typeof value === 'string' && !isNaN(Date.parse(value))) {
       return new Date(value).toDateString();
     }
     return value || defaultValue;
+  };
+
+  const openWordSelector = () => {
+    setWordSelectorMode(true);
+    setIsOpen(true);
+  };
+
+  const closeWordSelector = () => {
+    setWordSelectorMode(false);
+    setIsOpen(false);
   };
 
   const toggleTranslate = () => {
@@ -103,7 +119,9 @@ const Article = () => {
   const handleGetArticleDetail = async (articleId: number) => {
     const response = await useArticleApi.getArticleDetail(articleId);
     setArticleData(response);
-
+    if (!articleMeta?.imageUrl) {
+      setArticleMeta(response);
+    }
     if (response && response.sentences) {
       const sentences = response.sentences;
       const translatedSentences = response.sentences.map(
@@ -148,7 +166,16 @@ const Article = () => {
     setIsOpenHelpModal(false);
   };
 
+  const openWSHelpModal = () => {
+    setIsOpenWSHelpModal(true);
+  };
+
+  const closeWSHelpModal = () => {
+    setIsOpenWSHelpModal(false);
+  };
+
   useEffect(() => {
+    if (articleData) return;
     if (articleMeta && articleMeta.id) {
       handleGetArticleDetail(articleMeta.id);
       checkIfScrapped(); // DB에서 스크랩 상태 확인
@@ -202,6 +229,14 @@ const Article = () => {
               <FaRegCircleQuestion />
             </div>
             <IconButton
+              onClick={openWordSelector}
+              onMouseEnter={openWSHelpModal}
+              onMouseLeave={closeWSHelpModal}
+              className={styles.wordSelectorButton}
+            >
+              <IoSearch />
+            </IconButton>
+            <IconButton
               onClick={e => toggleScrap(e)}
               className={`${styles.bookmark} ${
                 isAnimating ? styles.animate : ''
@@ -214,14 +249,6 @@ const Article = () => {
         </div>
         <div className={styles.articleBackground}>
           <div className={styles.articleContainer}>
-            {!isTranslateOpen && (
-              <div className={styles.articleImageContainer}>
-                <img
-                  className={styles.articleImage}
-                  src={articleMeta?.imageUrl || logo}
-                />
-              </div>
-            )}
             {isTranslateOpen ? (
               <ArticleTranslation
                 sentences={articleSentences?.sentences || []}
@@ -248,28 +275,10 @@ const Article = () => {
           <p>회화 시작</p>
         </button>
       </div>
-      {/* <div className={styles.helpModal}>도움말을 띄오보자</div> */}
-      {isOpenHelpModal && (
-        <div className={styles.helpModal}>
-          <div className={styles.helpModalTitle}>NewSpeak 100% 사용법</div>
-          <div className={styles.helpModalContent}>
-            <li>기사 제목 아래에는, 기사의 난이도가 있어요</li>
-            <li>
-              문장을 <strong>좌클릭</strong>하면 문장을 듣고, 발음을 평가해볼 수
-              있어요
-            </li>
-            <li>
-              문장을 <strong>우클릭</strong>하면, 문장의 번역이 나와요
-            </li>
-            <li>
-              <strong>전문 번역</strong>버튼을 누르면, 기사 전체 번역을 볼 수
-              있어요
-            </li>
-            <li>
-              <strong>회화 시작</strong>버튼을 누르고, 바로 회화를 시작해보세요!
-            </li>
-          </div>
-        </div>
+      {isOpenHelpModal && <ArticleAbout />}
+      {isOpenWSHelpModal && <WSHelpAbout />}
+      {wordSelectorMode && (
+        <WordSelector closeWordSelector={closeWordSelector} />
       )}
     </>
   );
