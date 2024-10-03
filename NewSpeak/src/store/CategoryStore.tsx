@@ -30,7 +30,7 @@ const usePreferredCategoryStore = create(
       updatePreferredCategory: async (categories: number[]) => {
         try {
           // 서버에 카테고리 제거 요청 보내기
-          await axiosInstance.post('/my/categories',[]);
+          await axiosInstance.post('/my/categories',categories);
           // 요청이 성공하면 상태 업데이트
           set({
             preferredCategories: categories, // 카테고리 제거
