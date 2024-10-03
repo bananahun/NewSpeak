@@ -91,7 +91,7 @@ const getMyVocasDetail = async (vocaId: number) => {
 // 단어 문제 풀기
 const getMyVocasQuiz = async (vocaId: number) => {
   try {
-    const response = await axiosInstance.get(`/my/vocas/${vocaId}/quiz`);
+    const response = await axiosInstance.get(`/vocas/${vocaId}/quiz`);
     console.log(response.data, '[API] getMyVocasQuiz 호출 결과');
     return response.data.wordQuizList;
   } catch (error) {
@@ -169,11 +169,7 @@ const fetchPronounce = async (audioFile: File) => {
     formData.append('audioFile', audioFile); // "file" 필드에 음성 파일 추가
 
     // POST 요청 보내기
-    const response = await axiosInstance.post('/pronounce', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data', // multipart/form-data 형식으로 요청
-      },
-    });
+    const response = await axiosInstance.post('/pronounce', formData);    
     console.log(response.data, '[API] fetchPronounce 호출 결과');
     return response.data;
   } catch (error) {
@@ -224,6 +220,8 @@ const fetchMyWord = async (
       sentenceId,
     });
     console.log(response.data, '[API] fetchMyWord 호출 결과');
+    return response; // 응답 데이터 반환
+
   } catch (error) {
     console.error('[API] fetchMyWord 에러:', error);
   }

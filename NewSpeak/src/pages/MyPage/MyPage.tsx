@@ -6,17 +6,14 @@ import Category from '../../components/Profile/Category';
 import Streak from '../../components/Profile/Streak';
 import userApi from '../../apis/UserApi';
 import { useVocaStore } from '../../store/VocaStore';
+import useAuthStore from '../../store/AuthStore';
 
-interface User {
-  id: number;
-  name: string;
-}
+
 //  user 데이터 저장로직 아직 안짬
 
 const MyPage = () => {
   // 임시데이터
-  const usertest: User = { id: 1, name: '뉴진스' };
-
+  const {user} = useAuthStore();
   interface Streaks {
     [key: string]: number;
   }
@@ -42,13 +39,6 @@ const MyPage = () => {
         console.error('Error fetching streaks:', error);
       }
     };
-
-    fetchStreaks(); // API 요청
-
-    // 선호 카테고리 가져오기
-},[]); // 의존성 배열에 추가
-
-  useEffect(() => {
     if(!vocaId) {
       const fetchVocaIds = async () => {
         try {
@@ -61,14 +51,20 @@ const MyPage = () => {
 
       fetchVocaIds();      
     }
-  })
+
+    fetchStreaks(); // API 요청
+
+    // 선호 카테고리 가져오기
+},[]); // 의존성 배열에 추가
+
+const username = user?.nickname || '뉴진스';
 
   return (
     <div className={styles.mypage}>
       <div className={styles.profileContainer}>
-        <ProfileImage username={usertest.name} />
+        <ProfileImage username={username} />
         <div className={styles.profileInfo}>
-          <div className={styles.username}>{usertest.name}님의 프로필</div>
+          <div className={styles.username}>{username}님의 프로필</div>
           <button
             className={`${styles['btn-ghost']} ${styles.changeInfoButton}`}
           >

@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import axiosInstance from '../apis/axiosConfig';
-
 interface CategoryState {
   id: number;  // 카테고리 ID
   setCategory: (id: number, category: number) => void;
@@ -20,13 +19,10 @@ const usePreferredCategoryStore = create(
       preferredCategories: [], // 초기값을 빈 배열로 설정
       getPreferredCategory: async () => {
         try {
-          // 서버에 카테고리 추가 요청 보내기
           const response = await axiosInstance.get('/my/categories');
-          // 요청이 성공하면 상태 업데이트
-          const categories = response.data.categoryList.map((cat: { categoryId: number; categoryName: string }) => cat.categoryName);
-
-          set({ preferredCategories: categories }); // 서버에서 받은 카테고리 이름으로 업데이트
-
+          const selectedCategories = response.data.categoryList.map((cat: { categoryId: number; categoryName: string }) => cat.categoryId);
+          console.log(selectedCategories);
+          set({ preferredCategories: selectedCategories });
         } catch (error) {
           console.error('[API] getPreferredCategory 에러:', error);
         }
@@ -43,6 +39,7 @@ const usePreferredCategoryStore = create(
           console.error('[API] removePreferredCategory 에러:', error);
         }
       },
+
     }),
     {
       name: 'preferredCategoryStorage', // 로컬 스토리지에 저장될 이름

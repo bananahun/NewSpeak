@@ -19,16 +19,29 @@ const Test = () => {
 
   const [score, setScore] = useState<number | null>(null);
   const [answers, setAnswers] = useState<string[]>([]);
-  const [words,setWords] = useState<Word[]>([]);
-  const {vocaId} = useVocaStore() // 임시
+  const [words,setWords] = useState<Word[]>();
+  const {vocaId , setVocaId} = useVocaStore() // 임시
 
   useEffect(() => {
     const fetchTestWords = async () => {
       try {
+        if (!vocaId) {
+          const fetchVocaIds = async () => {
+            try {
+              const fetchedVocaId = await userApi.getMyVocas();
+              setVocaId(fetchedVocaId); // 가져온 데이터를 상태에 저장
+            } catch (error) {
+              console.error('Error fetching vocaIds:', error);
+            }
+          };
+    
+          fetchVocaIds(); 
+
+        }
         if(vocaId !== null) {
         const fetchedTestWords = await userApi.getMyVocasQuiz(vocaId);
         setWords(fetchedTestWords || []); // 가져온 데이터를 상태에 저장
-        }
+        } 
       } catch (error) {
         console.error('Error fetching streaks:', error);
       }
@@ -39,39 +52,6 @@ const Test = () => {
 
   }, [vocaId]); // 의존성 배열에 추가
   
-//   const words: Word[] = [
-//     {
-//         "wordId": 1,
-//         "answer": "Innovation",
-//         "level": 5,
-//         "createdAt": null,
-//         "meaningDatas": [
-//             {
-//                 "meaning": "Innovation 1번째 뜻",
-//                 "example": "Innovation drives progress in various fields.",
-//                 "exampleKorean": "혁신은 다양한 분야에서 발전을 이끕니다."
-//             },
-//             {
-//                 "meaning": "Innovation 2번째 뜻",
-//                 "example": "Innovation 2번째 뜻 문장",
-//                 "exampleKorean": "Innovation 2번째 뜻 문장 한국어뜻"
-//             }
-//         ]
-//     },
-//     {
-//         "wordId": 2,
-//         "answer": "Technology",
-//         "level": 4,
-//         "createdAt": null,
-//         "meaningDatas": [
-//             {
-//                 "meaning": "Technology 1번째 뜻",
-//                 "example": "Technology has revolutionized communication.",
-//                 "exampleKorean": "기술은 통신에 혁신을 가져왔습니다."
-//             }
-//         ]
-//     }
-// ]
 
   const handleTestComplete = async (finalScore: number, userAnswers: string[]) => {
     const result = await userApi.gradeMyVocasQuiz(finalScore)
@@ -90,8 +70,9 @@ const Test = () => {
           correctAnswers={words.map(word => word.answer)}
         />
       ) : (
-        <WordTest words={words} onTestComplete={handleTestComplete} />
-      )}
+        words && (
+          <WordTest words={words} onTestComplete={handleTestComplete} />
+        ))}
     </div>
   );
 };
