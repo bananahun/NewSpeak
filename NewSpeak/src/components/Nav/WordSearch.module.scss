@@ -19,6 +19,7 @@
 .searchBarOverlay {
   width: 100vw;
   height: 100vh;
+
   .searchBar {
     position: absolute;
     top: 0;
@@ -26,13 +27,14 @@
     width: 50vw;
     min-width: 400px;
     max-width: 600px;
-    height: 100vh;
+    height: 100vh; /* 전체 높이 */
     padding: 12px;
     background-color: var(--background-color);
     color: var(--font-color);
     transform: translateX(-100%);
     border-right: 0.5px solid var(--font-color);
     animation: 0.5s ease forwards;
+    overflow-y: hidden; /* 기본적으로 스크롤 비활성화 */
 
     .inputContainer {
       width: 100%;
@@ -40,12 +42,22 @@
       display: flex;
       gap: 12px;
       margin-bottom: 20px;
+
       .inputBar {
         flex-grow: 1;
         width: 80%;
         border-radius: 10px;
         padding: 5px;
         font-size: 16px;
+        border: 1px solid var(--main-color);
+
+        &:focus {
+          outline: none;
+          background-color: #f0f8ff;
+          border: 1px solid var(--contrast-color);
+          box-shadow: 0 0 5px var(--contrast-color);
+          color: var(--contrast-color);
+        }
       }
 
       button {
@@ -55,18 +67,54 @@
       }
     }
 
+    /* 검색 결과가 스크롤될 수 있도록 높이와 오버플로우 설정 */
     .searchedWords {
       width: 100%;
+      height: calc(100vh - 120px); /* 검색창 높이 제외한 나머지 공간 */
+      overflow-y: auto; /* 스크롤 활성화 */
+      margin-top: 20px;
 
-      li {
-        word-break: whitespace;
-        width: 100%;
-        overflow-x: hidden;
+      .wordCard {
+        padding: 15px;
+        background: #f0f0f0;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+
+        &:hover {
+          transform: translateY(-3px);
+        }
+
+        .wordMeaning,
+        .wordExample,
+        .wordExampleKorean {
+          margin: 10px 0;
+          padding: 8px 10px;
+          background: #ffffff;
+          border: 1px solid var(--contrast-color);
+          border-radius: 5px;
+        }
+
+        .sectionTitle {
+          font-weight: bold;
+          margin-bottom: 5px;
+          color: var(--font-color);
+        }
+
+        .divider {
+          border: none;
+          height: 1px;
+          background-color: #ddd;
+          margin: 10px 0;
+        }
       }
     }
 
     &.open {
       animation: slideIn 0.5s ease forwards;
+      overflow-y: auto; /* 스크롤을 전체 검색창에 적용 */
     }
 
     &.close {
