@@ -25,12 +25,12 @@ const ConversationSession = ({
   const [isFirstMessage, setIsFirstMessage] = useState(true);
   const [activeAnswer, setActiveAnswer] = useState(currentAnswer);
   const [editedAnswer, setEditedAnswer] = useState('');
-  const [byteMp3, setByteMp3] = useState('');
+  // const [byteMp3, setByteMp3] = useState('');
   const [base64Mp3, setBase64Mp3] = useState('');
   const [activeResponse, setActiveResponse] = useState('');
   const [isFirstRender, setIsFirstRender] = useState(true);
   const [toggleStates, setToggleStates] = useState<boolean[]>([]);
-  const [showRecommend, setShowRecommend] = useState(false);
+  const [showRecommend, setShowRecommend] = useState<boolean[]>([]);
 
   useEffect(() => {
     setToggleStates(prevStates => [
@@ -38,6 +38,10 @@ const ConversationSession = ({
       ...new Array(conversation.length - prevStates.length).fill(false),
     ]);
   }, [conversation]);
+
+  useEffect(() => {
+    setShowRecommend(new Array(recommendedAnswers.length).fill(false));
+  }, [recommendedAnswers]);
 
   useEffect(() => {
     if (isFirstRender) {
@@ -162,8 +166,10 @@ const ConversationSession = ({
     );
   };
 
-  const handleShowRecommend = () => {
-    setShowRecommend(prev => !prev);
+  const handleShowRecommend = (index: number) => {
+    setShowRecommend(prev =>
+      prev.map((state, idx) => (idx === index ? !state : state)),
+    );
   };
 
   return (
@@ -201,13 +207,23 @@ const ConversationSession = ({
           </div>
         </div>
       )}
-      {!isGeneratingResponse && (
-        <div className={styles.botMessage} onClick={handleShowRecommend}>
-          <div className={styles.messageContent}>
-            {recommendedAnswers.map((message, idx) => {
-              return <div key={idx}>{message}</div>;
-            })}
-          </div>
+      {!isGeneratingResponse && !activeAnswer && (
+        <div
+          className={`${styles.recommendMessage} ${
+            isFirstMessage ? styles.firstRecommend : ''
+          }`}
+        >
+          {recommendedAnswers.map((message, idx) => {
+            return (
+              <div
+                key={idx}
+                className={styles.messageContent}
+                onClick={() => handleShowRecommend(idx)}
+              >
+                {showRecommend[idx] ? <>{message}</> : '클릭해서 열기'}
+              </div>
+            );
+          })}
         </div>
       )}
       <div className={styles.userMessageInput}>

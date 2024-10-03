@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 // import useVocaStore from '../../store/VocaStore';
 import styles from './AddWordModal.module.scss';
@@ -8,16 +8,22 @@ import { useSelectedSentenceStore } from '../../store/selectedSentenceStore';
 
 interface AddWordModalProps {
   word: string;
-  articleId: number;  
+  articleId: number;
   isOpen: boolean;
   onClose: () => void;
 }
 
-const AddWordModal = ({ word,articleId, isOpen, onClose }: AddWordModalProps) => {
-  const {vocaId,setVocaId} = useVocaStore();
-  const {selectedSentenceId} = useSelectedSentenceStore();
+const AddWordModal = ({
+  word,
+  articleId,
+  isOpen,
+  onClose,
+}: AddWordModalProps) => {
+  const { vocaId, setVocaId } = useVocaStore();
+  const { selectedSentenceId, setSelectedSentenceId } =
+    useSelectedSentenceStore();
   useEffect(() => {
-    if(!vocaId) {
+    if (!vocaId) {
       const fetchVocaIds = async () => {
         try {
           const fetchedVocaId = await userApi.getMyVocas();
@@ -27,29 +33,34 @@ const AddWordModal = ({ word,articleId, isOpen, onClose }: AddWordModalProps) =>
         }
       };
 
-      fetchVocaIds();      
+      fetchVocaIds();
     }
-  },[vocaId, setVocaId])
+  }, [vocaId, setVocaId]);
   if (!isOpen) return null;
 
   const handleAddWord = async () => {
     if (!selectedSentenceId) {
       alert('단어 추가에 실패했습니다. 다시 시도해주세요');
-      console.log('sentenceId 가져오기 실패')
+      console.log('sentenceId 가져오기 실패');
       return;
-    } 
+    }
 
     if (!vocaId) {
       alert('단어 추가에 실패했습니다. 다시 시도해주세요');
-      console.log('vocaId 가져오기 실패')
+      console.log('vocaId 가져오기 실패');
       return;
     }
 
     try {
-      const response = await userApi.fetchMyWord(articleId, vocaId, word, selectedSentenceId);
+      const response = await userApi.fetchMyWord(
+        articleId,
+        vocaId,
+        word,
+        selectedSentenceId,
+      );
       console.log(response);
       if (response && response.status === 200) {
-      alert('단어가 성공적으로 추가되었습니다.'); // 성공 메시지
+        alert('단어가 성공적으로 추가되었습니다.'); // 성공 메시지
       } else {
         alert('단어가 추가되지 않았습니다.');
       }
@@ -58,7 +69,6 @@ const AddWordModal = ({ word,articleId, isOpen, onClose }: AddWordModalProps) =>
       console.error('Error adding word:', error);
       alert('단어 추가에 실패했습니다. 다시 시도해주세요.'); // 오류 메시지
       onClose();
-
     }
   };
 

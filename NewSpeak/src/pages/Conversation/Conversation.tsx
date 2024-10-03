@@ -122,8 +122,12 @@ const Conversation = () => {
     setRecordModalOpen(false);
   };
 
-  const toggleModal = () => {
-    setArticleModalOpen(!articleModalOpen);
+  const openModal = () => {
+    setArticleModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setArticleModalOpen(false);
   };
 
   useEffect(() => {
@@ -161,7 +165,7 @@ const Conversation = () => {
           Selected News <strong>|</strong> {articleTitle}
         </div>
         <div>
-          <div className={styles.articleOriginalButton} onClick={toggleModal}>
+          <div className={styles.articleOriginalButton} onClick={openModal}>
             기사 전문 보기
           </div>
           {isConvStarted && (
@@ -169,14 +173,7 @@ const Conversation = () => {
           )}
         </div>
       </div>
-      <div className={styles.conversationContainer}>
-        {articleModalOpen && (
-          <span className={styles.articleOriginal}>
-            <ArticleInConversationModal />
-          </span>
-        )}
-        {renderStep(step)}
-      </div>
+      <div className={styles.conversationContainer}>{renderStep(step)}</div>
       <div className={styles.buttonContainer}>
         <button onClick={leftButton}>{activeLeftButton}</button>
         <button onClick={rightButton}>{activeRightButton}</button>
@@ -195,6 +192,11 @@ const Conversation = () => {
             submitResponse={submitResponse}
             setRecordModalOpen={setRecordModalOpen}
           />
+        </span>
+      )}
+      {articleModalOpen && (
+        <span className={styles.articleOriginal} onClick={closeModal}>
+          <ArticleInConversationModal />
         </span>
       )}
     </>

@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import styles from './ArticleOriginal.module.scss';
 import SentenceDetailModal from '../Modal/SentenceDetailModal';
 import { useSelectedSentenceStore } from '../../store/selectedSentenceStore';
+import { useWordSelectorState } from '../../store/ModalStore';
+
 interface Sentence {
   id: number;
   content: string;
   translation: string;
 }
-import { useWordSelectorState } from '../../store/ModalStore';
 
 const ArticleOriginal = ({
   sentences,
@@ -16,7 +17,8 @@ const ArticleOriginal = ({
   sentences: Sentence[];
   translatedSentences: string[];
 }) => {
-  const {selectedSentenceId,setSelectedSentenceId} = useSelectedSentenceStore();
+  const { selectedSentenceId, setSelectedSentenceId } =
+    useSelectedSentenceStore();
   const { isOpen } = useWordSelectorState();
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   const [sentenceDetailModalOpen, setSentenceDetailModalOpen] = useState(false);
@@ -71,7 +73,7 @@ const ArticleOriginal = ({
             <p className={styles.sentence}>
               {visibleTranslations[index]
                 ? translatedSentences[index]
-                : sentence.content }
+                : sentence.content}
             </p>
           </div>
         ))}

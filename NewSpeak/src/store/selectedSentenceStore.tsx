@@ -5,7 +5,7 @@ interface SelectedSentenceStore {
   setSelectedSentenceId: (id: number | null) => void;
 }
 
-export const useSelectedSentenceStore = create<SelectedSentenceStore>((set) => ({
-    selectedSentenceId: null,
-    setSelectedSentenceId: (id) => set({ selectedSentenceId: id }),
+export const useSelectedSentenceStore = create<SelectedSentenceStore>(set => ({
+  selectedSentenceId: null,
+  setSelectedSentenceId: id => set({ selectedSentenceId: id }),
 }));

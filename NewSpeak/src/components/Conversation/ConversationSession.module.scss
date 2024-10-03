@@ -57,7 +57,7 @@
   color: var(--font-color);
   gap: 10px;
 
-  > .messageContent {
+  .messageContent {
     background-color: var(--sub-color);
     max-width: 100%;
     color: var(--font-color);
@@ -84,4 +84,24 @@
     border-radius: 10px;
     ime-mode: disabled;
   }
+}
+
+.recommendMessage {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+  cursor: pointer;
+  margin-bottom: 15px;
+  opacity: 0;
+  animation: fadeIn 3s forwards;
+  animation-delay: 10s;
+
+  .messageContent {
+    background-color: var(--main-color);
+  }
+}
+
+.firstRecommend {
+  animation-delay: 0s;
 }

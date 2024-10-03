@@ -4,7 +4,8 @@ import { useModalStore } from '../../store/ModalStore';
 import AddWordModal from './AddWordModal';
 import styles from './WordSelector.module.scss';
 import { FiSearch } from 'react-icons/fi';
-import useArticleStore from "../../store/ArticleStore";
+import useArticleStore from '../../store/ArticleStore';
+import { useSelectedSentenceStore } from '../../store/selectedSentenceStore';
 
 const isEnglishWord = (word: string) => {
   const englishWordPattern = /^[a-zA-Z]+$/;
@@ -19,6 +20,7 @@ const handleOpenModal = (
   event: MouseEvent,
   openModal: (word: string) => void,
 ) => {
+  event.preventDefault();
   const word = getSelectedText();
   if (!word) {
     alert('단어를 선택해주세요.');
@@ -39,6 +41,8 @@ const WordSelector = ({
 }) => {
   const articleMeta = useArticleStore.getState().articleMeta;
   const { isOpen, selectedWord, openModal, closeModal } = useModalStore();
+  const { selectedSentenceId, setSelectedSentenceId } =
+    useSelectedSentenceStore();
   const [cursorPosition, setCursorPosition] = useState<{
     x: number;
     y: number;
@@ -56,6 +60,7 @@ const WordSelector = ({
 
     const handleMouseUp = (e: MouseEvent) => {
       const selectedText = getSelectedText();
+      if (!selectedSentenceId) return;
       if (selectedText) {
         handleOpenModal(e, openModal);
         window.getSelection()?.removeAllRanges();
@@ -79,6 +84,11 @@ const WordSelector = ({
     e.stopPropagation();
   };
 
+  const handleClose = () => {
+    setSelectedSentenceId(null);
+    closeModal();
+  };
+
   return ReactDOM.createPortal(
     <>
       <div
@@ -98,10 +108,15 @@ const WordSelector = ({
           </div>
         )}
       </div>
-      <AddWordModal word={selectedWord} articleId={articleMeta?articleMeta.id:0} isOpen={isOpen} onClose={() => { 
-    closeModal();  // 모달 닫기
-    closeWordSelector(); // WordSelector 닫기
-  }}  />
+      <AddWordModal
+        word={selectedWord}
+        articleId={articleMeta ? articleMeta.id : 0}
+        isOpen={isOpen}
+        onClose={() => {
+          closeModal(); // 모달 닫기
+          closeWordSelector(); // WordSelector 닫기
+        }}
+      />
     </>,
     document.body,
   );
