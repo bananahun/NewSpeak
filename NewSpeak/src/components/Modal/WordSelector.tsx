@@ -60,7 +60,10 @@ const WordSelector = ({
 
     const handleMouseUp = (e: MouseEvent) => {
       const selectedText = getSelectedText();
-      if (!selectedSentenceId) return;
+      if (!selectedSentenceId) {
+        console.log('id없음');
+        return;
+      }
       if (selectedText) {
         handleOpenModal(e, openModal);
         window.getSelection()?.removeAllRanges();
@@ -78,15 +81,10 @@ const WordSelector = ({
       document.removeEventListener('contextmenu', handleContextMenu);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [closeWordSelector]);
+  }, [closeWordSelector, selectedSentenceId]);
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-  };
-
-  const handleClose = () => {
-    setSelectedSentenceId(null);
-    closeModal();
   };
 
   return ReactDOM.createPortal(
