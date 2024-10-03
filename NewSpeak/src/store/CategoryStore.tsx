@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import axiosInstance from '../apis/axiosConfig';
+
 interface CategoryState {
   id: number;  // 카테고리 ID
   setCategory: (id: number, category: number) => void;
@@ -9,15 +10,15 @@ interface CategoryState {
 // 선호 카테고리 상태 정의
 interface PreferredCategoryState {
   preferredCategories: number[]; // 선호 카테고리 배열
-  getPreferredCategory: () => Promise<void>; // 선호 카테고리 추가 함수
-  updatePreferredCategory: (categoris: number[]) => Promise<void>; // 선호 카테고리 제거 함수
+  getPreferredCategory: (handleAuthError: () => void) => Promise<void>; // 선호 카테고리 추가 함수
+  updatePreferredCategory: (categoris: number[],handleAuthError: () => void) => Promise<void>; // 선호 카테고리 제거 함수
 }
 
 const usePreferredCategoryStore = create(
   persist<PreferredCategoryState>(
     set => ({
       preferredCategories: [], // 초기값을 빈 배열로 설정
-      getPreferredCategory: async () => {
+      getPreferredCategory: async (handleAuthError) => {
         try {
           const response = await axiosInstance.get('/my/categories');
           const selectedCategories = response.data.categoryList.map((cat: { categoryId: number; categoryName: string }) => cat.categoryId);
@@ -25,9 +26,10 @@ const usePreferredCategoryStore = create(
           set({ preferredCategories: selectedCategories });
         } catch (error) {
           console.error('[API] getPreferredCategory 에러:', error);
+          handleAuthError();
         }
       },
-      updatePreferredCategory: async (categories: number[]) => {
+      updatePreferredCategory: async (categories: number[],handleAuthError) => {
         try {
           // 서버에 카테고리 제거 요청 보내기
           await axiosInstance.post('/my/categories',categories);
@@ -37,6 +39,7 @@ const usePreferredCategoryStore = create(
           });
         } catch (error) {
           console.error('[API] removePreferredCategory 에러:', error);
+          handleAuthError();
         }
       },
 
