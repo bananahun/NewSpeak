@@ -6,6 +6,7 @@ import useThemeStore from '../../store/ThemeStore';
 import useArticleStore from '../../store/ArticleStore';
 import useAuthStore from '../../store/AuthStore'; // AuthStore에서 로그인 상태를 가져오기 위해 추가
 import logo from '../../assets/NewSpeak.png';
+import useArticleApi from '../../apis/ArticleApi';
 import logoWhite from '../../assets/NewSpeakWhite.png';
 
 interface Article {
@@ -26,6 +27,7 @@ const ArticleSearch: React.FC = () => {
   const [searchType, setSearchType] = useState<string>('title'); // 선택된 검색 타입
   const [startDate, setStartDate] = useState<string>(''); // 시작 날짜
   const [endDate, setEndDate] = useState<string>(''); // 종료 날짜
+  const [level, setLevel] = useState<number>(1); // 난이도 상태
   const [articles, setArticles] = useState<Article[]>([]); // 검색 결과 상태
   const [showResults, setShowResults] = useState<boolean>(false); // 결과 표시 여부
 
@@ -34,11 +36,13 @@ const ArticleSearch: React.FC = () => {
 
   // 검색 타입 변경 시, 관련 입력 필드를 초기화
   useEffect(() => {
+    console.log('띠로링');
     setSearchQuery('');
     setSearchTitle('');
     setSearchContent('');
     setStartDate('');
     setEndDate('');
+    setLevel(1); // 난이도도 초기화
     setShowResults(false); // 검색 옵션이 바뀌면 이전 검색 결과를 숨김
   }, [searchType]);
 
@@ -69,6 +73,10 @@ const ArticleSearch: React.FC = () => {
 
   const handleEndDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEndDate(event.target.value);
+  };
+
+  const handleLevelChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setLevel(Number(event.target.value));
   };
 
   const handleKeyPress = (event: React.KeyboardEvent) => {
@@ -125,6 +133,9 @@ const ArticleSearch: React.FC = () => {
             0,
           );
           break;
+        case 'level': // 난이도별 검색 추가
+          result = await useArticleApi.getArticleLevel(level, 0);
+          break;
         default:
           result = [];
       }
@@ -146,14 +157,6 @@ const ArticleSearch: React.FC = () => {
     navigate('/article');
   };
 
-  useEffect(() => {
-    if (theme === 'light') {
-      setMainLogo(logo);
-    } else {
-      setMainLogo(logoWhite);
-    }
-  }, [theme]);
-
   return (
     <div className={styles.searchSection}>
       <div
@@ -161,7 +164,6 @@ const ArticleSearch: React.FC = () => {
           showResults ? styles.moveUp : ''
         }`}
       >
-        {/* 검색 타입 선택 드롭다운 */}
         <select
           value={searchType}
           onChange={handleSearchTypeChange}
@@ -174,61 +176,37 @@ const ArticleSearch: React.FC = () => {
           <option value="titleDate">날짜 + 제목 검색</option>
           <option value="contentDate">날짜 + 본문 검색</option>
           <option value="titleContentDate">날짜 + 제목 + 본문 검색</option>
+          <option value="level">난이도별 검색</option>
         </select>
 
-        {/* 날짜 입력 칸 (옵션에 따라 표시) */}
-        {(searchType.includes('Date') || searchType === 'date') && (
-          <div className={styles.dateInputContainer}>
-            <input
-              type="date"
-              value={startDate}
-              onChange={handleStartDateChange}
-              placeholder="시작 날짜"
-              className={styles.dateInput}
-            />
-            <input
-              type="date"
-              value={endDate}
-              onChange={handleEndDateChange}
-              placeholder="종료 날짜"
-              className={styles.dateInput}
-            />
-          </div>
+        {/* 난이도별 검색 옵션 추가 */}
+        {searchType === 'level' && (
+          <select
+            value={level}
+            onChange={handleLevelChange}
+            className={styles.levelDropdown}
+          >
+            {[1, 2, 3, 4, 5].map(lvl => (
+              <option key={lvl} value={lvl}>
+                레벨 {lvl}
+              </option>
+            ))}
+          </select>
         )}
 
-        {/* 검색 인풋 (기본 인풋 필드) */}
-        {searchType !== 'date' && searchType !== 'titleContentDate' && (
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            onKeyPress={handleKeyPress}
-            placeholder="검색어를 입력하세요"
-            className={styles.searchInput}
-          />
-        )}
-
-        {/* 제목과 본문을 따로 입력할 수 있는 필드 */}
-        {searchType === 'titleContentDate' && (
-          <div className={styles.multiInputContainer}>
+        {/* 기존 검색 인풋과 옵션들 유지 */}
+        {searchType !== 'date' &&
+          searchType !== 'titleContentDate' &&
+          searchType !== 'level' && (
             <input
               type="text"
-              value={searchTitle}
-              onChange={handleTitleChange}
+              value={searchQuery}
+              onChange={handleSearchChange}
               onKeyPress={handleKeyPress}
-              placeholder="제목을 입력하세요"
+              placeholder="검색어를 입력하세요"
               className={styles.searchInput}
             />
-            <input
-              type="text"
-              value={searchContent}
-              onChange={handleContentChange}
-              onKeyPress={handleKeyPress}
-              placeholder="본문을 입력하세요"
-              className={styles.searchInput}
-            />
-          </div>
-        )}
+          )}
 
         <button onClick={handleSearch} className={styles.searchButton}>
           검색

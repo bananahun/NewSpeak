@@ -17,12 +17,6 @@ const MyPage = () => {
     [key: string]: number;
   }
 
-  // const streaks: Streaks = {
-  //   '2024-08-15': 1,
-  //   '2024-08-10': 2,
-  //   // streak 데이터 생략
-  // };
-
   const [streaks, setStreaks] = useState<Streaks>({});
 
   const { vocaId, setVocaId } = useVocaStore();
@@ -54,7 +48,7 @@ const MyPage = () => {
     // 선호 카테고리 가져오기
   }, []); // 의존성 배열에 추가
 
-  const username = user?.nickname || '뉴진스';
+  const username = user?.nickname || '닉네임이 없습니다.';
 
   return (
     <div className={styles.mypage}>
