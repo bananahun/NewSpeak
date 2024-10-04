@@ -79,11 +79,6 @@ public class Article {
     @OneToMany(mappedBy = "article")
     private List<Sentence> sentences;
 
-    @ManyToOne
-    @JoinColumn(name = "report_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Report report;
-
     @OneToMany(mappedBy = "article")
     private Set<UserArticle> userArticles;
 }
