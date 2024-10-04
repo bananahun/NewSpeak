@@ -60,7 +60,7 @@ const Article = () => {
   const [isScrapped, setIsScrapped] = useState(false); // 스크랩 상태 관리
   const [isAnimating, setIsAnimating] = useState(false);
   const [isOpenHelpModal, setIsOpenHelpModal] = useState(false);
-  const [isOpenWSHelpModal, setIsOpenWSHelpModal] = useState(false);
+  const [isOpenWSHelpModal, setIsOpenWSHelpModal] = useState(true);
 
   const getOrDefault = (value: any, defaultValue: string = 'Loading..') => {
     if (typeof value === 'string' && !isNaN(Date.parse(value))) {

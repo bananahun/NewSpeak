@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
-import useArticleApi from "../../apis/ArticleApi";
-import styles from "./CategoryArticles.module.scss";
-import noImage from "../../assets/NewSpeak.png"; // 대체 이미지 import
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useArticleApi from '../../apis/ArticleApi';
+import useArticleStore from '../../store/ArticleStore';
+import styles from './CategoryArticles.module.scss';
+import noImage from '../../assets/NewSpeak.png'; // 대체 이미지 import
 
 interface Article {
   id: number;
@@ -16,6 +18,8 @@ interface CategoryArticlesProps {
 }
 
 const CategoryArticles: React.FC<CategoryArticlesProps> = ({ categoryId }) => {
+  const navigate = useNavigate();
+  const { setArticleMeta } = useArticleStore();
   const [articles, setArticles] = useState<Article[]>([]);
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
@@ -38,10 +42,10 @@ const CategoryArticles: React.FC<CategoryArticlesProps> = ({ categoryId }) => {
       if (result.length === 0) {
         setHasMore(false);
       } else {
-        setArticles((prevArticles) => [...prevArticles, ...result]);
+        setArticles(prevArticles => [...prevArticles, ...result]);
       }
     } catch (error) {
-      console.error("Error fetching articles:", error);
+      console.error('Error fetching articles:', error);
     } finally {
       setLoading(false);
     }
@@ -49,20 +53,30 @@ const CategoryArticles: React.FC<CategoryArticlesProps> = ({ categoryId }) => {
 
   const handleLoadMore = () => {
     if (!loading && hasMore) {
-      setPage((prevPage) => prevPage + 1);
+      setPage(prevPage => prevPage + 1);
     }
+  };
+
+  const loadArticleDetail = (article: Article) => {
+    setArticleMeta({
+      id: article.id,
+      title: article.title,
+      imageUrl: article.imageUrl,
+    });
+    navigate('/article');
   };
 
   return (
     <div className={styles.outerContainer}>
       <div className={styles.articlesContainer}>
-        {articles.map((article) => (
+        {articles?.map(article => (
           <div key={article.id} className={styles.articleCard}>
             {article.imageUrl ? (
               <img
                 src={article.imageUrl}
                 alt={article.title}
                 className={styles.articleImage}
+                onClick={() => loadArticleDetail(article)}
               />
             ) : (
               <img
@@ -74,7 +88,7 @@ const CategoryArticles: React.FC<CategoryArticlesProps> = ({ categoryId }) => {
             <div className={styles.articleInfo}>
               <h4 className={styles.articleTitle}>{article.title}</h4>
               <p className={styles.articleMeta}>
-                {new Date(article.publishedDate).toLocaleDateString()} |{" "}
+                {new Date(article.publishedDate).toLocaleDateString()} |{' '}
                 {article.publisher}
               </p>
             </div>
