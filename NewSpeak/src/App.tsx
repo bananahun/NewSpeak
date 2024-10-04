@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Register from './pages/Register/Register';
 import Login from './pages/Login/Login';
@@ -9,7 +9,7 @@ import Conversation from './pages/Conversation/Conversation';
 import Word from './pages/Word/Word';
 import Test from './pages/Word/Test';
 import Nav from './components/Nav/Nav';
-import ArticleListDetail from './pages/Artricle/ArticleListDetail';
+import NotFound from './pages/NotFound/NotFound';
 import Report from './pages/MyPage/Report';
 import ReportList from './pages/MyPage/ReportList';
 import ScrapList from './pages/MyPage/ScrapList';
@@ -30,7 +30,9 @@ function App() {
   const location = useLocation();
 
   const isAuthPage =
-    location.pathname === '/register' || location.pathname === '/login';
+    location.pathname === '/register' ||
+    location.pathname === '/login' ||
+    location.pathname === '/notfound';
 
   const { checkAuth } = useAuthStore();
 
@@ -47,26 +49,26 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/login/oauth2/code/kakao" element={<OAuthCallback />} />
-          
-          <Route path="/mypage" element={<PrivateRoute><MyPage /></PrivateRoute>} />
-          <Route path="/article" element={<PrivateRoute><Article /></PrivateRoute>} />
-          <Route path="/about" element={<PrivateRoute><About /></PrivateRoute>} />
-          <Route path="/conversation" element={<PrivateRoute><Conversation /></PrivateRoute>} />
-          <Route path="/word" element={<PrivateRoute><Word /></PrivateRoute>} />
-          <Route path="/wordlist/test" element={<PrivateRoute><Test /></PrivateRoute>} />
-          <Route path="/articlelist" element={<PrivateRoute><ArticleListDetail /></PrivateRoute>} />
-          <Route path="/log" element={<PrivateRoute><Test /></PrivateRoute>} />
-          <Route path="/report" element={<PrivateRoute><Report /></PrivateRoute>} />
-          <Route path="/reportlist" element={<PrivateRoute><ReportList /></PrivateRoute>} />
-          <Route path="/scraplist" element={<PrivateRoute><ScrapList /></PrivateRoute>} />
-          <Route path="/about" element={<About />} />
-          <Route
-            path="/articlelist/category"
-            element={<PrivateRoute><ArticleListCategory /></PrivateRoute>}
-          />
-          ///
-          <Route path="/test/api" element={<PrivateRoute><TestApiComponent /></PrivateRoute>} />
-          ///
+          <Route path="*" element={<Navigate to="/notfound" />} />
+          <Route path="/notfound" element={<NotFound />} />
+
+          <Route element={<PrivateRoute />}>
+            <Route path="/mypage" element={<MyPage />} />
+            <Route path="/article" element={<Article />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/conversation" element={<Conversation />} />
+            <Route path="/word" element={<Word />} />
+            <Route path="/wordlist/test" element={<Test />} />
+            <Route path="/log" element={<Test />} />
+            <Route path="/report" element={<Report />} />
+            <Route path="/reportlist" element={<ReportList />} />
+            <Route path="/scraplist" element={<ScrapList />} />
+            <Route path="/about" element={<About />} />
+            <Route
+              path="/articlelist/category"
+              element={<ArticleListCategory />}
+            />
+          </Route>
         </Routes>
       </main>
     </div>
