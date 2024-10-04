@@ -17,7 +17,7 @@ const PronounceModal = ({ isOpen, onClose, text }: PronounceModalProps) => {
   const recorderRef = useRef<MicRecorder | null>(null);
 
   const startRecording = async () => {
-    const mp3Recorder = new MicRecorder({ bitRate: 64 });
+    const mp3Recorder = new MicRecorder({ bitRate: 128 });
     try {
       await mp3Recorder.start();
       recorderRef.current = mp3Recorder;

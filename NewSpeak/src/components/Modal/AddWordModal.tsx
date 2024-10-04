@@ -20,7 +20,7 @@ const AddWordModal = ({
   onClose,
 }: AddWordModalProps) => {
   const { vocaId, setVocaId } = useVocaStore();
-  const { selectedSentenceId, setSelectedSentenceId } =
+  const { selectedSentenceId } =
     useSelectedSentenceStore();
   useEffect(() => {
     if (!vocaId) {
