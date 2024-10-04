@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './ArticleOriginal.module.scss';
 import SentenceDetailModal from '../Modal/SentenceDetailModal';
+import useThemeStore from '../../store/ThemeStore';
 import useArticleStore from '../../store/ArticleStore';
 import { useSelectedSentenceStore } from '../../store/selectedSentenceStore';
 import { useWordSelectorState } from '../../store/ModalStore';
+import logo from '../../assets/NewSpeak.png';
+import logoWhite from '../../assets/NewSpeakWhite.png';
 
 interface Sentence {
   id: number;
@@ -18,6 +21,8 @@ const ArticleOriginal = ({
   sentences: Sentence[];
   translatedSentences: string[];
 }) => {
+  const { theme } = useThemeStore();
+  const [mainLogo, setMainLogo] = useState(logo);
   const { articleMeta } = useArticleStore();
   const { selectedSentenceId, setSelectedSentenceId } =
     useSelectedSentenceStore();
@@ -58,10 +63,21 @@ const ArticleOriginal = ({
     setSentenceDetailModalOpen(false);
   };
 
+  useEffect(() => {
+    if (theme === 'light') {
+      setMainLogo(logo);
+    } else {
+      setMainLogo(logoWhite);
+    }
+  }, [theme]);
+
   return (
     <>
       <div className={styles.articleContent}>
-        <img src={articleMeta?.imageUrl} className={styles.articleImage} />
+        <img
+          src={articleMeta?.imageUrl || mainLogo}
+          className={styles.articleImage}
+        />
         {sentences.map((sentence, index) => (
           <div
             key={index}
