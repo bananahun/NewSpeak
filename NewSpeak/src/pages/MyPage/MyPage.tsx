@@ -1,4 +1,4 @@
-import React,{useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './MyPage.module.scss';
 import ProfileImage from '../../components/Profile/ProfileImage';
@@ -8,17 +8,14 @@ import userApi from '../../apis/UserApi';
 import { useVocaStore } from '../../store/VocaStore';
 import useAuthStore from '../../store/AuthStore';
 
-
 //  user 데이터 저장로직 아직 안짬
 
 const MyPage = () => {
   // 임시데이터
-  const {user} = useAuthStore();
+  const { user } = useAuthStore();
   interface Streaks {
     [key: string]: number;
   }
-
-
 
   // const streaks: Streaks = {
   //   '2024-08-15': 1,
@@ -28,8 +25,8 @@ const MyPage = () => {
 
   const [streaks, setStreaks] = useState<Streaks>({});
 
-  const {vocaId, setVocaId} = useVocaStore();
-  
+  const { vocaId, setVocaId } = useVocaStore();
+
   useEffect(() => {
     const fetchStreaks = async () => {
       try {
@@ -39,7 +36,7 @@ const MyPage = () => {
         console.error('Error fetching streaks:', error);
       }
     };
-    if(!vocaId) {
+    if (!vocaId) {
       const fetchVocaIds = async () => {
         try {
           const fetchedVocaId = await userApi.getMyVocas();
@@ -49,15 +46,15 @@ const MyPage = () => {
         }
       };
 
-      fetchVocaIds();      
+      fetchVocaIds();
     }
 
     fetchStreaks(); // API 요청
 
     // 선호 카테고리 가져오기
-},[]); // 의존성 배열에 추가
+  }, []); // 의존성 배열에 추가
 
-const username = user?.nickname || '뉴진스';
+  const username = user?.nickname || '뉴진스';
 
   return (
     <div className={styles.mypage}>
@@ -71,8 +68,7 @@ const username = user?.nickname || '뉴진스';
             내 정보 변경
           </button> */}
         </div>
-        <Category  
-        />
+        <Category />
       </div>
       <div className={styles.streakSection}>
         <Streak streaks={streaks} />
