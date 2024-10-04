@@ -42,12 +42,14 @@
 
 .meaningsContainer {
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap; /* 줄 바꿈 가능 */
   gap: 10px; /* 박스 간 간격 */
   margin-top: 10px;
 }
 
 .meaningBox {
+
   background-color: var(--main-color);
   border-radius: 5px;
   padding: 10px;

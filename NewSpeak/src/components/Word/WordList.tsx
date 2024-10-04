@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styles from './WordList.module.scss';
 import { FaMicrophone, FaBook } from 'react-icons/fa';
 import { GiSpeaker } from 'react-icons/gi';
 import PronounceModal from '../Modal/PronounceModal';
 import userApi from '../../apis/UserApi'; 
 import { useVocaStore } from '../../store/VocaStore';
+import WordModal from '../Modal/WordModal';
 
 const WordList = () => {
   interface Word {
@@ -25,7 +26,10 @@ const WordList = () => {
   const [flipped, setFlipped] = useState<number | null>(null);
   const [isPronounceModalOpen, setPronounceModalOpen] = useState(false);
   const [selectedText, setSelectedText] = useState<string>('');
+  const [isWordModalOpen, setWordModalOpen] = useState(false); // 모달 상태 추가
+  const [selectedWord, setSelectedWord] = useState<Word | null>(null);
   const {vocaId,setVocaId} = useVocaStore() 
+  const nav = useNavigate()
 
   useEffect(() => {
     const fetchWordDetails = async () => {
@@ -61,18 +65,52 @@ const WordList = () => {
     setPronounceModalOpen(false);
   };
 
+  const openWordModal = (word: Word) => {
+    setSelectedWord(word); // 선택한 단어 저장
+    setWordModalOpen(true); // 모달 열기
+  };
+
+  const closeWordModal = () => {
+    setWordModalOpen(false); // 모달 닫기
+    setSelectedWord(null); // 선택한 단어 초기화
+  };
+
+
+  const handleTestButtonClick = () => {
+    if (words.length <= 10) {
+      alert('단어 수가 10개 이하입니다. 더 많은 단어를 추가하세요.');
+    } else {
+      nav('/wordlist/test')
+    }
+  };
+
+  const handleWordDeleteClick = async (wordId: number) => {
+    if (!vocaId) {
+      return
+    }
+    if (window.confirm('이 단어를 삭제하시겠습니까?')) {
+      try {
+        await userApi.deleteMyWord(vocaId, wordId);
+        // 단어 삭제 후 상태 업데이트
+        setWords(prevWords => prevWords.filter(word => word.wordId !== wordId));
+        alert('단어가 삭제되었습니다.');
+      } catch (error) {
+        console.error('[WordList] 단어 삭제 중 오류:', error);
+        alert('단어 삭제 중 오류가 발생했습니다.');
+      }
+    }
+  };
+
+
   return (
     <div>
       {(!words || words.length === 0) &&  (
             <div>단어가 없습니다.</div>
           )}
       <div className={styles.wordlist}>
-        <Link to="/wordlist/test">
-          <button className={styles.testButton}>테스트</button>
-        </Link>
-        {/* <Link to={`/wordlist/test?vocaId=${vocaId}`}>
-          <button className={styles.testButton}>테스트</button>
-        </Link> */}
+          <button className={styles.testButton}  onClick={handleTestButtonClick}>
+            테스트
+          </button>
       </div>
       <div className={styles.container}>
         <div className={styles.wordlist2}>
@@ -122,9 +160,16 @@ const WordList = () => {
                         <div
                           className={styles.iconButton}
                           title="예문 확인"
-                          onClick={() => handleExampleClick(index)}
+                          onClick={() => openWordModal(word)}
                         >
                           <FaBook />
+                        </div>
+                        <div
+                          className={styles.iconButton}
+                          title="단어 삭제"
+                          onClick={() => handleWordDeleteClick(word.wordId)} // 단어 삭제 핸들러 호출
+                        >
+                          🗑️
                         </div>
                       </div>
                     </>
@@ -142,6 +187,12 @@ const WordList = () => {
         onClose={closePronounceModal}
         text={selectedText}
         sourcePage={'WordList'}
+      />
+      <WordModal
+        isOpen={isWordModalOpen}
+        onClose={closeWordModal}
+        word={selectedWord?.content || ''}
+        meanings={selectedWord?.meaningDatas || []} // 단어의 모든 의미를 모달로 전달
       />
     </div>
   );

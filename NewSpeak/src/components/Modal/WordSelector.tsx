@@ -112,7 +112,6 @@ const WordSelector = ({
         isOpen={isOpen}
         onClose={() => {
           closeModal(); // 모달 닫기
-          closeWordSelector(); // WordSelector 닫기
         }}
       />
     </>,

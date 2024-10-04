@@ -21,12 +21,11 @@ const PronounceModal = ({ isOpen, onClose, text, sourcePage }: PronounceModalPro
   const [proScore, setProScore] = useState<number | null>(null); // 발음 점수 상태
   const recorderRef = useRef<MicRecorder | null>(null);
   const { transcript, resetTranscript } = useSpeechRecognition();
-  const [isListening, setIsListening] = useState(false);
   
 
 
   const startRecording = async () => {
-    if (sourcePage === 'WordList') {
+    if (sourcePage !== 'WordList') {
     const mp3Recorder = new MicRecorder({ bitRate: 128 });
     try {
       await mp3Recorder.start();
@@ -36,16 +35,17 @@ const PronounceModal = ({ isOpen, onClose, text, sourcePage }: PronounceModalPro
       console.error('녹음 시작 중 오류 발생:', error);
     }
   } else {
+    resetTranscript()
     SpeechRecognition.startListening({
       language: 'en-US',
       continuous: true,
     });
-    setIsListening(true);
+    setIsRecording(true);
   }
   };
 
   const stopRecording = async () => {
-    if (sourcePage === 'WordList') {
+    if (sourcePage !== 'WordList') {
     if (recorderRef.current) {
       try {
         const [buffer, blob] = await recorderRef.current.stop().getMp3(); // MP3 데이터 가져오기
@@ -62,7 +62,7 @@ const PronounceModal = ({ isOpen, onClose, text, sourcePage }: PronounceModalPro
     }
   } else {
     SpeechRecognition.stopListening();
-        setIsListening(false);
+    setIsRecording(false);
   }
   };
 
@@ -96,7 +96,7 @@ const PronounceModal = ({ isOpen, onClose, text, sourcePage }: PronounceModalPro
             <p>발음 점수: {proScore}</p>
           </div>
         )}
-        {transcript !== null && (
+        {transcript !== '' && (
           <div>
             <p>발음 text: {transcript}</p>
           </div>

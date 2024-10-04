@@ -231,6 +231,21 @@ const fetchMyWord = async (
   }
 };
 
+const deleteMyWord = async (
+  vocaId:number,
+  wordId: number
+) => {
+  try {
+    const response = await axiosInstance.delete(`/vocas/${vocaId}/word`, {
+      params: { wordId }, // 쿼리 매개변수로 wordId 전달
+    });
+    console.log(response.data, '[API] deleteMyWord 호출 결과');
+    return response.data;
+  } catch (error) {
+    console.error('[API] deleteMyWord 에러:', error);
+  }
+}
+
 const createMyArticles = async (articleId: number) => {
   try {
     const response = await axiosInstance.post(`/articles/${articleId}/scrap`);
@@ -250,49 +265,6 @@ const deleteMyArticles = async (articleId: number) => {
     console.error('[API] deleteMyArticles 에러:', error);
   }
 };
-
-// 임시
-// const getUserStreaks = async () => {
-//   try {
-//     const now = new Date();
-//     const requests = [];
-
-//     // 5개월 전까지의 데이터를 가져오기 위한 반복문
-//     for (let i = 0; i < 6; i++) {
-//       const date = new Date(now.getFullYear(), now.getMonth() - i);
-//       const year = date.getFullYear();
-//       const month = String(date.getMonth() + 1).padStart(2, '0');
-
-//       // 각 월의 데이터를 가져오는 요청을 배열에 추가
-//       const request = axiosInstance.get('my/exp-logs', {
-//         params: {
-//           year: year,
-//           month: month,
-//         },
-//       });
-
-//       requests.push(request);
-//     }
-
-//     // 모든 요청이 완료될 때까지 기다림
-//     const responses = await Promise.all(requests);
-
-//     // 응답 데이터를 합침
-//     const expData = responses.reduce((acc: Record<string, number>, response) => {
-//       const data = response.data.dailyExpList;
-//       data.forEach((exp: { date: string; totalExp: number }) => {
-//         acc[exp.date] = exp.totalExp;
-//       });
-//       return acc;
-//     }, {});
-
-//     console.log(expData, '[API] getUserStreaks 5개월치 호출 결과');
-//     return expData;
-
-//   } catch (error) {
-//     console.error('[API] getUserStreaks 에러:', error);
-//   }
-// };
 
 const getReportDetails = async (reportId: number) => {
   try {
@@ -320,6 +292,7 @@ const userApi = {
   createMyArticles,
   deleteMyArticles,
   getReportDetails,
+  deleteMyWord
 };
 
 export default userApi;
