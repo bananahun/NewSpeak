@@ -27,8 +27,8 @@ public class ProController {
 
     @PostMapping
     public ResponseEntity<ProResponse> evaluatePronunciation(
-            @RequestBody PronounceClientRequest body) throws IOException {
-            String audioFileUrl = audioFileUploadService.uploadFile(body.getAudioFile());
+            @RequestPart("audioFile") MultipartFile audioFile) throws IOException {
+            String audioFileUrl = audioFileUploadService.uploadFile(audioFile);
             ProRequest request = new ProRequest("english", audioFileUrl);
             ProResponse result = proService.evaluatePronunciation(request);
             return ResponseEntity.status(OK).body(result);
