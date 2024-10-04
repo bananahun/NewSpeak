@@ -23,12 +23,13 @@ public class WordService {
 
     public WordMeaningFindResponse findMeaningByContent(String content) {
         Word word = wordRepository.findByContent(content);
-        List<WordMeaning> meanings = wordMeaningRepository.findByWordId(word.getId());
-        List<MeaningSentence> sentences = meanings.stream()
-                .map(meaning -> meaningSentenceRepository.findByWordMeaningId(meaning.getId()))
+//        List<WordMeaning> meanings = wordMeaningRepository.findByWordId(word.getId());
+
+        List<MeaningSentence> sentences = word.getWordMeanings().stream()
+                .map(WordMeaning::getMeaningSentence)
                 .collect(Collectors.toList());
 
-        return WordMeaningFindResponse.from(word, meanings, sentences);
+        return WordMeaningFindResponse.from(word, word.getWordMeanings(), sentences);
     }
 
     public void save(Word word) { wordRepository.save(word); }

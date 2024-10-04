@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -40,5 +41,6 @@ public class Word {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "word")
+    @BatchSize(size = 20)
     private List<WordMeaning> wordMeanings;
 }
