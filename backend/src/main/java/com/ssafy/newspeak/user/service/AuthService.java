@@ -1,10 +1,12 @@
 package com.ssafy.newspeak.user.service;
 
 
+import com.ssafy.newspeak.category.entity.Category;
 import com.ssafy.newspeak.security.jwt.service.JwtService;
 import com.ssafy.newspeak.user.controller.dto.UserSignUpDto;
 import com.ssafy.newspeak.user.entity.Role;
 import com.ssafy.newspeak.user.entity.User;
+import com.ssafy.newspeak.user.entity.userCategory.UserCategoryId;
 import com.ssafy.newspeak.user.repository.UserRepo;
 import com.ssafy.newspeak.voca.controller.VocaPostDto;
 import com.ssafy.newspeak.voca.service.VocaService;
@@ -17,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 
@@ -52,6 +56,7 @@ public class AuthService {
     }
 
     private final String VocaDefaultName="나의 단어장";
+    private final UserCategoryService userCategoryService;
     public void OAuthSignUp(HttpServletRequest request,UserSignUpDto userSignUpDto) throws Exception {
         Cookie[] cookies=request.getCookies();
         String accessToken=jwtService.extractAccessToken(cookies).orElse(null);
@@ -64,6 +69,17 @@ public class AuthService {
         if(user.getRole().equals(Role.USER)) {
             throw new IllegalAccessException();
         }
+
+        List<UserCategoryId> userCategoryIds=new ArrayList<>();
+        List<Long> categoryIds=userSignUpDto.getCategoryIds();
+        for(Long id:categoryIds){
+            UserCategoryId userCategoryId=UserCategoryId.builder()
+                    .categoryId(id)
+                    .userId(user.getId()).build();
+            userCategoryIds.add(userCategoryId);
+        }
+        userCategoryService.updateCategoriesByUserId(user.getId(),userCategoryIds);
+
         user.updateNickname(userSignUpDto.getNickname());
         user.authorizeUser();
         

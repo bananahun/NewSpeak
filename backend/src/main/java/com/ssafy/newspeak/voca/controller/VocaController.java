@@ -1,6 +1,7 @@
 package com.ssafy.newspeak.voca.controller;
 
 import com.ssafy.newspeak.activitytype.entity.ActivityTypeEnum;
+import com.ssafy.newspeak.article.controller.AddWordRequest;
 import com.ssafy.newspeak.explog.controller.ExpResult;
 import com.ssafy.newspeak.explog.entity.ExpLog;
 import com.ssafy.newspeak.explog.service.ExpLogRequest;
@@ -30,6 +31,20 @@ public class VocaController {
         MyUserDetails userDetails=AuthUtil.getUserDetails();
         Long vocaId=vocaService.makeVoca(vocaPostDto,userDetails.getUserId());
         return ResponseEntity.ok(new MakeVocaResponse(vocaId));
+    }
+
+    @PostMapping("/{vocaId}/word")
+    public void addWord( @PathVariable Long vocaId,@RequestBody AddWordRequest addWordRequest) {
+        MyUserDetails userDetails= AuthUtil.getUserDetails();
+        addWordRequest.setVocaId(vocaId);
+        vocaService.addWord(addWordRequest,userDetails.getUserId());
+    }
+
+    @DeleteMapping("/{vocaId}/word")
+    public void deleteWord( @PathVariable Long vocaId,@RequestBody DeleteWordRequest deleteWordRequest) {
+        MyUserDetails userDetails= AuthUtil.getUserDetails();
+        deleteWordRequest.setVocaId(vocaId);
+        vocaService.deleteWord(deleteWordRequest,userDetails.getUserId());
     }
 
     @GetMapping("")
@@ -66,11 +81,10 @@ public class VocaController {
                                                         @RequestBody VocaQuizResult vocaQuizResult){
         MyUserDetails userDetails=AuthUtil.getUserDetails();
 
-        int vocaQuizTotal = 10;
         ExpLog expLog=expLogService.saveExpLogAndAddToUserExp(ExpLogRequest.from(
             ActivityTypeEnum.VOCAQUIZ,
             userDetails.getUserId(),
-            (double) (vocaQuizResult.getAnswerCount() / vocaQuizTotal), vocaId
+            (double) vocaQuizResult.getAnswerCount() / vocaQuizResult.getTotalCount(), vocaId
         ));
         return ResponseEntity.ok(new ExpResult(expLog));
     }
