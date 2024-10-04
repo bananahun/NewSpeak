@@ -173,7 +173,8 @@ const fetchPronounce = async (audioFile: File) => {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-    });    console.log(response.data, '[API] fetchPronounce 호출 결과');
+    });    
+    console.log(response.data, '[API] fetchPronounce 호출 결과');
     return response.data;
   } catch (error) {
     console.error('[API] fetchPronounce 에러:', error);
