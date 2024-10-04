@@ -13,7 +13,6 @@ interface AddWordModalProps {
   onClose: () => void;
 }
 
-
 const AddWordModal = ({
   word,
   articleId,
