@@ -63,7 +63,7 @@ const Conversation = () => {
             Swal.showLoading();
           },
           didClose: () => {
-            navigate('/reportlist');
+            navigate('/article');
           },
         });
       }

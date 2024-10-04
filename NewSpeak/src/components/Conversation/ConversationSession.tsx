@@ -207,12 +207,13 @@ const ConversationSession = ({
           </div>
         </div>
       )}
-      {!isGeneratingResponse && !activeAnswer && (
+      {!isGeneratingResponse && (
         <div
           className={`${styles.recommendMessage} ${
             isFirstMessage ? styles.firstRecommend : ''
           }`}
         >
+          <div className={styles.messageContent}>SPEAKO의 추천 문장</div>
           {recommendedAnswers.map((message, idx) => {
             return (
               <div
@@ -220,7 +221,11 @@ const ConversationSession = ({
                 className={styles.messageContent}
                 onClick={() => handleShowRecommend(idx)}
               >
-                {showRecommend[idx] ? <>{message}</> : '클릭해서 열기'}
+                {showRecommend[idx] ? (
+                  <>{`${idx + 1}. ${message}`}</>
+                ) : (
+                  <>{`${idx + 1}. 클릭해서 열기`}</>
+                )}
               </div>
             );
           })}
