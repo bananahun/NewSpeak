@@ -9,6 +9,7 @@ import styles from './Conversation.module.scss';
 import Swal from 'sweetalert2';
 import useConversationStore from '../../store/ConversationStore';
 import useConversationApi from '../../apis/ConversationApi';
+import { mySwal } from '../../components/Alert/CustomSwal';
 
 const Conversation = () => {
   const navigate = useNavigate();
@@ -42,29 +43,52 @@ const Conversation = () => {
   };
 
   const reportAlert = () => {
-    Swal.fire({
-      title: '회화 끝내기.',
-      text: '보고서를 생성할까요?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: '네',
-      cancelButtonText: '아니요',
-    }).then(async response => {
+    mySwal(
+      '회화 끝내기.',
+      '보고서를 생성할까요?',
+      'question',
+      '',
+      true,
+      true,
+      '네',
+      '아니요',
+    ).then(async response => {
       if (response.isConfirmed) {
         Swal.fire({
           title: '회화 완료',
           text: 'SPEAKO가 보고서를 작성중입니다.',
-          footer: '완료될때까지 시간이 조금 걸릴 수 있어요.',
           icon: 'info',
-          showCancelButton: false,
+          footer: '완료될때까지 시간이 조금 걸릴 수 있어요.',
           showConfirmButton: false,
+          showCancelButton: true,
+          cancelButtonText: '취소',
           didOpen: () => {
             createReportThread();
             Swal.showLoading();
           },
-          didClose: () => {
-            navigate('/article');
-          },
+        }).then(response => {
+          if (response.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire(
+              '보고서 작성 취소',
+              '보고서 작성을 취소하셨습니다.',
+              'info',
+            );
+            return;
+          }
+          mySwal(
+            '완료',
+            '보고서가 성공적으로 생성되었습니다',
+            'success',
+            '',
+            true,
+            false,
+            '확인',
+            '',
+          ).then(response => {
+            if (response.isConfirmed) {
+              navigate('/mypage');
+            }
+          });
         });
       }
     });
@@ -78,15 +102,16 @@ const Conversation = () => {
 
   const leftButton = () => {
     if (step === 2) {
-      Swal.fire({
-        title: '돌아가기.',
-        text: '저장하지 않고 나가시겠어요?',
-        footer: '지금까지 진행된 대화가 사라질거에요.',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: '네',
-        cancelButtonText: '아니요',
-      }).then(response => {
+      mySwal(
+        '돌아가기.',
+        '저장하지 않고 나가시겠어요?',
+        'question',
+        '지금까지 진행된 대화가 사라질거에요.',
+        true,
+        true,
+        '네',
+        '아니요',
+      ).then(response => {
         if (response.isConfirmed) {
           setStep(1);
           setConversationCount(0);
@@ -147,7 +172,7 @@ const Conversation = () => {
   }, [articleMeta]);
 
   useEffect(() => {
-    if (conversationCount >= 10) {
+    if (conversationCount > 10) {
       setIsUserTurn(false);
       setConversationCount(10);
     }
@@ -176,7 +201,12 @@ const Conversation = () => {
       <div className={styles.conversationContainer}>{renderStep(step)}</div>
       <div className={styles.buttonContainer}>
         <button onClick={leftButton}>{activeLeftButton}</button>
-        <button onClick={rightButton}>{activeRightButton}</button>
+        <button
+          onClick={rightButton}
+          disabled={isConvStarted && conversationCount <= 4}
+        >
+          {activeRightButton}
+        </button>
         {isConvStarted && (
           <button
             disabled={!isUserTurn || isGeneratingResponse}

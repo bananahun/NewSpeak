@@ -33,14 +33,18 @@ const ConversationSession = ({
   const [showRecommend, setShowRecommend] = useState<boolean[]>([]);
 
   useEffect(() => {
-    setToggleStates(prevStates => [
-      ...prevStates,
-      ...new Array(conversation.length - prevStates.length).fill(false),
-    ]);
+    if (conversation && conversation.length > 0) {
+      setToggleStates(prevStates => [
+        ...prevStates,
+        ...new Array(conversation.length - prevStates.length).fill(false),
+      ]);
+    }
   }, [conversation]);
 
   useEffect(() => {
-    setShowRecommend(new Array(recommendedAnswers.length).fill(false));
+    if (recommendedAnswers && recommendedAnswers.length > 0) {
+      setShowRecommend(new Array(recommendedAnswers.length).fill(false));
+    }
   }, [recommendedAnswers]);
 
   useEffect(() => {
@@ -114,16 +118,21 @@ const ConversationSession = ({
 
   const base64ToArrayBuffer = (base64: string) => {
     const binaryString = atob(base64);
-    const len = binaryString.length;
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
+    try {
+      const len = binaryString.length;
+      const bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      return bytes.buffer;
+    } catch (error) {
+      console.error(error);
     }
-    return bytes.buffer;
   };
 
   const byteToMp3 = (byteData: string) => {
     const arrayBuffer = base64ToArrayBuffer(byteData);
+    if (!arrayBuffer) return;
     const blob = new Blob([arrayBuffer], { type: 'audio/mpeg' });
     const url: string = URL.createObjectURL(blob);
     return url;
@@ -200,37 +209,6 @@ const ConversationSession = ({
           );
         })}
       </div>
-      {isGeneratingResponse && (
-        <div className={styles.botMessage}>
-          <div className={styles.messageContent}>
-            SPEKAO가 대답을 준비중이에요
-          </div>
-        </div>
-      )}
-      {!isGeneratingResponse && (
-        <div
-          className={`${styles.recommendMessage} ${
-            isFirstMessage ? styles.firstRecommend : ''
-          }`}
-        >
-          <div className={styles.messageContent}>SPEAKO의 추천 문장</div>
-          {recommendedAnswers.map((message, idx) => {
-            return (
-              <div
-                key={idx}
-                className={styles.messageContent}
-                onClick={() => handleShowRecommend(idx)}
-              >
-                {showRecommend[idx] ? (
-                  <>{`${idx + 1}. ${message}`}</>
-                ) : (
-                  <>{`${idx + 1}. 클릭해서 열기`}</>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
       <div className={styles.userMessageInput}>
         {activeAnswer && (
           <>
@@ -267,6 +245,37 @@ const ConversationSession = ({
           </>
         )}
       </div>
+      {isGeneratingResponse && (
+        <div className={styles.botMessage}>
+          <div className={styles.messageContent}>
+            SPEKAO가 대답을 준비중이에요
+          </div>
+        </div>
+      )}
+      {!isGeneratingResponse && (
+        <div
+          className={`${styles.recommendMessage} ${
+            isFirstMessage ? styles.firstRecommend : ''
+          }`}
+        >
+          <div className={styles.messageContent}>SPEAKO의 추천 문장</div>
+          {recommendedAnswers.map((message, idx) => {
+            return (
+              <div
+                key={idx}
+                className={styles.messageContent}
+                onClick={() => handleShowRecommend(idx)}
+              >
+                {showRecommend[idx] ? (
+                  <>{`${idx + 1}. ${message}`}</>
+                ) : (
+                  <>{`${idx + 1}. 클릭해서 열기`}</>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </>
   );
 };
