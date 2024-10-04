@@ -17,7 +17,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/elastic/articles")
+@RequestMapping("/api/v1/elastic")
 public class ArticleSearchController {
 
     private final ArticleSearchService articleSearchService;
