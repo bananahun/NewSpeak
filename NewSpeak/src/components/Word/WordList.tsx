@@ -141,6 +141,7 @@ const WordList = () => {
         isOpen={isPronounceModalOpen}
         onClose={closePronounceModal}
         text={selectedText}
+        sourcePage={'WordList'}
       />
     </div>
   );

@@ -71,6 +71,7 @@ const SentenceDetailModal = ({
         isOpen={isPronounceModalOpen}
         onClose={closePronounceModal}
         text={text}
+        sourcePage={'SentenceDetailModal'}
       />
     </div>,
     document.body,
