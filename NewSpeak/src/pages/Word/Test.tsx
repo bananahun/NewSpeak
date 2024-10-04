@@ -54,7 +54,11 @@ const Test = () => {
   
 
   const handleTestComplete = async (finalScore: number, userAnswers: string[]) => {
-    const result = await userApi.gradeMyVocasQuiz(finalScore)
+    if (!vocaId) {
+      alert('단어장이 선택되지 않습니다.'); // vocaId가 없을 때 알�� 추가
+      return;
+    }
+    const result = await userApi.gradeMyVocasQuiz(finalScore,vocaId)
     console.log('API gradeMyVocasQuiz result:', result);
     setScore(finalScore);
     setAnswers(userAnswers); // 사용자의 답안을 상태에 저장

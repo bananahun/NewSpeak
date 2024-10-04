@@ -101,9 +101,9 @@ const getMyVocasQuiz = async (vocaId: number) => {
 
 // 단어 문제 채점
 // 단어 문제 채점에서 quizId 가 필요하지 않나?
-const gradeMyVocasQuiz = async (answerCount: number) => {
+const gradeMyVocasQuiz = async (answerCount: number,vocaId:number) => {
   try {
-    const response = await axiosInstance.post('/vocas/quiz/result', {
+    const response = await axiosInstance.post(`/vocas/${vocaId}/quiz/result`, {
       answerCount,
     });
     console.log(response.data, '[API] gradeMyVocasQuiz 호출 결과');
@@ -169,8 +169,11 @@ const fetchPronounce = async (audioFile: File) => {
     formData.append('audioFile', audioFile); // "file" 필드에 음성 파일 추가
 
     // POST 요청 보내기
-    const response = await axiosInstance.post('/pronounce', formData);    
-    console.log(response.data, '[API] fetchPronounce 호출 결과');
+    const response = await axiosInstance.post('/pronounce', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });    console.log(response.data, '[API] fetchPronounce 호출 결과');
     return response.data;
   } catch (error) {
     console.error('[API] fetchPronounce 에러:', error);
