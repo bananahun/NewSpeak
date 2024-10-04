@@ -14,7 +14,7 @@
   color: var(--font-color);
   width: calc(100vw - 12rem);
   height: 100vh; // 전체 화면 높이
-  overflow-y: hidden; // 스크롤 방지
+  overflow-y: scroll; // 스크롤 방지
 }
 
 .authMain {
@@ -24,7 +24,7 @@
   background-color: var(--background-color);
   color: var(--font-color);
   height: 100vh; // 전체 화면 높이
-  overflow-y: hidden; // 스크롤 방지
+  overflow-y: scroll; // 스크롤 방지
 }
 
 .modal {
