@@ -1,5 +1,6 @@
 package com.ssafy.newspeak.pronounce.service;
 
+import com.google.gson.JsonElement;
 import com.ssafy.newspeak.pronounce.dto.ProRequest;
 import com.ssafy.newspeak.pronounce.dto.ProResponse;
 import com.ssafy.newspeak.pronounce.entity.Pronounce;
@@ -108,10 +109,26 @@ public class ProService {
 
                 LOGGER.info("Response body: " + responseBody);
 
+                // 안전하게 score 값을 가져오기
+                Double score = 0.0; // 기본값 설정
+
                 // 응답 본문에서 score 값 추출
                 JsonObject responseJson = gson.fromJson(responseBody, JsonObject.class);
                 JsonObject returnObject = responseJson.getAsJsonObject("return_object");
-                Double score = returnObject.get("score").getAsDouble();  // score 추출
+
+                JsonElement scoreElement = returnObject.get("score");
+
+                if (scoreElement != null && scoreElement.isJsonPrimitive() && scoreElement.getAsJsonPrimitive().isNumber()) {
+                    try {
+                        score = scoreElement.getAsDouble();
+                    } catch (NumberFormatException e) {
+                        // score가 숫자 형식이 아니면 기본값(0)을 유지
+                        System.out.println("Score is not a valid double, using default value 0");
+                    }
+                } else {
+                    System.out.println("Score is missing or not a number, using default value 0");
+                }
+
                 Pronounce pronounce = Pronounce.builder()
                         .proScore(score)
                         .audioPath(request.getSoundFilePath())
