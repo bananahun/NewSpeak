@@ -20,22 +20,25 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @RestControllerAdvice
 public class GlobalExceptionAdvice {
     // 4xx 예외 처리
-    // @ExceptionHandler(HttpClientErrorException.class)
-    // public ResponseEntity<String> handleClientError(HttpClientErrorException ex) {
-    //     return ResponseEntity.status(ex.getStatusCode()).body("클라이언트 오류: " + ex.getMessage());
-    // }
+    @ExceptionHandler(HttpClientErrorException.class)
+    public ResponseEntity<String> handleClientError(HttpClientErrorException ex) {
+        log.info(ex.getMessage());
+        return ResponseEntity.status(ex.getStatusCode()).body("클라이언트 오류: " + ex.getMessage());
+    }
 
     // 특정 4xx 예외 처리
-    // @ExceptionHandler(ResponseStatusException.class)
-    // public ResponseEntity<String> handleResponseStatusException(ResponseStatusException ex) {
-    //     return ResponseEntity.status(ex.getStatusCode()).body("응답 상태 오류: " + ex.getReason());
-    // }
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<String> handleResponseStatusException(ResponseStatusException ex) {
+        log.info(ex.getMessage());
+        return ResponseEntity.status(ex.getStatusCode()).body("응답 상태 오류: " + ex.getReason());
+    }
 
     // 5xx 예외 처리
-    // @ExceptionHandler(Exception.class)
-    // public ResponseEntity<String> handleServerError(Exception ex) {
-    //     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류: " + ex.getMessage());
-    // }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleServerError(Exception ex) {
+        log.info(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류: " + ex.getMessage());
+    }
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {

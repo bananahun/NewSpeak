@@ -7,4 +7,5 @@ import lombok.NoArgsConstructor;
 @Getter
 public class VocaQuizResult {
     private Integer answerCount;
+    private Integer totalCount;
 }

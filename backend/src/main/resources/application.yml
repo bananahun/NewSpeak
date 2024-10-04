@@ -9,10 +9,6 @@ spring:
         credentials:
           location: 5e01616d4635ae3d07be55d482fad7567834f0c2.json
 
-#  sql:
-#    init:
-#      mode: always
-
   data:
     redis:
       host: localhost
