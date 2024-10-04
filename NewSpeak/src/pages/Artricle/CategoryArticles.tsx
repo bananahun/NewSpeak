@@ -35,10 +35,19 @@ const CategoryArticles: React.FC<CategoryArticlesProps> = ({ categoryId }) => {
     fetchArticles(categoryId, page);
   }, [page, categoryId]);
 
+  // fetchArticles 함수 수정
   const fetchArticles = async (categoryId: number, page: number) => {
     setLoading(true);
     try {
-      const result = await useArticleApi.getArticleCategory(categoryId, page);
+      let result;
+      if (categoryId === 0) {
+        // 카테고리 ID가 0일 경우 전체 기사 조회
+        result = await useArticleApi.getArticleList(page); // 전체 기사 조회 API 사용
+      } else {
+        // 특정 카테고리의 기사 조회
+        result = await useArticleApi.getArticleCategory(categoryId, 0);
+      }
+
       if (result.length === 0) {
         setHasMore(false);
       } else {
