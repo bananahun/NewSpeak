@@ -8,7 +8,7 @@
   display: flex;
   flex-direction: column; /* 세로 방향으로 쌓이도록 설정 */
   align-items: center; /* 가로 중앙 정렬 */
-  width: 70vw; /* 전체 컨테이너 너비 설정 */
+  width: 60vw; /* 전체 컨테이너 너비 설정 */
   padding: 10px 0;
 }
 
@@ -66,7 +66,7 @@
 .publishedDate {
   position: absolute;
   font-size: 0.9em;
-  color: #666;
+  color: var(--font-color);
   bottom: 5px;
   right: 5px;
 }

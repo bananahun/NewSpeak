@@ -38,6 +38,14 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, onWordClick }) => {
       const width = container.clientWidth;
       const height = container.clientHeight;
 
+      const maxSize = Math.max(...data.map(d => d.size));
+      const minSize = Math.min(...data.map(d => d.size));
+
+      const relativeData = data.map(d => ({
+        ...d,
+        size: ((d.size - minSize) / (maxSize - minSize)) * 50 + 40,
+      }));
+
       d3.select(container).select('svg').remove();
 
       const svg = d3
@@ -109,7 +117,7 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, onWordClick }) => {
 
           textElement
             .transition()
-            .duration(1000)
+            .duration(3000)
             .ease(d3.easeLinear)
             .attrTween('transform', function () {
               return d3.interpolateString(
@@ -130,9 +138,9 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, onWordClick }) => {
       cloud<WordData>()
         .size([width, height])
         .words(
-          data.map(d => ({
+          relativeData.map(d => ({
             text: d.text,
-            size: d.size + 10,
+            size: d.size,
             id: d.id,
           })),
         )
@@ -163,6 +171,7 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, onWordClick }) => {
           justifyContent: 'center',
           alignItems: 'center',
           position: 'relative',
+          marginTop: '10px',
         }}
       />
     </div>

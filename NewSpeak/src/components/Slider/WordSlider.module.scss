@@ -1,17 +1,35 @@
 .wordSlider {
   top: 20px;
   width: 35vh;
-  height: 20vh;
+  height: auto;
   text-align: center;
+  pointer-events: none;
+
+  .slide {
+    justify-content: center;
+    align-items: center;
+
+    .wordText {
+      font-size: 40px;
+      font-family: Impact;
+      color: --var(font-color);
+    }
+  }
 }
 
-.slide {
-  justify-content: center;
-  align-items: center;
+.slideButton {
+  position: absolute;
+  left: 52%;
+  bottom: -5px;
+  animation: blink 1s both;
 }
 
-.wordText {
-  font-size: 40px;
-  font-family: Impact;
-  color: --var(font-color);
+@keyframes blink {
+  0%,
+  75% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }

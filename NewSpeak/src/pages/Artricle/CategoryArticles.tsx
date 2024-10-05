@@ -35,16 +35,13 @@ const CategoryArticles: React.FC<CategoryArticlesProps> = ({ categoryId }) => {
     fetchArticles(categoryId, page);
   }, [page, categoryId]);
 
-  // fetchArticles 함수 수정
   const fetchArticles = async (categoryId: number, page: number) => {
     setLoading(true);
     try {
       let result;
       if (categoryId === 0) {
-        // 카테고리 ID가 0일 경우 전체 기사 조회
-        result = await useArticleApi.getArticleList(page); // 전체 기사 조회 API 사용
+        result = await useArticleApi.getArticleList(page);
       } else {
-        // 특정 카테고리의 기사 조회
         result = await useArticleApi.getArticleCategory(categoryId, 0);
       }
 
@@ -70,7 +67,7 @@ const CategoryArticles: React.FC<CategoryArticlesProps> = ({ categoryId }) => {
     setArticleMeta({
       id: article.id,
       title: article.title,
-      imageUrl: article.imageUrl,
+      imageUrl: article.imageUrl || null,
     });
     navigate('/article');
   };
@@ -89,9 +86,9 @@ const CategoryArticles: React.FC<CategoryArticlesProps> = ({ categoryId }) => {
               />
             ) : (
               <img
-                src={noImage} // 이미지가 없는 경우 대체 이미지 사용
+                src={noImage}
                 alt="No Image Available"
-                className={`${styles.articleImage} ${styles.noImage}`} // 스타일 추가
+                className={`${styles.articleImage} ${styles.noImage}`}
               />
             )}
             <div className={styles.articleInfo}>
