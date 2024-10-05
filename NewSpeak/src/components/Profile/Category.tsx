@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'; // 로그인 페이지로 리다
 import useAuthStore from '../../store/AuthStore'; // 로그인 상태를 가져오기 위한 훅
 
 // const Category: React.FC<CategoryProps> = ({ preferredCategories, updatePreferredCategory }) => {
-const Category: React.FC = () => {
+const Category = () => {
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   // 최대 선택 가능한 카테고리 수
   const maxSelectable = 3;

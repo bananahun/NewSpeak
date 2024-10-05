@@ -4,7 +4,6 @@ import styles from './ArticleSearch.module.scss';
 import { useNavigate } from 'react-router-dom';
 import useThemeStore from '../../store/ThemeStore';
 import useArticleStore from '../../store/ArticleStore';
-import useAuthStore from '../../store/AuthStore'; // AuthStore에서 로그인 상태를 가져오기 위해 추가
 import logo from '../../assets/NewSpeak.png';
 import useArticleApi from '../../apis/ArticleApi';
 import logoWhite from '../../assets/NewSpeakWhite.png';
@@ -17,13 +16,11 @@ interface Article {
   publisher: string;
 }
 
-const ArticleSearch: React.FC = () => {
+const ArticleSearch = () => {
   const { setArticleMeta } = useArticleStore();
   const { theme } = useThemeStore();
   const [mainLogo, setMainLogo] = useState(logo);
   const [searchQuery, setSearchQuery] = useState<string>(''); // 검색어 상태
-  const [searchTitle, setSearchTitle] = useState<string>(''); // 제목 입력 상태
-  const [searchContent, setSearchContent] = useState<string>(''); // 본문 입력 상태
   const [searchType, setSearchType] = useState<string>('title'); // 선택된 검색 타입
   const [startDate, setStartDate] = useState<string>(''); // 시작 날짜
   const [endDate, setEndDate] = useState<string>(''); // 종료 날짜
@@ -31,22 +28,30 @@ const ArticleSearch: React.FC = () => {
   const [articles, setArticles] = useState<Article[]>([]); // 검색 결과 상태
   const [showResults, setShowResults] = useState<boolean>(false); // 결과 표시 여부
 
-  const { isLoggedIn } = useAuthStore(); // 로그인 상태를 가져옴
   const navigate = useNavigate(); // 라우팅을 위한 네비게이션 훅
+
+  useEffect(() => {
+    setMainLogo(theme === 'light' ? logo : logoWhite); // 로고 이미지 ���기화
+  });
 
   // 검색 타입 변경 시, 관련 입력 필드를 초기화
   useEffect(() => {
-    console.log('띠로링');
     setSearchQuery('');
-    setSearchTitle('');
-    setSearchContent('');
     setStartDate('');
     setEndDate('');
     setLevel(1); // 난이도도 초기화
     setShowResults(false); // 검색 옵션이 바뀌면 이전 검색 결과를 숨김
   }, [searchType]);
 
-  // 드롭다운에서 검색 타입 변경 핸들러
+  const loadArticleDetail = (article: Article) => {
+    setArticleMeta({
+      id: article.id,
+      title: article.title,
+      imageUrl: article.imageUrl,
+    });
+    navigate('/article');
+  };
+
   const handleSearchTypeChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
@@ -55,14 +60,6 @@ const ArticleSearch: React.FC = () => {
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
-  };
-
-  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTitle(event.target.value);
-  };
-
-  const handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchContent(event.target.value);
   };
 
   const handleStartDateChange = (
@@ -86,14 +83,23 @@ const ArticleSearch: React.FC = () => {
   };
 
   const handleSearch = async () => {
-    if (!isLoggedIn) {
-      alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
-      navigate('/login'); // 로그인 페이지로 리다이렉트
-      return; // 로그인되지 않은 경우 검색 함수 중단
-    }
-
     try {
       let result: Article[] | undefined;
+      let title = '';
+      let content = '';
+
+      // `searchQuery`를 제목과 본문으로 분리하는 로직 추가
+      if (searchType === 'titleContentDate') {
+        // 특정 구분자 ':' 를 사용하여 나눔 (예: "제목:본문 내용")
+        const splitIndex = searchQuery.indexOf(':');
+        if (splitIndex !== -1) {
+          title = searchQuery.slice(0, splitIndex).trim(); // 구분자 앞부분을 제목으로 설정
+          content = searchQuery.slice(splitIndex + 1).trim(); // 구분자 뒷부분을 본문으로 설정
+        } else {
+          title = searchQuery; // 구분자가 없으면 전체를 제목으로
+          content = searchQuery; // 본문은 빈 값으로 설정
+        }
+      }
 
       switch (searchType) {
         case 'title':
@@ -128,8 +134,8 @@ const ArticleSearch: React.FC = () => {
           result = await useElasticApi.getElasticByTitleContentDate(
             startDate,
             endDate,
-            searchTitle,
-            searchContent,
+            title,
+            content,
             0,
           );
           break;
@@ -140,21 +146,12 @@ const ArticleSearch: React.FC = () => {
           result = [];
       }
 
-      setArticles(result || []); // 결과 설정
+      setArticles(result || []);
       setShowResults(true); // 검색 결과를 표시
     } catch (error) {
       console.error(`"${searchQuery}"로 검색한 기사 가져오기 에러:`, error);
       setArticles([]); // 오류 발생 시 빈 배열로 설정하여 오류 방지
     }
-  };
-
-  const loadArticleDetail = (article: Article) => {
-    setArticleMeta({
-      id: article.id,
-      title: article.title,
-      imageUrl: article.imageUrl,
-    });
-    navigate('/article');
   };
 
   return (
@@ -179,34 +176,35 @@ const ArticleSearch: React.FC = () => {
           <option value="level">난이도별 검색</option>
         </select>
 
-        {/* 난이도별 검색 옵션 추가 */}
-        {searchType === 'level' && (
-          <select
-            value={level}
-            onChange={handleLevelChange}
-            className={styles.levelDropdown}
-          >
-            {[1, 2, 3, 4, 5].map(lvl => (
-              <option key={lvl} value={lvl}>
-                레벨 {lvl}
-              </option>
-            ))}
-          </select>
+        {/* 날짜 입력 칸 (옵션에 따라 표시) */}
+        {(searchType.includes('Date') || searchType === 'date') && (
+          <div className={styles.dateInputContainer}>
+            <input
+              type="date"
+              value={startDate}
+              onChange={handleStartDateChange}
+              className={styles.dateInput}
+            />
+            <input
+              type="date"
+              value={endDate}
+              onChange={handleEndDateChange}
+              className={styles.dateInput}
+            />
+          </div>
         )}
 
-        {/* 기존 검색 인풋과 옵션들 유지 */}
-        {searchType !== 'date' &&
-          searchType !== 'titleContentDate' &&
-          searchType !== 'level' && (
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              onKeyPress={handleKeyPress}
-              placeholder="검색어를 입력하세요"
-              className={styles.searchInput}
-            />
-          )}
+        {/* 검색어 입력 필드 */}
+        {searchType !== 'date' && (
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            onKeyPress={handleKeyPress}
+            placeholder="검색어를 입력하세요"
+            className={styles.searchInput}
+          />
+        )}
 
         <button onClick={handleSearch} className={styles.searchButton}>
           검색
@@ -216,7 +214,7 @@ const ArticleSearch: React.FC = () => {
       {/* 검색 결과 표시 */}
       {showResults && (
         <div className={styles.searchResults}>
-          {articles && articles.length > 0 ? (
+          {articles.length > 0 ? (
             articles.map(article => (
               <div
                 key={article.id}
@@ -233,8 +231,8 @@ const ArticleSearch: React.FC = () => {
                 <div className={styles.articleInfo}>
                   <h4 className={styles.title}>{article.title}</h4>
                   <p className={styles.meta}>
-                    {new Date(article.publishedDate).toLocaleDateString()}{' '}
-                    <strong>|</strong> {article.publisher}
+                    {new Date(article.publishedDate).toLocaleDateString()} |{' '}
+                    {article.publisher}
                   </p>
                 </div>
               </div>
