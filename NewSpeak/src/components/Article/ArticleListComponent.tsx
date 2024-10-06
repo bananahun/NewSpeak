@@ -6,7 +6,7 @@ import useArticleStore from '../../store/ArticleStore';
 import useThemeStore from '../../store/ThemeStore';
 import logo from '../../assets/NewSpeak.png';
 import logoWhite from '../../assets/NewSpeakWhite.png';
-import styles from './CategoryArticleList.module.scss';
+import styles from './ArticleListComponent.module.scss';
 import {
   FaAngleLeft,
   FaAnglesLeft,
@@ -25,11 +25,11 @@ interface Article {
   publisher: string;
 }
 
-const CategoryArticleList = ({
+const ArticleListComponent = ({
   categoryId = 0,
   isScrap = false,
 }: {
-  categoryId: number;
+  categoryId?: number;
   isScrap?: boolean;
 }) => {
   const navigate = useNavigate();
@@ -39,21 +39,13 @@ const CategoryArticleList = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [fetchLoading, setFetchLoading] = useState<boolean>(false);
   const [articles, setArticles] = useState<Article[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const articleRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchArticles(categoryId, 0, true);
   }, [categoryId]);
 
-  useEffect(() => {
-    // DOM 요소가 완전히 렌더링된 후에 스크롤을 적용합니다.
-    if (articleRef.current) {
-      setTimeout(() => {
-        articleRef.current!.scrollLeft = 0;
-      }, 0); // 타임아웃으로 약간의 지연을 줘서 DOM이 확실히 렌더링되도록 함
-    }
-  }, [articles]); // articles가 렌더링된 후에 스크롤을 적용
   const fetchArticles = async (
     categoryId: number,
     page: number = 0,
@@ -63,9 +55,9 @@ const CategoryArticleList = ({
       setCurrentPage(0);
       setArticles([]);
     }
+    setFetchLoading(true);
     try {
       let result;
-      setFetchLoading(true);
       if (isScrap) {
         const response = await userApi.getMyArticles(page, 5);
         result = response?.data;
@@ -74,9 +66,7 @@ const CategoryArticleList = ({
       } else {
         result = await useArticleApi.getArticleCategory(categoryId, page);
       }
-      console.log(result);
       if (result && Array.isArray(result)) {
-        console.log(2);
         const formattedArticles = result.map(article => ({
           id: article.id,
           title: article.title,
@@ -149,7 +139,7 @@ const CategoryArticleList = ({
   }, [theme]);
 
   return (
-    <div className={styles.categoryArticleList}>
+    <div className={styles.articleListComponent}>
       {loading ? (
         <LoadingModal />
       ) : articles.length > 0 ? (
@@ -204,4 +194,4 @@ const CategoryArticleList = ({
   );
 };
 
-export default CategoryArticleList;
+export default ArticleListComponent;

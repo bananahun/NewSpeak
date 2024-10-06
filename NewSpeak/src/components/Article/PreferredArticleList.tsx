@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePreferredCategoryStore } from '../../store/CategoryStore'; // zustand store import
 import styles from './PreferredArticleList.module.scss';
-import CategoryArticleList from './CategoryArticleList';
+import ArticleListComponent from './ArticleListComponent';
 import { categories } from '../../utils/Categories';
 
 const PreferredArticleList = () => {
@@ -52,7 +52,7 @@ const PreferredArticleList = () => {
           ALL
         </button>
       </div>
-      {!isLoading && <CategoryArticleList categoryId={selectedCategory} />}
+      {!isLoading && <ArticleListComponent categoryId={selectedCategory} />}
     </div>
   );
 };
