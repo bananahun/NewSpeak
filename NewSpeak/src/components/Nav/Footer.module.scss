@@ -1,0 +1,21 @@
+.footer {
+  width: 100%;
+  padding: 20px;
+  background-color: var(--background-color);
+  color: var(--font-color);
+  text-align: center;
+  border-top: 1px solid var(--border-color);
+
+  .footerContent {
+    display: flex;
+    justify-content: center; /* 가운데 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    flex-wrap: wrap;
+    gap: 10px;
+
+    .copyright {
+      font-size: 8px;
+      font-weight: 600;
+    }
+  }
+}

@@ -7,6 +7,9 @@
   color: var(--font-color);
   padding: 12px;
   border-right: 0.1px solid var(--font-color);
+  display: flex; /* 플렉스 박스 사용 */
+  flex-direction: column; /* 세로 정렬 */
+  justify-content: space-between; /* 위아래 공간 분배 */
 
   .logo {
     display: flex;
@@ -25,18 +28,22 @@
     margin-top: 20px;
     display: flex;
     flex-direction: column;
+    flex-grow: 1; /* 공간을 채워서 푸터가 하단에 고정되도록 설정 */
+    gap: 12px; /* 링크 사이 간격 추가 */
 
     li {
-      border-radius: 12px;
+      border-radius: 8px;
       cursor: pointer;
-      border-bottom: 1px solid var(--font-color);
+      // border-bottom: 1px solid var(--font-color);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
       background-color: var(--background-color);
       color: var(--font-color);
-      font-size: 20px;
+      font-size: 18px; /* 글자 크기 조금 줄임 */
+      // margin: 0 0 10px 0; /* 링크 사이 간격 추가 */
     }
 
     li > a {
-      border-radius: 12px;
+      border-radius: 8px;
       border: none;
 
       span {
@@ -70,13 +77,41 @@
 .logout {
   display: flex;
   align-items: center;
-  justify-self: center;
+  justify-content: center; /* 버튼 내용 중앙 정렬 */
   cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  margin-top: 10px;
+  background-color: var(--background-color);
+  &:hover {
+    background-color: var(--main-color);
+    color: var(--background-color);
+  }
 }
 
 .addWord {
   display: flex;
   align-items: center;
-  justify-self: center;
+  justify-content: center; /* 버튼 내용 중앙 정렬 */
   cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  margin-top: 10px;
+  background-color: var(--background-color);
+  &:hover {
+    background-color: var(--main-color);
+    color: var(--background-color);
+  }
+}
+
+/* 푸터 컨테이너 스타일 */
+.footerContainer {
+  display: flex; /* 플렉스 사용 */
+  justify-content: center; /* 중앙 정렬 */
+  align-items: center; /* 수직 중앙 정렬 */
+  width: 100%; /* 네브바 전체 너비 */
+  height: 60px; /* 푸터 높이 */
+  background-color: var(--footer-background-color);
+  color: var(--footer-font-color);
+  margin-top: auto; /* 하단에 고정 */
 }
