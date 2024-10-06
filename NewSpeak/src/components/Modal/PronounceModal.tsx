@@ -77,9 +77,9 @@ const PronounceModal = ({ isOpen, onClose, text, sourcePage }: PronounceModalPro
         <p>{text}</p>
 
         {isRecording ? (
-          <button onClick={stopRecording}>녹음 중지</button>
+          <button onClick={stopRecording}>발음테스트 중지</button>
         ) : (
-          <button onClick={startRecording}>녹음 시작</button>
+          <button onClick={startRecording}>발음테스트 시작</button>
         )}
 
         {mp3Url && (

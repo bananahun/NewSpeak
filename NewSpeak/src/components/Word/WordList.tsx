@@ -26,10 +26,11 @@ const WordList = () => {
   const [flipped, setFlipped] = useState<number | null>(null);
   const [isPronounceModalOpen, setPronounceModalOpen] = useState(false);
   const [selectedText, setSelectedText] = useState<string>('');
-  const [isWordModalOpen, setWordModalOpen] = useState(false); // 모달 상태 추가
+  const [isWordModalOpen, setWordModalOpen] = useState<boolean>(false); // 모달 상태 추가
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
   const {vocaId,setVocaId} = useVocaStore() 
   const nav = useNavigate()
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
   useEffect(() => {
     const fetchWordDetails = async () => {
@@ -84,6 +85,32 @@ const WordList = () => {
     }
   };
 
+  const handleSpeak = (word:string) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const speech = new SpeechSynthesisUtterance(word);
+      speech.lang = 'en-US';
+      speech.onstart = () => {
+        console.log('Speech started');
+        setIsSpeaking(true);
+      };
+
+      speech.onend = () => {
+        console.log('Speech ended');
+        setIsSpeaking(false);
+      };
+
+      speech.onerror = event => {
+        console.error('SpeechSynthesis error', event);
+        setIsSpeaking(false);
+      };
+
+      window.speechSynthesis.speak(speech);
+    } else {
+      console.log('Browser does not support Text-to-Speech');
+    }
+  };
+
   const handleWordDeleteClick = async (wordId: number) => {
     if (!vocaId) {
       return
@@ -107,18 +134,14 @@ const WordList = () => {
       {(!words || words.length === 0) &&  (
             <div>단어가 없습니다.</div>
           )}
-      <div className={styles.wordlist}>
-          <button className={styles.testButton}  onClick={handleTestButtonClick}>
-            테스트
-          </button>
-      </div>
+      
       <div className={styles.container}>
         <div className={styles.wordlist2}>
           {words && words.length !== 0 && words.map((word, index) => (
             <div key={index} className={styles.card}>
               <div className={styles.cardInner}>
                 <div className={styles.cardContent}>
-                  {flipped === index ? (
+                  {/* {flipped === index ? (
                     <>
                       <h3>{word.content}</h3>
                       <div className={styles.examplesContainer}>
@@ -137,16 +160,41 @@ const WordList = () => {
                       </button>
                     </>
                   ) : (
-                    <>
+                    <> */}
+                    <div className={styles.cardContentTitle}>
                       <h3>{word.content}</h3>
+                      <div
+                          className={styles.iconButton}
+                          title="단어 삭제"
+                          onClick={() => handleWordDeleteClick(word.wordId)} // 단어 삭제 핸들러 호출
+                        >
+                          x
+                        </div>
+                      </div>
                       <div className={styles.meaningsContainer}>
-                        {word.meaningDatas.map((meaning, meaningIndex) => (
+                        {word.meaningDatas.slice(0,2).map((meaning, meaningIndex) => (
                           <div key={meaningIndex} className={styles.meaningBox}>
                             <p>{meaning.meaning}</p>
                           </div>
                         ))}
                       </div>
                       <div className={styles.buttonContainer}>
+                        <button
+                          className={styles.detailButton}
+                          title="예문 확인"
+                          onClick={() => openWordModal(word)}
+                        >
+                          예문 보기
+                        </button>
+                        <button
+                          className={styles.detailButton}
+                          title="발음 듣기"
+                          onClick={() => handleSpeak(word.content)}
+                        >
+                          발음 듣기
+                        </button>
+                      </div>
+                      {/* <div className={styles.buttonContainer}>
                         <div
                           className={styles.iconButton}
                           title="발음 평가"
@@ -164,22 +212,21 @@ const WordList = () => {
                         >
                           <FaBook />
                         </div>
-                        <div
-                          className={styles.iconButton}
-                          title="단어 삭제"
-                          onClick={() => handleWordDeleteClick(word.wordId)} // 단어 삭제 핸들러 호출
-                        >
-                          🗑️
-                        </div>
-                      </div>
-                    </>
-                  )}
+                        
+                      </div> */}
+                    {/* </>
+                  )} */}
                 </div>
               </div>
             </div>
           ))}
           
         </div>
+      </div>
+      <div className={styles.wordlist}>
+          <button className={styles.testButton}  onClick={handleTestButtonClick}>
+            테스트
+          </button>
       </div>
       {/* 발음 평가 모달창 */}
       <PronounceModal

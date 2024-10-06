@@ -96,7 +96,6 @@ const ArticleOriginal = ({
             </p>
           </div>
         ))}
-        <p>{selectedSentenceId}</p>
       </div>
       <SentenceDetailModal
         isOpen={sentenceDetailModalOpen}
