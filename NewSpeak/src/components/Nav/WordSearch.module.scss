@@ -22,6 +22,7 @@
 
   .searchBar {
     position: absolute;
+    align-content: center;
     top: 0;
     left: 12rem;
     width: 50vw;
@@ -78,7 +79,8 @@
         padding: 15px;
         background: #f0f0f0;
         border-radius: 8px;
-        margin-bottom: 15px;
+        margin: 10px;
+        padding-top: 10px;
         border: 1px solid #ddd;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s;
@@ -92,7 +94,7 @@
         .wordExampleKorean {
           margin: 10px 0;
           padding: 8px 10px;
-          background: #ffffff;
+          background: var(--background-color);
           border: 1px solid var(--contrast-color);
           border-radius: 5px;
         }
@@ -121,4 +123,48 @@
       animation: slideOut 0.5s ease forwards;
     }
   }
+}
+
+.addButtonContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+
+  .addButton {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: var(--main-color);
+    border: 2px solid var(--main-color);
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: var(--contrast-color);
+      border-color: var(--contrast-color);
+      color: var(--background-color);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active {
+      background: var(--main-color);
+      color: #ffffff;
+      transform: translateY(0);
+      box-shadow: none;
+    }
+  }
+}
+.noResults {
+  display: flex; /* Flexbox 사용 */
+  justify-content: center; /* 가로 중앙 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
+  height: 100%; /* 부모 컨테이너의 전체 높이 사용 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  font-size: 18px; /* 텍스트 크기 조정 */
+  font-weight: bold; /* 글자 두껍게 */
+  color: var(--contrast-color); /* 색상 변경 */
 }
