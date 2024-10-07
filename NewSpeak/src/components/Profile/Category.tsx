@@ -2,39 +2,37 @@ import React, { useEffect, useState } from 'react';
 import styles from './Category.module.scss';
 import { usePreferredCategoryStore } from '../../store/CategoryStore';
 import { categories } from '../../utils/Categories';
-import { useNavigate } from 'react-router-dom'; // 로그인 페이지로 리다이렉트 하기 위해
-import useAuthStore from '../../store/AuthStore'; // 로그인 상태를 가져오기 위한 훅
+import { useNavigate } from 'react-router-dom';
+import useAuthStore from '../../store/AuthStore';
 
-// const Category: React.FC<CategoryProps> = ({ preferredCategories, updatePreferredCategory }) => {
-const Category = () => {
+const Category: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
-  // 최대 선택 가능한 카테고리 수
-  const maxSelectable = 3;
-  // const { preferredCategories, getPreferredCategory, updatePreferredCategory } = usePreferredCategoryStore();
   const { preferredCategories, getPreferredCategory, updatePreferredCategory } =
     usePreferredCategoryStore();
   const [selectedCategories, setSelectedCategories] =
     useState<number[]>(preferredCategories);
-  // 설정된 카테고리들
+  const { isLoggedIn } = useAuthStore();
+  const navigate = useNavigate();
 
-  const { isLoggedIn } = useAuthStore(); // 로그인 상태 가져오기
-  const navigate = useNavigate(); // 로그인 페이지로 이동하기 위한 훅
+  const minSelectable = 1;
+  const maxSelectable = 5;
 
   useEffect(() => {
     const fetchPreferredCategories = async () => {
       if (preferredCategories.length === 0) {
-        // 값이 없으면
-        await getPreferredCategory(handleAuthError); // 서버에 요청
+        await getPreferredCategory(handleAuthError);
       }
     };
-    console.log(preferredCategories);
-    fetchPreferredCategories(); // 선호 카테고리 요청
+    fetchPreferredCategories();
   }, []);
 
-  // 로그인 오류 처리 함수
+  useEffect(() => {
+    setSelectedCategories(preferredCategories);
+  }, [preferredCategories]);
+
   const handleAuthError = () => {
     alert('로그인이 필요합니다. 확인을 누르면 로그인 페이지로 이동합니다.');
-    navigate('/login'); // 로그인 페이지로 이동
+    navigate('/login');
   };
 
   const handleCategoryClick = (category: number) => {
@@ -42,24 +40,44 @@ const Category = () => {
       handleAuthError();
       return;
     }
-    setSelectedCategories(prev => {
-      const currentCategories = prev || []; // prev가 null일 경우 빈 배열로 초기화
 
-      // 이미 선택된 경우, 선택 해제
+    setSelectedCategories(prev => {
+      const currentCategories = prev || [];
+
+      // 이미 선택된 경우: 최소 선택 갯수를 충족하는 경우에만 선택 해제 가능
       if (currentCategories.includes(category)) {
-        const updatedCategories = currentCategories.filter(c => c !== category);
-        updatePreferredCategory(updatedCategories, handleAuthError); // 서버에 변경된 데이터 업데이트
-        return updatedCategories;
+        if (currentCategories.length > minSelectable) {
+          const updatedCategories = currentCategories.filter(
+            c => c !== category,
+          );
+          updatePreferredCategory(updatedCategories, handleAuthError);
+          return updatedCategories;
+        } else {
+          alert(`최소 ${minSelectable}개의 카테고리를 선택해야 합니다.`);
+          return currentCategories;
+        }
       }
-      // 새로 선택하려는 경우, 최대 선택 수를 초과하지 않으면 추가
+
+      // 새로 선택하려는 경우: 최대 선택 갯수를 초과하지 않으면 추가
       else if (currentCategories.length < maxSelectable) {
         const updatedCategories = [...currentCategories, category];
-        updatePreferredCategory(updatedCategories, handleAuthError); // 서버에 변경된 데이터 업데이트
+        updatePreferredCategory(updatedCategories, handleAuthError);
         return updatedCategories;
+      } else {
+        alert(`최대 ${maxSelectable}개의 카테고리만 선택할 수 있습니다.`);
+        return currentCategories;
       }
-      // 최대 선택 수를 초과하면 현재 상태 유지
-      return currentCategories;
     });
+  };
+
+  const handleRemoveCategory = (category: number) => {
+    if (selectedCategories.length > minSelectable) {
+      const updatedCategories = selectedCategories.filter(c => c !== category);
+      setSelectedCategories(updatedCategories);
+      updatePreferredCategory(updatedCategories, handleAuthError);
+    } else {
+      alert(`최소 ${minSelectable}개의 카테고리를 선택해야 합니다.`);
+    }
   };
 
   const toggleDropdown = () => {
@@ -89,7 +107,7 @@ const Category = () => {
                 <div
                   key={index + 1}
                   className={`${styles.dropdownItem} ${
-                    selectedCategories?.includes(index + 1)
+                    selectedCategories.includes(index + 1)
                       ? styles.selected
                       : ''
                   }`}
@@ -102,15 +120,30 @@ const Category = () => {
           )}
         </div>
 
-        {/* 드롭다운 우측에 선택된 카테고리 태그 표시 */}
+        {/* 드롭다운 우측에 선택된 카테고리 태그 표시, X 버튼 포함 */}
         <div className={styles.selectedCategories}>
-          {selectedCategories?.map((categoryIndex, index) => (
+          {selectedCategories.map((categoryIndex, index) => (
             <span key={index} className={styles.selectedCategory}>
-              {categories[categoryIndex]}{' '}
-              {/* 선택된 카테고리 인덱스를 사용해 해당 카테고리 이름을 가져옴 */}
+              {categories[categoryIndex]}
+              {/* X 버튼 추가하여 카테고리 제거 */}
+              <span
+                className={styles.removeButton}
+                onClick={() => handleRemoveCategory(categoryIndex)}
+              >
+                &times; {/* × 문자 또는 다른 아이콘 사용 가능 */}
+              </span>
             </span>
           ))}
         </div>
+      </div>
+
+      {/* 선택된 카테고리 수에 따른 메시지 또는 상태 표시 */}
+      <div className={styles.categoryStatus}>
+        {selectedCategories.length < minSelectable
+          ? `최소 ${minSelectable}개의 카테고리를 선택해야 합니다.`
+          : selectedCategories.length > maxSelectable
+          ? `최대 ${maxSelectable}개의 카테고리만 선택할 수 있습니다.`
+          : `선택된 카테고리: ${selectedCategories.length} / ${maxSelectable}`}
       </div>
     </div>
   );

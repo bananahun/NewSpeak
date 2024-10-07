@@ -11,10 +11,12 @@ interface ResultProps {
 const Result = ({ score, total, answers, correctAnswers }: ResultProps) => {
   return (
     <div className={styles.resultContainer}>
+      <div className={styles.headContainer}>
       <h2>시험 완료!</h2>
       <p>
         최종 점수: {score} / {total}
       </p>
+      </div>
       <h3>답안 결과:</h3>
       <div className={styles.answersContainer}>
         <div className={styles.leftColumn}>

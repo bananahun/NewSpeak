@@ -24,7 +24,7 @@ const WordTest = ({ words, onTestComplete }: WordTestProps) => {
   const [userAnswers, setUserAnswers] = useState<string[]>(
     Array(words.length).fill(''),
   );
-  const [timer, setTimer] = useState(6); // 각 문제당 6초
+  const [timer, setTimer] = useState(10); // 각 문제당 6초
   const inputRef = useRef<HTMLInputElement | null>(null); // input ref
 
   const currentWord = words[currentQuestionIndex];
@@ -44,7 +44,7 @@ const WordTest = ({ words, onTestComplete }: WordTestProps) => {
 
     if (nextIndex < words.length) {
       setCurrentQuestionIndex(nextIndex);
-      setTimer(6); // 타이머 리셋
+      setTimer(10); // 타이머 리셋
     } else {
       onTestComplete(score + (isCorrect ? 1 : 0), userAnswers); // 최종 점수와 답안 전달
     }
@@ -53,16 +53,16 @@ const WordTest = ({ words, onTestComplete }: WordTestProps) => {
   useEffect(() => {
     const countdown = setInterval(() => {
       setTimer(prev => {
-        if (prev === 1) {
+        if (prev === 0) {
           handleAnswerSubmit(false, ''); // 시간이 다 지나면 자동으로 문제 제출
-          return 0; // 타이머를 0으로 설정
+          return 10; // 타이머를 0으로 설정
         }
         return prev - 1;
       });
     }, 1000);
 
     return () => clearInterval(countdown);
-  }, []);
+  }, [currentQuestionIndex]);
 
   useEffect(() => {
     inputRef.current?.focus(); // 컴포넌트가 마운트될 때 입력창에 포커스
@@ -79,11 +79,22 @@ const WordTest = ({ words, onTestComplete }: WordTestProps) => {
 
   return (
     <div className={styles.wordTestContainer}>
-      <h1>단어 시험</h1>
-      <h2>{currentWord.meaningDatas[0].meaning}</h2>
       <p>
         문제 {currentQuestionIndex + 1} / {words.length}
       </p>
+      <div className={styles.questionContainer}>
+        <h2 className={styles.question}>{currentWord.meaningDatas[0].meaning}</h2>
+        <div className={styles.timerContainer}>
+          <div className={styles.timeWatchWrapper}>
+            <TimeWatch timer={timer} />
+          </div>
+          <p className={styles.timer}>남은 시간: {timer}초</p>
+        </div>
+      </div>
+
+
+      <div className={styles.inputContainer}>
+
       <input
         type="text"
         className={styles.answerInput}
@@ -111,8 +122,8 @@ const WordTest = ({ words, onTestComplete }: WordTestProps) => {
       >
         제출
       </button>
-      <TimeWatch timer={timer} />
-      <p className={styles.timer}>남은 시간: {timer}초</p>
+      </div>
+
     </div>
   );
 };
