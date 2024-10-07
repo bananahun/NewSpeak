@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import cloud from 'd3-cloud';
 import styles from './WordCLoud.module.scss';
@@ -24,6 +24,7 @@ interface WordData {
 
 interface WordCloudProps {
   data: WordData[];
+  dashboard?: boolean;
   onWordClick?: (word: string, id: number) => void; // 클릭 시 단어와 ID 전달
 }
 
@@ -34,16 +35,18 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, onWordClick }) => {
     const drawWordCloud = () => {
       const container = containerRef.current;
       if (!container) return;
+      let width: number;
+      let height: number;
 
-      const width = container.clientWidth;
-      const height = container.clientHeight;
+      width = Math.max(container.clientWidth - 160, 160);
+      height = container.clientHeight;
 
       const maxSize = Math.max(...data.map(d => d.size));
       const minSize = Math.min(...data.map(d => d.size));
 
       const relativeData = data.map(d => ({
         ...d,
-        size: ((d.size - minSize) / (maxSize - minSize)) * 50 + 40,
+        size: (d.size - minSize) / (maxSize - minSize) + 30,
       }));
 
       d3.select(container).select('svg').remove();
@@ -90,60 +93,7 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, onWordClick }) => {
               onWordClick(d.text as string, (d as WordData).id); // 클릭 시 단어와 ID 전달
             }
           });
-
-        // texts.each(function (d: cloud.Word) {
-        //   return moveWord(d3.select(this), d);
-        // });
       };
-
-      // function moveWord(
-      //   textElement: d3.Selection<
-      //     SVGTextElement,
-      //     cloud.Word,
-      //     SVGGElement,
-      //     unknown
-      //   >,
-      //   d: cloud.Word,
-      // ) {
-      //   let currentX = d.x;
-      //   let currentY = d.y;
-
-      //   function continuousMove() {
-      //     const targetX = currentX + (Math.random() * 30 - 15);
-      //     const targetY = currentY + (Math.random() * 30 - 15);
-
-      //     const bbox = textElement.node()?.getBBox();
-      //     const textWidth = bbox ? bbox.width : 0;
-      //     const textHeight = bbox ? bbox.height : 0;
-
-      //     const boundedTargetX = Math.max(
-      //       -width / 2 + textWidth / 2,
-      //       Math.min(targetX, width / 2 - textWidth / 2),
-      //     );
-      //     const boundedTargetY = Math.max(
-      //       -height / 2.1 + textHeight / 2,
-      //       Math.min(targetY, height / 2 - textHeight / 2),
-      //     );
-
-      //     textElement
-      //       .transition()
-      //       .duration(3000)
-      //       .ease(d3.easeLinear)
-      //       .attrTween('transform', function () {
-      //         return d3.interpolateString(
-      //           `translate(${currentX}, ${currentY}) rotate(${d.rotate})`,
-      //           `translate(${boundedTargetX}, ${boundedTargetY}) rotate(${d.rotate})`,
-      //         );
-      //       })
-      //       .on('end', function () {
-      //         currentX = boundedTargetX;
-      //         currentY = boundedTargetY;
-      //         continuousMove();
-      //       });
-      //   }
-
-      //   continuousMove();
-      // }
 
       cloud<WordData>()
         .size([width, height])
@@ -174,8 +124,8 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, onWordClick }) => {
         ref={containerRef}
         id="word-cloud"
         style={{
-          width: '35vh',
-          height: '80vh',
+          width: '100%',
+          height: '100%',
           overflow: 'hidden',
           display: 'flex',
           justifyContent: 'center',

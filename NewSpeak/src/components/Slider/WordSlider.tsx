@@ -60,10 +60,6 @@ const WordSlider = ({
   }, [isSliding]);
 
   useEffect(() => {
-    console.log(newIndexBuffer);
-  }, [newIndexBuffer]);
-
-  useEffect(() => {
     if (sliderRef.current) {
       sliderRef.current.slickPause();
       setAutoPlay(false);
@@ -107,20 +103,24 @@ const WordSlider = ({
       {!isLoading && (
         <>
           <div className={styles.wordSlider}>
-            <Slider {...sliderSettings} ref={sliderRef}>
+            <Slider
+              {...sliderSettings}
+              ref={sliderRef}
+              className={styles.slide}
+            >
               {words.map((word, index) => (
-                <div key={index} className={styles.slide}>
+                <div key={index}>
                   <h2 className={styles.wordText}>{word.text}</h2>
                 </div>
               ))}
             </Slider>
-          </div>
-          <div className={styles.slideButton} key={animationKey}>
-            {autoPlay ? (
-              <FaPause size={25} onClick={handleStopAutoChange} />
-            ) : (
-              <FaPlay size={25} onClick={handlePlayAutoChange} />
-            )}
+            <div className={styles.slideButton} key={animationKey}>
+              {autoPlay ? (
+                <FaPause size={25} onClick={handleStopAutoChange} />
+              ) : (
+                <FaPlay size={25} onClick={handlePlayAutoChange} />
+              )}
+            </div>
           </div>
         </>
       )}
