@@ -75,65 +75,75 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, onWordClick }) => {
           )
           .text((d: cloud.Word) => d.text as string)
           .style('cursor', 'pointer')
+          .on('mouseenter', function (event, d) {
+            d3.select(this).style('transform', function () {
+              return `translate(${d.x}px, ${d.y}px) rotate(${d.rotate}deg) scale(1.05)`;
+            });
+          })
+          .on('mouseleave', function (event, d) {
+            d3.select(this).style('transform', function () {
+              return `translate(${d.x}px, ${d.y}px) rotate(${d.rotate}deg) scale(1)`;
+            });
+          })
           .on('click', (event, d) => {
             if (onWordClick) {
               onWordClick(d.text as string, (d as WordData).id); // 클릭 시 단어와 ID 전달
             }
           });
 
-        texts.each(function (d: cloud.Word) {
-          return moveWord(d3.select(this), d);
-        });
+        // texts.each(function (d: cloud.Word) {
+        //   return moveWord(d3.select(this), d);
+        // });
       };
 
-      function moveWord(
-        textElement: d3.Selection<
-          SVGTextElement,
-          cloud.Word,
-          SVGGElement,
-          unknown
-        >,
-        d: cloud.Word,
-      ) {
-        let currentX = d.x;
-        let currentY = d.y;
+      // function moveWord(
+      //   textElement: d3.Selection<
+      //     SVGTextElement,
+      //     cloud.Word,
+      //     SVGGElement,
+      //     unknown
+      //   >,
+      //   d: cloud.Word,
+      // ) {
+      //   let currentX = d.x;
+      //   let currentY = d.y;
 
-        function continuousMove() {
-          const targetX = currentX + (Math.random() * 30 - 15);
-          const targetY = currentY + (Math.random() * 30 - 15);
+      //   function continuousMove() {
+      //     const targetX = currentX + (Math.random() * 30 - 15);
+      //     const targetY = currentY + (Math.random() * 30 - 15);
 
-          const bbox = textElement.node()?.getBBox();
-          const textWidth = bbox ? bbox.width : 0;
-          const textHeight = bbox ? bbox.height : 0;
+      //     const bbox = textElement.node()?.getBBox();
+      //     const textWidth = bbox ? bbox.width : 0;
+      //     const textHeight = bbox ? bbox.height : 0;
 
-          const boundedTargetX = Math.max(
-            -width / 2 + textWidth / 2,
-            Math.min(targetX, width / 2 - textWidth / 2),
-          );
-          const boundedTargetY = Math.max(
-            -height / 2.1 + textHeight / 2,
-            Math.min(targetY, height / 2 - textHeight / 2),
-          );
+      //     const boundedTargetX = Math.max(
+      //       -width / 2 + textWidth / 2,
+      //       Math.min(targetX, width / 2 - textWidth / 2),
+      //     );
+      //     const boundedTargetY = Math.max(
+      //       -height / 2.1 + textHeight / 2,
+      //       Math.min(targetY, height / 2 - textHeight / 2),
+      //     );
 
-          textElement
-            .transition()
-            .duration(3000)
-            .ease(d3.easeLinear)
-            .attrTween('transform', function () {
-              return d3.interpolateString(
-                `translate(${currentX}, ${currentY}) rotate(${d.rotate})`,
-                `translate(${boundedTargetX}, ${boundedTargetY}) rotate(${d.rotate})`,
-              );
-            })
-            .on('end', function () {
-              currentX = boundedTargetX;
-              currentY = boundedTargetY;
-              continuousMove();
-            });
-        }
+      //     textElement
+      //       .transition()
+      //       .duration(3000)
+      //       .ease(d3.easeLinear)
+      //       .attrTween('transform', function () {
+      //         return d3.interpolateString(
+      //           `translate(${currentX}, ${currentY}) rotate(${d.rotate})`,
+      //           `translate(${boundedTargetX}, ${boundedTargetY}) rotate(${d.rotate})`,
+      //         );
+      //       })
+      //       .on('end', function () {
+      //         currentX = boundedTargetX;
+      //         currentY = boundedTargetY;
+      //         continuousMove();
+      //       });
+      //   }
 
-        continuousMove();
-      }
+      //   continuousMove();
+      // }
 
       cloud<WordData>()
         .size([width, height])

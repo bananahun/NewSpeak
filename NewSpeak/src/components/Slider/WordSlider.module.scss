@@ -1,6 +1,6 @@
 .wordSlider {
   top: 20px;
-  width: 35vh;
+  width: 250px;
   height: auto;
   text-align: center;
   pointer-events: none;
@@ -12,16 +12,23 @@
     .wordText {
       font-size: 40px;
       font-family: Impact;
-      color: --var(font-color);
+      color: var(--font-color);
     }
   }
 }
 
 .slideButton {
   position: absolute;
-  left: 52%;
-  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -23px;
   animation: blink 1s both;
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateX(-50%) scale(1.2);
+  }
 }
 
 @keyframes blink {

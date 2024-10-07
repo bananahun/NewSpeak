@@ -21,7 +21,7 @@ const PrivateRoute = () => {
     if (!isLoggedIn && !isLoading) {
       mySwal(
         '로그인이 필요합니다.',
-        '확인을 누르면 로그인 페이지로 이동합니다.',
+        '',
         'warning',
         '',
         true,
@@ -29,7 +29,7 @@ const PrivateRoute = () => {
         '확인',
         '',
       ).then(() => {
-        navigate('/login');
+        navigate('/welcome');
       });
     }
   }, [isLoggedIn, isLoading, navigate]);
