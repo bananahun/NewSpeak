@@ -4,6 +4,7 @@ import com.ssafy.newspeak.article.controller.AddWordRequest;
 import com.ssafy.newspeak.user.entity.User;
 import com.ssafy.newspeak.user.repository.UserRepo;
 import com.ssafy.newspeak.user.repository.dto.VocaInfoDto;
+import com.ssafy.newspeak.voca.controller.DeleteWordRequest;
 import com.ssafy.newspeak.voca.entity.VocaWord;
 import com.ssafy.newspeak.voca.entity.VocaWordId;
 import com.ssafy.newspeak.voca.repository.VocaRepo;
@@ -105,4 +106,13 @@ public class VocaService {
         return wordQuizs;
     }
 
+    public void deleteWord(DeleteWordRequest deleteWordRequest, Long userId) {
+        Voca voca=vocaRepo.findById(deleteWordRequest.getVocaId()).orElseThrow(NoSuchElementException::new);
+        if(!userId.equals(voca.getUser().getId())){
+            throw new AccessDeniedException("not your voca");
+        }
+        VocaWordId vocaWordId=new VocaWordId(deleteWordRequest);
+        VocaWord vocaWord=vocaWordRepo.findById(vocaWordId).orElseThrow(NoSuchElementException::new);
+        vocaWordRepo.delete(vocaWord);
+    }
 }

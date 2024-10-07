@@ -58,7 +58,7 @@ public class MyPageController {
     @GetMapping("/articles")
     public ResponseEntity<Page<ArticleInfoDto>> getArticle(@RequestParam("page") int page, @RequestParam("size") int size) {
         MyUserDetails userDetails=AuthUtil.getUserDetails();
-        Pageable pageable=PageRequest.of(0,10);
+        Pageable pageable=PageRequest.of(page,size);
         return ResponseEntity.ok().body(userArticleService.getAllUserArticles(userDetails.getUserId(),pageable));
     }
 
@@ -79,7 +79,8 @@ public class MyPageController {
 
     @PostMapping("/categories")
     public ResponseEntity<Void> postCategories(@RequestBody List<Long> categoryIds) {
-        if(categoryIds.size()>3){ return ResponseEntity.badRequest().build(); }
+//        if(categoryIds.size()>3){ return ResponseEntity.badRequest().build(); }
+        //프론트가 검증
 
         MyUserDetails userDetails=AuthUtil.getUserDetails();
         List<UserCategoryId> userCategoryIds=new ArrayList<>();

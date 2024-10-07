@@ -11,16 +11,11 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface VocaWordRepo extends JpaRepository<VocaWord, VocaWordId> {
-//    @Query("select new com.ssafy.newspeak.voca.repository.dto.WordDetail(w.content,w.wordMeanings) "+
-//            "FROM Voca v "+
-//            "JOIN VocaWord vw ON v.id = vw.vocaWordId.vocaId "+
-//            "JOIN Word w ON vw.vocaWordId.wordId = w.id "+
-//            "WHERE v.id =:vocaId")
     @Query("SELECT w " +
         "FROM Voca v " +
         "JOIN VocaWord vw ON v.id = vw.vocaWordId.vocaId " +
         "JOIN Word w ON vw.vocaWordId.wordId = w.id " +
-        "JOIN FETCH w.wordMeanings wm " +
+//        "JOIN FETCH w.wordMeanings wm " + //fetch join  대신 batch size로 word에 wordMeanings 조회
         "WHERE v.id = :vocaId")
     List<Word> findVocaWordsByVocaId(Long vocaId);
 

@@ -1,5 +1,6 @@
 package com.ssafy.newspeak.voca.entity;
 
+import com.ssafy.newspeak.voca.controller.DeleteWordRequest;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
@@ -17,5 +18,10 @@ public class VocaWordId implements Serializable {
     public VocaWordId(Long vocaId, Long wordId) {
         this.vocaId = vocaId;
         this.wordId = wordId;
+    }
+
+    public VocaWordId(DeleteWordRequest deleteWordRequest){
+        this.vocaId = deleteWordRequest.getVocaId();
+        this.wordId = deleteWordRequest.getWordId();
     }
 }
