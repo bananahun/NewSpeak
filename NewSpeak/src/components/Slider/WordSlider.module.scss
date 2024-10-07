@@ -1,13 +1,13 @@
 .wordSlider {
-  top: 20px;
+  position: relative;
   width: 250px;
-  height: auto;
+  height: 60px;
   text-align: center;
-  pointer-events: none;
 
   .slide {
     justify-content: center;
     align-items: center;
+    pointer-events: none;
 
     .wordText {
       font-size: 40px;
@@ -20,8 +20,8 @@
 .slideButton {
   position: absolute;
   left: 50%;
+  bottom: -35px;
   transform: translateX(-50%);
-  bottom: -23px;
   animation: blink 1s both;
   transition: transform 0.2s ease-in-out;
   cursor: pointer;

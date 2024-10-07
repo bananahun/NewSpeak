@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Radar,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-} from 'recharts';
+import { renderRadarChart } from '../../utils/Chart';
 import styles from './ReportList.module.scss';
-import axiosInstance from '../../apis/axiosConfig';
+import userApi from '../../apis/UserApi';
 import { useNavigate } from 'react-router-dom';
 import LoadingModal from '../../components/Modal/LoadingModal';
 
@@ -40,6 +34,7 @@ interface FeedbackContent {
 
 const ReportList = () => {
   const navigate = useNavigate();
+  const { getReportList } = userApi;
   const [reportData, setReportData] = useState<Report[]>([]);
   const [parsedReportData, setParsedReportData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -48,79 +43,11 @@ const ReportList = () => {
     navigate('/report', { state: { reportId } });
   };
 
-  const renderRadarChart = (report: any) => {
-    const data = [
-      {
-        subject: '명료성',
-        score: report.feedback.clarity.score,
-        fullMark: 100,
-      },
-      {
-        subject: '이해력',
-        score: report.feedback.comprehension.score,
-        fullMark: 100,
-      },
-      {
-        subject: '표현력',
-        score: report.feedback.expressiveness.score,
-        fullMark: 100,
-      },
-      {
-        subject: '문법',
-        score: report.feedback.grammar.score,
-        fullMark: 100,
-      },
-      {
-        subject: '어휘',
-        score: report.feedback.vocabulary.score,
-        fullMark: 100,
-      },
-    ];
-
-    const renderCustomTick = (props: any) => {
-      const { payload, x, y, textAnchor, ...rest } = props;
-      return (
-        <text
-          {...rest}
-          x={x}
-          y={y + 1.35}
-          textAnchor="middle"
-          fill="var(--font-color)"
-          fontSize="12px"
-        >
-          {payload.value}
-        </text>
-      );
-    };
-
-    return (
-      <RadarChart
-        width={170}
-        height={150}
-        cx="50%"
-        cy="50%"
-        outerRadius="80%"
-        data={data}
-      >
-        <PolarGrid />
-        <PolarAngleAxis dataKey="subject" tick={renderCustomTick} />
-        <PolarRadiusAxis angle={30} domain={[0, 20]} tick={false} />
-        <Radar
-          name="Feedback"
-          dataKey="score"
-          stroke="var(--accent-color)"
-          fill="var(--accent-color)"
-          fillOpacity={0.6}
-        />
-      </RadarChart>
-    );
-  };
-
   useEffect(() => {
     const getReports = async () => {
       try {
-        const response = await axiosInstance.get('/conversation');
-        const rawData = response.data.reports;
+        const response = await getReportList();
+        const rawData = response.reports;
 
         const parsedData = rawData.map((report: any) => {
           const parsedContent = JSON.parse(report.content);
