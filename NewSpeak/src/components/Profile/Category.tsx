@@ -4,18 +4,18 @@ import { usePreferredCategoryStore } from '../../store/CategoryStore';
 import { categories } from '../../utils/Categories';
 import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../../store/AuthStore';
+import { mySwal } from '../Alert/CustomSwal';
 
-const Category: React.FC = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+const Category = () => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const maxSelectable = 5; // 최대 선택 가능 카테고리 수
+  const minSelectable = 1; // 최소 선택 가능 카테고리 수
   const { preferredCategories, getPreferredCategory, updatePreferredCategory } =
     usePreferredCategoryStore();
   const [selectedCategories, setSelectedCategories] =
     useState<number[]>(preferredCategories);
   const { isLoggedIn } = useAuthStore();
   const navigate = useNavigate();
-
-  const minSelectable = 1;
-  const maxSelectable = 5;
 
   useEffect(() => {
     const fetchPreferredCategories = async () => {
@@ -31,10 +31,16 @@ const Category: React.FC = () => {
   }, [preferredCategories]);
 
   const handleAuthError = () => {
-    alert('로그인이 필요합니다. 확인을 누르면 로그인 페이지로 이동합니다.');
+    mySwal(
+      '로그인이 필요합니다.',
+      '확인을 누르면 로그인 페이지로 이동합니다.',
+      'info',
+    );
+    // alert('로그인이 필요합니다. 확인을 누르면 로그인 페이지로 이동합니다.');
     navigate('/login');
   };
 
+  // 카테고리 클릭 시 상태 업데이트 및 서버에 업데이트 요청
   const handleCategoryClick = (category: number) => {
     if (!isLoggedIn) {
       handleAuthError();
@@ -44,18 +50,20 @@ const Category: React.FC = () => {
     setSelectedCategories(prev => {
       const currentCategories = prev || [];
 
-      // 이미 선택된 경우: 최소 선택 갯수를 충족하는 경우에만 선택 해제 가능
+      // 이미 선택된 경우, 선택 해제 (단, 최소 선택 수 이상일 때만 해제 가능)
       if (currentCategories.includes(category)) {
-        if (currentCategories.length > minSelectable) {
-          const updatedCategories = currentCategories.filter(
-            c => c !== category,
+        if (currentCategories.length <= minSelectable) {
+          mySwal(
+            '카테고리',
+            `최소 ${minSelectable}개의 카테고리를 선택해야 합니다.`,
+            'warning',
           );
-          updatePreferredCategory(updatedCategories, handleAuthError);
-          return updatedCategories;
-        } else {
-          alert(`최소 ${minSelectable}개의 카테고리를 선택해야 합니다.`);
+          // alert(`최소 ${minSelectable}개의 카테고리를 선택해야 합니다.`);
           return currentCategories;
         }
+        const updatedCategories = currentCategories.filter(c => c !== category);
+        updatePreferredCategory(updatedCategories, handleAuthError);
+        return updatedCategories;
       }
 
       // 새로 선택하려는 경우: 최대 선택 갯수를 초과하지 않으면 추가
@@ -64,27 +72,34 @@ const Category: React.FC = () => {
         updatePreferredCategory(updatedCategories, handleAuthError);
         return updatedCategories;
       } else {
-        alert(`최대 ${maxSelectable}개의 카테고리만 선택할 수 있습니다.`);
+        mySwal(
+          '카테고리',
+          `최대 ${maxSelectable}개의 카테고리를 선택해야 합니다.`,
+          'warning',
+        );
+        // alert(`최대 ${maxSelectable}개의 카테고리만 선택할 수 있습니다.`);
         return currentCategories;
       }
     });
   };
 
-  const handleRemoveCategory = (category: number) => {
-    if (selectedCategories.length > minSelectable) {
-      const updatedCategories = selectedCategories.filter(c => c !== category);
-      setSelectedCategories(updatedCategories);
-      updatePreferredCategory(updatedCategories, handleAuthError);
-    } else {
-      alert(`최소 ${minSelectable}개의 카테고리를 선택해야 합니다.`);
-    }
-  };
-
+  // 드롭다운 열기/닫기 함수
   const toggleDropdown = () => {
     if (!isLoggedIn) {
       handleAuthError();
       return;
     }
+
+    // 최소 선택 갯수보다 적으면 드롭다운을 열 때 알림
+    if (selectedCategories.length < minSelectable) {
+      mySwal(
+        '카테고리',
+        `최소 ${minSelectable}개의 카테고리를 선택해야 합니다.`,
+        'warning',
+      );
+      // alert(`최소 ${minSelectable}개의 카테고리를 선택해야 합니다.`);
+    }
+
     setIsDropdownOpen(!isDropdownOpen);
   };
 
