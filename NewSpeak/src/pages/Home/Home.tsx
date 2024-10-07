@@ -38,6 +38,9 @@ const Home = () => {
     if (!isLoggedIn) {
       navigate('/welcome');
     }
+  }, [isLoggedIn]);
+
+  useEffect(() => {
     fullpageScroll();
 
     const fetchWordData = async () => {

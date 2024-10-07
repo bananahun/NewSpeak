@@ -27,7 +27,7 @@ const Login = () => {
     if (isLoggedIn) {
       navigate('/');
     }
-  });
+  }, [isLoggedIn]);
 
   const loginWith = loginWithOAuth;
 
