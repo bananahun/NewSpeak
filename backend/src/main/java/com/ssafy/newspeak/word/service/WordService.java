@@ -4,26 +4,28 @@ import com.ssafy.newspeak.word.dto.WordMeaningFindResponse;
 import com.ssafy.newspeak.word.entity.MeaningSentence;
 import com.ssafy.newspeak.word.entity.Word;
 import com.ssafy.newspeak.word.entity.WordMeaning;
-import com.ssafy.newspeak.word.repository.MeaningSentenceRepository;
-import com.ssafy.newspeak.word.repository.WordMeaningRepository;
 import com.ssafy.newspeak.word.repository.WordRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Repository
+@Service
 @RequiredArgsConstructor
 public class WordService {
 
     private final WordRepository wordRepository;
-    private final MeaningSentenceRepository meaningSentenceRepository;
-    private final WordMeaningRepository wordMeaningRepository;
 
+    // 단어와 단어 뜻을 Redis에 캐시
+    @Cacheable(value = "wordMeanings", key = "#content", unless = "#result == null")
     public WordMeaningFindResponse findMeaningByContent(String content) {
         Word word = wordRepository.findByContent(content);
-//        List<WordMeaning> meanings = wordMeaningRepository.findByWordId(word.getId());
+
+        if (word == null) {
+            return null;  // 단어가 없을 경우 null 반환
+        }
 
         List<MeaningSentence> sentences = word.getWordMeanings().stream()
                 .map(WordMeaning::getMeaningSentence)
