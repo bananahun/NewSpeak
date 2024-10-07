@@ -164,7 +164,7 @@ const WordList = () => {
                     <div className={styles.cardContentTitle}>
                       <h3>{word.content}</h3>
                       <div
-                          className={styles.iconButton}
+                          className={styles.deleteButton}
                           title="단어 삭제"
                           onClick={() => handleWordDeleteClick(word.wordId)} // 단어 삭제 핸들러 호출
                         >
@@ -179,20 +179,15 @@ const WordList = () => {
                         ))}
                       </div>
                       <div className={styles.buttonContainer}>
-                        <button
-                          className={styles.detailButton}
+                          <FaBook
+                          className={styles.iconButton}
                           title="예문 확인"
-                          onClick={() => openWordModal(word)}
-                        >
-                          예문 보기
-                        </button>
-                        <button
-                          className={styles.detailButton}
+                          onClick={() => openWordModal(word)}/>
+                          <GiSpeaker
+                          className={styles.iconButton}
                           title="발음 듣기"
-                          onClick={() => handleSpeak(word.content)}
-                        >
-                          발음 듣기
-                        </button>
+                          onClick={() => handleSpeak(word.content)}                          
+                           />
                       </div>
                       {/* <div className={styles.buttonContainer}>
                         <div

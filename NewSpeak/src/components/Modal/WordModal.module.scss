@@ -13,20 +13,23 @@
 
 .modalContent {
   width: 70vw; /* 모달의 너비 */
-  max-width: 600px; /* 최대 너비 */
+  max-width: 800px; /* 최대 너비 */
+  max-height: 80vh;
   background-color: white;
-  padding: 20px;
+  padding: 30px;
   padding-top: 30px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* 그림자 강도를 증가 */
   text-align: center;
   z-index: 1001;
   position: relative;
+  overflow-y: auto ;
 
   .wordTitle {
     font-weight: bold; /* bold 스타일 적용 */
     font-size: 1.7rem; /* 크기 조정 */
-    margin-bottom: 20px; /* 아래쪽 여백 */
+    margin-top: 10px;
+    margin-bottom: 30px; /* 아래쪽 여백 */
     text-align: center; /* 중앙 정렬 */
   }
   
@@ -44,17 +47,37 @@
   .meaningContainer {
     position: relative; /* 위치 조정을 위해 추가 */
     padding-top: 10px; /* 아래쪽 여백 추가 */
+    padding: 15px;
     text-align: left; /* 텍스트 왼쪽 정렬 */
+    background: #f0f0f0;
+    border-radius: 8px;
+    margin: 20px 10px ;
+    border: 1px solid #ddd;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
 
+    &:hover {
+      transform: translateY(-3px);
+    }
+    .wordMeaning,
+    .wordExample,
+    .wordExampleKorean {
+      margin: 10px;
+      margin-right: 100px;
+      padding: 8px 10px;
+      background: var(--background-color);
+      border: 1px solid var(--contrast-color);
+      border-radius: 5px;
+    }
   }
 
   .iconButton {
     position: absolute; /* 위치 조정 */
-    right: 0; /* 오른쪽 끝에 위치 */
+    right: 40px; /* 오른쪽 끝에 위치 */
     top: 50%; /* 중앙 정렬 */
     transform: translateY(-50%); /* 중앙 정렬 보정 */
     cursor: pointer;
-    font-size: 1.5rem; /* 아이콘 크기 조정 */
+    font-size: 2rem; /* 아이콘 크기 조정 */
     margin-left: 10px; /* 간격 조정 */
     transition: color 0.3s;
 
@@ -70,15 +93,16 @@
   .closeButton {
     position: absolute;
     display: flex;
-    top: 10px;
-    right: 10px;
+    top: 20px;
+    right: 20px;
     width: 30px; /* 닫기 버튼의 크기 조정 */
     height: 30px; /* 닫기 버튼의 크기 조정 */
+    font-size: 30px; /* 아이콘 크기 조정 */
+
     border: none;
     align-items: center;
     justify-content: center;
     padding: 0;
-    background-color: transparent; /* 투명 배경 */
     cursor: pointer;
     transition: transform 0.3s; /* 애니메이션 효과 */
     

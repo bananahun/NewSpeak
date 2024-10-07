@@ -12,26 +12,15 @@ const isEnglishWord = (word: string) => {
   return englishWordPattern.test(word);
 };
 
-const getSelectedText = (): string => {
-  return window.getSelection()?.toString().trim() || '';
+const cleanWord = (word: string): string => {
+  // 양 끝의 영어가 아닌 문자 제거
+  return word.replace(/^[^a-zA-Z]+|[^a-zA-Z]+$/g, '').trim();
 };
 
-const handleOpenModal = (
-  event: MouseEvent,
-  openModal: (word: string) => void,
-) => {
-  event.preventDefault();
-  const word = getSelectedText();
-  if (!word) {
-    alert('단어를 선택해주세요.');
-    return;
-  }
-  const wordsArray = word.split(' ');
-  if (wordsArray.length > 1 || !isEnglishWord(word)) {
-    alert('하나의 영어 단어만 선택해주세요.');
-  } else {
-    openModal(word); // Zustand store를 사용하여 모달을 엽니다
-  }
+const hasNonEnglishCharacters = (word: string): boolean => {
+  // 단어 중간에 영어가 아닌 문자가 있는지 확인
+  const nonEnglishPattern = /[^a-zA-Z]/;
+  return nonEnglishPattern.test(word);
 };
 
 const WordSelector = ({
@@ -41,8 +30,7 @@ const WordSelector = ({
 }) => {
   const articleMeta = useArticleStore.getState().articleMeta;
   const { isOpen, selectedWord, openModal, closeModal } = useModalStore();
-  const { selectedSentenceId, setSelectedSentenceId } =
-    useSelectedSentenceStore();
+  const { selectedSentenceId } = useSelectedSentenceStore();
   const [cursorPosition, setCursorPosition] = useState<{
     x: number;
     y: number;
@@ -58,16 +46,58 @@ const WordSelector = ({
       closeWordSelector();
     };
 
+    const getWordAtCursor = (event: MouseEvent): string => {
+      const selection = window.getSelection();
+      if (!selection || selection.rangeCount === 0) return '';
+
+      const range = selection.getRangeAt(0);
+      const startContainer = range.startContainer;
+
+      if (startContainer.nodeType === Node.TEXT_NODE) {
+        const text = startContainer.textContent || '';
+        const offset = range.startOffset;
+
+        const beforeCursor = text.slice(0, offset).trim();
+        const afterCursor = text.slice(offset).trim();
+
+        const startOfWord = beforeCursor.search(/\S+$/); // 커서 앞쪽에서 마지막 단어의 시작을 찾음
+        const endOfWord = afterCursor.search(/\s/); // 커서 뒤쪽에서 첫 번째 공백을 찾음
+        console.log(startOfWord, endOfWord);
+        
+        const word = 
+          (startOfWord === -1 ? '' : beforeCursor.slice(startOfWord)) + 
+          afterCursor.slice(0, endOfWord === -1 ? afterCursor.length : endOfWord);
+        
+        return word.trim();
+        
+      }
+
+      return '';
+    };
+
     const handleMouseUp = (e: MouseEvent) => {
-      const selectedText = getSelectedText();
+      const target = e.target as HTMLElement;
+      if (target.closest(`.${styles.modal}`)) {
+        return; // 모달 내부에서 클릭된 경우
+      }
+      
+      const selectedText = getWordAtCursor(e); // 클릭한 위치의 단어 가져오기
       if (!selectedSentenceId) {
         console.log('id없음');
         return;
       }
-      if (selectedText) {
-        handleOpenModal(e, openModal);
-        window.getSelection()?.removeAllRanges();
-      }
+
+      const cleanedWord = cleanWord(selectedText); // 양 끝에서 영어가 아닌 문자 제거
+
+      if (cleanedWord) {
+        if (hasNonEnglishCharacters(cleanedWord)) { 
+          alert('단어 중간에 영어가 아닌 문자가 포함되어 있습니다.'); // 중간에 영어가 아닌 문자가 있을 경우 알림
+          return;
+        }
+        openModal(cleanedWord); // 모달 열기
+
+      } 
+      window.getSelection()?.removeAllRanges(); // 선택 영역 초기화
     };
 
     document.body.style.cursor = 'none';
@@ -75,6 +105,7 @@ const WordSelector = ({
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('contextmenu', handleContextMenu);
     document.addEventListener('mouseup', handleMouseUp);
+
     return () => {
       document.body.style.cursor = 'default';
       document.removeEventListener('mousemove', handleMouseMove);
@@ -91,7 +122,7 @@ const WordSelector = ({
     <>
       <div
         className={styles.overlay}
-        onClick={handleClick}
+        onClick={handleClick} // 클릭 시 이벤트 발생
         style={{ cursor: 'none' }}
       >
         {cursorPosition && (

@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Result.module.scss';
-
+import { useNavigate } from 'react-router-dom';
 interface ResultProps {
   score: number;
   total: number;
@@ -9,6 +9,11 @@ interface ResultProps {
 }
 
 const Result = ({ score, total, answers, correctAnswers }: ResultProps) => {
+  const navigate = useNavigate();
+
+  const handleToWordList = () => {
+    navigate('/word');
+  };
   return (
     <div className={styles.resultContainer}>
       <div className={styles.headContainer}>
@@ -53,6 +58,11 @@ const Result = ({ score, total, answers, correctAnswers }: ResultProps) => {
             </div>
           ))}
         </div>
+      </div>
+      <div className={styles.returnContainer}>
+      <button className={styles.returnButton} onClick={handleToWordList}>
+        단어장으로
+      </button>
       </div>
     </div>
   );

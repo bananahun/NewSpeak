@@ -38,7 +38,9 @@ const AddWordModal = ({
   }, [vocaId, setVocaId]);
   if (!isOpen) return null;
 
-  const handleAddWord = async () => {
+  const handleAddWord = async () => { 
+    // 클릭 이벤트 전파 방지
+
     if (!selectedSentenceId) {
       alert("단어 추가에 실패했습니다. 다시 시도해주세요");
       console.log("sentenceId 가져오기 실패");

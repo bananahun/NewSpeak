@@ -23,7 +23,7 @@ const WordSearch = ({
   isFirstRender,
   toggleWordSearchBar,
 }: WordSearchProps) => {
-  const { vocaId } = useVocaStore();
+  const { vocaId,setVocaId } = useVocaStore();
   const [searchQuery, setSearchQuery] = useState<string>(""); // 검색어 상태
   const [searchedWords, setSearchedWords] = useState<WordData[]>([]); // 검색된 단어 데이터 상태
   const [searchedWord, setSearchedWord] = useState<{
@@ -50,8 +50,20 @@ const WordSearch = ({
   // 단어장에 단어 추가 함수
   const addWordToVoca = async () => {
     if (!searchedWord) return; // 단어가 없는 경우 실행하지 않음
+    if (!vocaId) {
+      const fetchVocaIds = async () => {
+        try {
+          const fetchedVocaId = await userApi.getMyVocas();
+          setVocaId(fetchedVocaId); // 가져온 데이터를 상태에 저장
+        } catch (error) {
+          console.error("Error fetching vocaIds:", error);
+        }
+      };
 
+      fetchVocaIds();
+    }
     try {
+      if (!vocaId) return;
       const response = await userApi.getMyWord(vocaId, searchedWord.word); // 단어의 id 사용
       if (response && response.status === 200) {
         mySwal(
