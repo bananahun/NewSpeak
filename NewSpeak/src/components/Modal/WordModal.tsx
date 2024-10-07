@@ -1,7 +1,6 @@
 import React, {useState}from "react";
 import styles from './WordModal.module.scss';
 import { FaMicrophone } from 'react-icons/fa';
-import { GiSpeaker } from 'react-icons/gi';
 import PronounceModal from "./PronounceModal";
 
 interface WordModalProps {
@@ -29,25 +28,24 @@ const WordModal: React.FC<WordModalProps> = ({ isOpen, onClose, word, meanings }
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
         <h1 className={styles.wordTitle}>{word}</h1>         
-        <hr className={styles.separator} /> {/* 구분선 추가 */}
 
         {meanings.map((meaning, index) => (
+          <>
           <div key={index} className={styles.meaningContainer}>
             
-            <p className={styles.meaningText}>{meaning.meaning}</p> {/* bold 적용 */}
-            <p>예문: {meaning.example}</p>
-            <p>예문 (한국어): {meaning.exampleKorean}</p>
-            <div
-              className={styles.iconButton}
+            <p className={styles.wordMeaning}>
+              <strong>뜻:</strong> {meaning.meaning}</p> {/* bold 적용 */}
+            <p className={styles.wordExample}><strong>예문:</strong> {meaning.example}</p>
+            <p className={styles.wordExampleKorean}><strong>해석:</strong> {meaning.exampleKorean}</p>
+
+              <FaMicrophone className={styles.iconButton}
               title="발음 평가"
-              onClick={() => openPronounceModal(meaning.example)} // 발음 평가 모달 열기
-            >
-              <FaMicrophone />
-            </div>
-            <hr className={styles.separator} /> {/* 구분선 추가 */}
+              onClick={() => openPronounceModal(meaning.example)}/>
           </div>
+            <hr className={styles.separator} /> {/* 구분선 추가 */}
+          </>
         ))}
-        <button onClick={onClose} className={styles.closeButton}>닫기</button>
+        <button onClick={onClose} className={styles.closeButton}>x</button>
       </div>
       <PronounceModal
         isOpen={isPronounceModalOpen}
