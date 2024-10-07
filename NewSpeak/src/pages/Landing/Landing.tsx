@@ -20,11 +20,13 @@ const Landing = () => {
   const [background, setBackground] = useState<string>('');
   const [sectionChanging, setSectionChanging] = useState(false);
 
-  useEffect(() => {
-    // if (isLoggedIn) {
-    //   navigate('/');
-    // }
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     navigate('/');
+  //   }
+  // }, [isLoggedIn]);
 
+  useEffect(() => {
     fullpageScroll();
   }, []);
 
@@ -138,7 +140,7 @@ const Landing = () => {
         <ThemeSwitcher />
       </div>
       <button className={styles.loginButton} onClick={handleLogin}>
-        로그인
+        {isLoggedIn ? 'Home' : 'Login'}
       </button>
       <div className={`${styles.landingBackground}`}>
         <div className={styles.backgroundInner}>
@@ -161,7 +163,9 @@ const Landing = () => {
         </div>
         <div className={sectionStyles.section} onClick={handleSectionClick}>
           <div className={`${styles.landingSection} ${styles.fadeInSection}`}>
-            <h1 className={styles.landingText}>영어를 배우세요. 자연스럽게.</h1>
+            <h1 className={styles.landingText}>
+              영어를 배우세요. <span>자연스럽게.</span>
+            </h1>
             <h2 className={styles.landingSubText}>
               세상을 읽고, 언어로 말하다.
             </h2>

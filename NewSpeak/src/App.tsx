@@ -7,7 +7,6 @@ import MyPage from './pages/MyPage/MyPage';
 import Article from './pages/Artricle/Article';
 import Conversation from './pages/Conversation/Conversation';
 import Word from './pages/Word/Word';
-import Test from './pages/Word/Test';
 import Nav from './components/Nav/Nav';
 import NotFound from './pages/NotFound/NotFound';
 import Report from './pages/MyPage/Report';
@@ -57,8 +56,6 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/conversation" element={<Conversation />} />
             <Route path="/word" element={<Word />} />
-            <Route path="/wordlist/test" element={<Test />} />
-            <Route path="/log" element={<Test />} />
             <Route path="/report" element={<Report />} />
             <Route path="/reportlist" element={<ReportList />} />
             <Route path="/scraplist" element={<ScrapList />} />

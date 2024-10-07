@@ -32,6 +32,9 @@ const Register = () => {
     const fetchAndSetEmail = async () => {
       try {
         const userEmail = await fetchEmail();
+        if (userEmail?.response?.status === 403) {
+          navigate('/');
+        }
         setEmail(userEmail || '이메일을 불러오지 못했습니다.');
       } catch (error) {
         console.error('Failed to fetch email', error);
@@ -109,7 +112,7 @@ const Register = () => {
       };
 
       const register = await signUp(formdata);
-
+      console.log(register);
       if (register) {
         mySwal('회원가입 성공', '회원가입이 완료되었습니다!', 'success');
         navigate('/');
