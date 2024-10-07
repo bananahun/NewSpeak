@@ -1,173 +1,149 @@
-import React, { useState, useEffect } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
-import useThemeStore from "../../store/ThemeStore";
-import useAuthStore from "../../store/AuthStore";
-import logo from "../../assets/NewSpeak.png";
-import logoWhite from "../../assets/NewSpeakWhite.png";
-import ThemeSwitcher from "../ThemeSwitcher/ThemeSwitcher";
-import WordSearch from "./WordSearch";
-import Footer from "./Footer";
-import styles from "./Nav.module.scss";
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import HomeIcon from '@mui/icons-material/Home';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import InfoIcon from '@mui/icons-material/Info';
+import ArticleIcon from '@mui/icons-material/Article';
+import DescriptionIcon from '@mui/icons-material/Description';
+import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import styles from './Nav.module.scss'; // SCSS 스타일 임포트
 
-const Nav = () => {
-  const { theme } = useThemeStore();
-  const { isLoggedIn, logout } = useAuthStore();
-  const [mainLogo, setMainLogo] = useState(logo);
-  const [isOpenedWordSearchBar, setIsOpenedWordSearchBar] = useState(false);
-  const [overlayHide, setOverlayHide] = useState(false);
-  const [isFirstWordRender, setIsFirstWordRender] = useState(true);
-  const navigate = useNavigate();
+interface NavProps {
+  open: boolean;
+  handleDrawerToggle: () => void;
+}
 
-  // 워드 검색 바 토글 함수
-  const toggleWordSearchBar = () => {
-    if (isOpenedWordSearchBar) {
-      setIsOpenedWordSearchBar(false);
-      setTimeout(() => {
-        setOverlayHide(false);
-      }, 500);
-    } else {
-      setIsOpenedWordSearchBar(true);
-      setIsFirstWordRender(false);
-      setOverlayHide(true);
-    }
-  };
-
-  // 로그인 여부에 따라 네비게이션 링크 렌더링
-  const renderLinks = () => {
-    if (isLoggedIn) {
-      return (
-        <>
-          <MenuItem
-            component={
-              <NavLink
-                to="/mypage"
-                style={({ isActive }: { isActive: boolean }) => ({
-                  backgroundColor: isActive ? "#ff8b5a" : "inherit",
-                  fontWeight: isActive ? "bold" : "",
-                })}
-              />
-            }
-          >
-            My Page
-          </MenuItem>
-          <MenuItem
-            component={
-              <NavLink
-                to="/about"
-                style={({ isActive }: { isActive: boolean }) => ({
-                  backgroundColor: isActive ? "#ff8b5a" : "inherit",
-                  fontWeight: isActive ? "bold" : "",
-                })}
-              />
-            }
-          >
-            About
-          </MenuItem>
-          <MenuItem
-            onClick={toggleWordSearchBar}
-            style={{
-              backgroundColor: isOpenedWordSearchBar ? "#ff8b5a" : "inherit",
-              fontWeight: isOpenedWordSearchBar ? "bold" : "",
-            }}
-          >
-            Search Word
-          </MenuItem>
-        </>
-      );
-    } else {
-      return (
-        <>
-          <MenuItem component={<Link to="/login" />}>Login</MenuItem>
-        </>
-      );
-    }
-  };
-
-  // 테마 변경 시 로고 이미지 변경
-  useEffect(() => {
-    if (theme === "light") {
-      setMainLogo(logo);
-    } else {
-      setMainLogo(logoWhite);
-    }
-  }, [theme]);
-
+const Nav: React.FC<NavProps> = ({ open, handleDrawerToggle }) => {
   return (
-    <div className="fontContainer">
-      <Sidebar>
-        <Menu
-          menuItemStyles={{
-            root: {
-              padding: "0",
-            },
-            button: {
-              "&:hover": {
-                backgroundColor: "#ff8b5a", // 메뉴 항목 호버 시 전체 배경색 변경
-                fontWeight: "bold",
-              },
-            },
-          }}
-        >
-          <nav className={styles.navbar}>
-            {/* 네비게이션 바의 로고 */}
-            <Link className={styles.logo} to="/">
-              <img src={mainLogo} width={"160px"} />
-            </Link>
+    <div className={styles.navContainer}>
+      {/* 메뉴바 토글 버튼 */}
+      <IconButton onClick={handleDrawerToggle} className={styles.menuButton}>
+        {open ? <ChevronLeftIcon /> : <MenuIcon />}
+      </IconButton>
 
-            {/* 테마 스위처 */}
-            <div className={styles.switcher}>
-              <ThemeSwitcher />
-            </div>
+      <Divider />
 
-            {/* 네비게이션 링크들 */}
-            <div className={styles.links}>
-              <MenuItem
-                component={
-                  <NavLink
-                    to="/"
-                    style={({ isActive }: { isActive: boolean }) => ({
-                      backgroundColor: isActive ? "#ff8b5a" : "inherit",
-                      fontWeight: isActive ? "bold" : "",
-                    })}
-                  />
-                }
-              >
-                Home
-              </MenuItem>
-              {renderLinks()}
-
-              {/* 로그아웃 버튼 */}
-              {isLoggedIn && (
-                <MenuItem
-                  onClick={() => logout(navigate)}
-                  style={{
-                    cursor: "pointer",
-                  }}
-                >
-                  Logout
-                </MenuItem>
+      {/* 네비게이션 메뉴 */}
+      <List className={styles.list}>
+        <NavLink to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <ListItem
+            disablePadding
+            className={`${styles.listItem} ${
+              open ? styles.listItemOpen : styles.listItemClosed
+            }`}
+          >
+            <ListItemButton className={styles.listItemButton}>
+              <ListItemIcon className={styles.icon}>
+                <HomeIcon />
+              </ListItemIcon>
+              {open && (
+                <ListItemText primary="Home" className={styles.listItemText} />
               )}
+            </ListItemButton>
+          </ListItem>
+        </NavLink>
 
-              {/* 푸터 */}
-              <div className={styles.footerContainer}>
-                <Footer />
-              </div>
-            </div>
-          </nav>
-        </Menu>
-      </Sidebar>
+        <NavLink
+          to="/mypage"
+          style={{ textDecoration: 'none', color: 'inherit' }}
+        >
+          <ListItem
+            disablePadding
+            className={`${styles.listItem} ${
+              open ? styles.listItemOpen : styles.listItemClosed
+            }`}
+          >
+            <ListItemButton className={styles.listItemButton}>
+              <ListItemIcon className={styles.icon}>
+                <AccountCircleIcon />
+              </ListItemIcon>
+              {open && (
+                <ListItemText
+                  primary="My Page"
+                  className={styles.listItemText}
+                />
+              )}
+            </ListItemButton>
+          </ListItem>
+        </NavLink>
 
-      {/* 검색 바 오버레이 */}
-      {overlayHide && (
-        <div className={styles.searchBar}>
-          <WordSearch
-            isOpen={isOpenedWordSearchBar}
-            isFirstRender={isFirstWordRender}
-            toggleWordSearchBar={toggleWordSearchBar}
-          />
-        </div>
-      )}
+        <NavLink
+          to="/about"
+          style={{ textDecoration: 'none', color: 'inherit' }}
+        >
+          <ListItem
+            disablePadding
+            className={`${styles.listItem} ${
+              open ? styles.listItemOpen : styles.listItemClosed
+            }`}
+          >
+            <ListItemButton className={styles.listItemButton}>
+              <ListItemIcon className={styles.icon}>
+                <InfoIcon />
+              </ListItemIcon>
+              {open && (
+                <ListItemText primary="About" className={styles.listItemText} />
+              )}
+            </ListItemButton>
+          </ListItem>
+        </NavLink>
+
+        <NavLink
+          to="/article"
+          style={{ textDecoration: 'none', color: 'inherit' }}
+        >
+          <ListItem
+            disablePadding
+            className={`${styles.listItem} ${
+              open ? styles.listItemOpen : styles.listItemClosed
+            }`}
+          >
+            <ListItemButton className={styles.listItemButton}>
+              <ListItemIcon className={styles.icon}>
+                <ArticleIcon />
+              </ListItemIcon>
+              {open && (
+                <ListItemText
+                  primary="Article"
+                  className={styles.listItemText}
+                />
+              )}
+            </ListItemButton>
+          </ListItem>
+        </NavLink>
+
+        <NavLink
+          to="/conversation"
+          style={{ textDecoration: 'none', color: 'inherit' }}
+        >
+          <ListItem
+            disablePadding
+            className={`${styles.listItem} ${
+              open ? styles.listItemOpen : styles.listItemClosed
+            }`}
+          >
+            <ListItemButton className={styles.listItemButton}>
+              <ListItemIcon className={styles.icon}>
+                <DescriptionIcon />
+              </ListItemIcon>
+              {open && (
+                <ListItemText
+                  primary="Conversation"
+                  className={styles.listItemText}
+                />
+              )}
+            </ListItemButton>
+          </ListItem>
+        </NavLink>
+      </List>
     </div>
   );
 };
