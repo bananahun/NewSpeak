@@ -58,7 +58,7 @@ public class MyPageController {
     @GetMapping("/articles")
     public ResponseEntity<Page<ArticleInfoDto>> getArticle(@RequestParam("page") int page, @RequestParam("size") int size) {
         MyUserDetails userDetails=AuthUtil.getUserDetails();
-        Pageable pageable=PageRequest.of(0,10);
+        Pageable pageable=PageRequest.of(page,size);
         return ResponseEntity.ok().body(userArticleService.getAllUserArticles(userDetails.getUserId(),pageable));
     }
 
