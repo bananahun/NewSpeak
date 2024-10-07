@@ -1,20 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
-import useElasticApi from '../../apis/ElasticApi';
-import styles from './ArticleSearch.module.scss';
-import { useNavigate } from 'react-router-dom';
-import useThemeStore from '../../store/ThemeStore';
-import useArticleStore from '../../store/ArticleStore';
-import logo from '../../assets/NewSpeak.png';
-import logoWhite from '../../assets/NewSpeakWhite.png';
-import useArticleApi from '../../apis/ArticleApi';
-import LoadingModal from '../Modal/LoadingModal';
+import React, { useState, useEffect, useRef } from "react";
+import useElasticApi from "../../apis/ElasticApi";
+import styles from "./ArticleSearch.module.scss";
+import { useNavigate } from "react-router-dom";
+import useThemeStore from "../../store/ThemeStore";
+import useArticleStore from "../../store/ArticleStore";
+import logo from "../../assets/NewSpeak.png";
+import logoWhite from "../../assets/NewSpeakWhite.png";
+import useArticleApi from "../../apis/ArticleApi";
+import LoadingModal from "../Modal/LoadingModal";
 import {
   FaAngleLeft,
   FaAnglesLeft,
   FaAngleRight,
   FaAnglesRight,
   FaPlus,
-} from 'react-icons/fa6';
+} from "react-icons/fa6";
 
 interface Article {
   id: number;
@@ -29,10 +29,10 @@ const ArticleSearch = () => {
   const { setArticleMeta } = useArticleStore();
   const { theme } = useThemeStore();
   const [mainLogo, setMainLogo] = useState(logo);
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [searchType, setSearchType] = useState<string>('title');
-  const [startDate, setStartDate] = useState<string>('');
-  const [endDate, setEndDate] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchType, setSearchType] = useState<string>("title");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
   const [level, setLevel] = useState<number>(1);
   const [articles, setArticles] = useState<Article[]>([]);
   const [showResults, setShowResults] = useState<boolean>(false);
@@ -44,19 +44,17 @@ const ArticleSearch = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setMainLogo(theme === 'light' ? logo : logoWhite);
+    setMainLogo(theme === "light" ? logo : logoWhite);
   }, [theme]);
 
   useEffect(() => {
-    setSearchQuery('');
-    setStartDate('');
-    setEndDate('');
+    setSearchQuery("");
+    setStartDate("");
+    setEndDate("");
     setLevel(1);
     setShowResults(false);
     setArticles([]);
   }, [searchType]);
-
-  useEffect(() => {});
 
   const loadArticleDetail = (article: Article) => {
     setArticleMeta({
@@ -64,7 +62,7 @@ const ArticleSearch = () => {
       title: article.title,
       imageUrl: article.imageUrl,
     });
-    navigate('/article');
+    navigate("/article");
   };
 
   const handleMoveLeft = () => {
@@ -92,7 +90,7 @@ const ArticleSearch = () => {
   };
 
   const handleSearchTypeChange = (
-    event: React.ChangeEvent<HTMLSelectElement>,
+    event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     setSearchType(event.target.value);
   };
@@ -102,7 +100,7 @@ const ArticleSearch = () => {
   };
 
   const handleStartDateChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setStartDate(event.target.value);
   };
@@ -116,7 +114,7 @@ const ArticleSearch = () => {
   };
 
   const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       handleSearch(0, true);
     }
   };
@@ -129,73 +127,67 @@ const ArticleSearch = () => {
     setFetchLoading(true);
     try {
       let result;
-      let title = '';
-      let content = '';
-
-      if (searchType === 'titleContentDate') {
-        const splitIndex = searchQuery.indexOf(':');
-        if (splitIndex !== -1) {
-          title = searchQuery.slice(0, splitIndex).trim();
-          content = searchQuery.slice(splitIndex + 1).trim();
-        } else {
-          title = searchQuery;
-          content = searchQuery;
-        }
-      }
 
       switch (searchType) {
-        case 'title':
+        case "title":
           result = await useElasticApi.getElasticByKeyword(searchQuery, page);
           break;
-        case 'content':
+        case "content":
           result = await useElasticApi.getElasticByContent(searchQuery, page);
           break;
-        case 'contentKR':
+        case "contentKR":
           result = await useElasticApi.getElasticByContentKR(searchQuery, page);
           break;
-        case 'date':
+        case "date":
           result = await useElasticApi.getElasticByDate(
             startDate,
             endDate,
-            page,
+            page
           );
           break;
-        case 'titleDate':
+        case "titleDate":
           result = await useElasticApi.getElasticByTitleDate(
             startDate,
             endDate,
             searchQuery,
-            page,
+            page
           );
           break;
-        case 'contentDate':
+        case "contentDate":
           result = await useElasticApi.getElasticByContentDate(
             startDate,
             endDate,
             searchQuery,
-            page,
+            page
           );
           break;
-        case 'titleContentDate':
+        case "titleContentDate":
           result = await useElasticApi.getElasticByTitleContentDate(
             startDate,
             endDate,
-            title,
-            content,
-            page,
+            searchQuery,
+            searchQuery,
+            page
           );
           break;
-        case 'level':
+        case "titleContent":
+          result = await useElasticApi.getElasticByTitleContent(
+            searchQuery,
+            searchQuery,
+            page
+          );
+          break;
+        case "level":
           result = await useArticleApi.getArticleLevel(level, page);
           break;
         default:
           result = [];
       }
       if (result && Array.isArray(result)) {
-        const formattedArticles = result.map(article => ({
+        const formattedArticles = result.map((article) => ({
           id: article.id,
           title: article.title,
-          content: article.content || '',
+          content: article.content || "",
           imageUrl: article.imageUrl,
           date: article.publishedDate,
           publisher: article.publisher,
@@ -203,7 +195,7 @@ const ArticleSearch = () => {
         if (articles.length === 0) {
           setArticles(formattedArticles);
         } else {
-          setArticles(prev => {
+          setArticles((prev) => {
             return [...prev, ...formattedArticles];
           });
         }
@@ -221,14 +213,14 @@ const ArticleSearch = () => {
   const loadMoreArticles = () => {
     if (loading || fetchLoading) return;
     handleSearch(currentPage + 1);
-    setCurrentPage(prevPage => prevPage + 1);
+    setCurrentPage((prevPage) => prevPage + 1);
   };
 
   return (
     <div className={styles.searchSection}>
       <div
         className={`${styles.searchContainer} ${
-          showResults ? styles.moveUp : ''
+          showResults ? styles.moveUp : ""
         }`}
       >
         <select
@@ -243,11 +235,14 @@ const ArticleSearch = () => {
           <option value="titleDate">날짜 + 제목 검색</option>
           <option value="contentDate">날짜 + 본문 검색</option>
           <option value="titleContentDate">날짜 + 제목 + 본문 검색</option>
+          <option value="titleContent">제목 + 본문 검색</option>{" "}
+          {/* 추가된 옵션 */}
           <option value="level">난이도별 검색</option>
         </select>
 
         <div className={styles.inputContainer}>
-          {searchType !== 'date' && (
+          {/* 검색 타입에 따라 검색창 또는 날짜 선택 창 표시 */}
+          {searchType !== "date" && searchType !== "level" && (
             <input
               type="text"
               value={searchQuery}
@@ -258,7 +253,7 @@ const ArticleSearch = () => {
             />
           )}
 
-          {(searchType.includes('Date') || searchType === 'date') && (
+          {(searchType.includes("Date") || searchType === "date") && (
             <div className={styles.dateInputContainer}>
               <input
                 type="date"
@@ -276,6 +271,20 @@ const ArticleSearch = () => {
               까지
             </div>
           )}
+
+          {searchType === "level" && (
+            <select
+              value={level}
+              onChange={handleLevelChange}
+              className={styles.searchDropdown}
+            >
+              <option value={1}>Level 1</option>
+              <option value={2}>Level 2</option>
+              <option value={3}>Level 3</option>
+              <option value={4}>Level 4</option>
+              <option value={5}>Level 5</option>
+            </select>
+          )}
         </div>
 
         <button
@@ -285,37 +294,36 @@ const ArticleSearch = () => {
           검색
         </button>
       </div>
+
       <div className={styles.articleListComponent}>
         {showResults && !loading && (
           <>
             {articles.length > 0 ? (
               <>
                 <div className={styles.searchResults} ref={articleRef}>
-                  {articles.map((article, index) => {
-                    return (
-                      <div
-                        key={index}
-                        className={styles.articleCard}
-                        onClick={() => loadArticleDetail(article)}
-                      >
-                        <div className={styles.imageContainer}>
-                          <img
-                            src={article.imageUrl ? article.imageUrl : mainLogo}
-                            alt={article.title || 'Default News Image'}
-                            className={styles.articleImage}
-                          />
-                        </div>
-                        <div className={styles.articleInfo}>
-                          <h4 className={styles.title}>{article.title}</h4>
-                          <p className={styles.meta}>
-                            {new Date(article.date).toLocaleDateString()}{' '}
-                            <strong>|</strong> {article.publisher}
-                          </p>
-                          <p className={styles.content}>{article.content}</p>
-                        </div>
+                  {articles.map((article, index) => (
+                    <div
+                      key={index}
+                      className={styles.articleCard}
+                      onClick={() => loadArticleDetail(article)}
+                    >
+                      <div className={styles.imageContainer}>
+                        <img
+                          src={article.imageUrl ? article.imageUrl : mainLogo}
+                          alt={article.title || "Default News Image"}
+                          className={styles.articleImage}
+                        />
                       </div>
-                    );
-                  })}
+                      <div className={styles.articleInfo}>
+                        <h4 className={styles.title}>{article.title}</h4>
+                        <p className={styles.meta}>
+                          {new Date(article.date).toLocaleDateString()}{" "}
+                          <strong>|</strong> {article.publisher}
+                        </p>
+                        <p className={styles.content}>{article.content}</p>
+                      </div>
+                    </div>
+                  ))}
                   {fetchLoading ? (
                     <LoadingModal />
                   ) : (

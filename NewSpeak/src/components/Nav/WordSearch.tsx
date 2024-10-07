@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import styles from "./WordSearch.module.scss";
-import useWordApi from "../../apis/ArticleApi"; // Word API를 불러오기 위한 import
-import userApi from "../../apis/UserApi"; // 단어장 추가 API를 불러오기 위한 import
+import useWordApi from "../../apis/ArticleApi";
+import userApi from "../../apis/UserApi";
 import { useVocaStore } from "../../store/VocaStore";
+import { mySwal } from "../Alert/CustomSwal";
+
 interface WordData {
   meaning: string;
   example: string;
@@ -23,7 +25,7 @@ const WordSearch = ({
 }: WordSearchProps) => {
   const { vocaId } = useVocaStore();
   const [searchQuery, setSearchQuery] = useState<string>(""); // 검색어 상태
-  const [searchedWords, setSearchedWords] = useState<WordData[]>([]); // 검색된 단어 데이터 상태 (의미, 예문 등)
+  const [searchedWords, setSearchedWords] = useState<WordData[]>([]); // 검색된 단어 데이터 상태
   const [searchedWord, setSearchedWord] = useState<{
     id: number;
     word: string;
@@ -33,6 +35,8 @@ const WordSearch = ({
     : isOpen
     ? styles.open
     : styles.close;
+
+  const [isAlertVisible, setIsAlertVisible] = useState<boolean>(false); // 경고창 표시 상태
 
   const handleOverlayClick = () => {
     toggleWordSearchBar();
@@ -50,39 +54,66 @@ const WordSearch = ({
     try {
       const response = await userApi.getMyWord(vocaId, searchedWord.word); // 단어의 id 사용
       if (response && response.status === 200) {
-        alert(`"${searchedWord.word}" 단어가 단어장에 추가되었습니다!`);
+        mySwal(
+          "단어장추가",
+          `"${searchedWord.word}" 단어가 단어장에 추가되었습니다!`,
+          "success"
+        );
       } else {
-        alert(`"${searchedWord.word}" 단어를 추가하는 데 실패했습니다.`);
+        mySwal(
+          "단어장추가",
+          `"${searchedWord.word}" 단어를 추가하는 데 실패했습니다.`,
+          "error"
+        );
       }
     } catch (error) {
       console.error("Error adding word to voca:", error);
-      alert("단어를 추가하는 중 오류가 발생했습니다.");
+      mySwal("단어장추가", "단어를 추가하는 데 실패했습니다.", "error");
     }
   };
 
   // API 호출 및 검색 결과 업데이트 함수
-  const handleSearch = async () => {
-    if (!searchQuery.trim()) return; // 검색어가 빈 값일 때는 실행하지 않음
+  const handleSearch = async (e?: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e) e.preventDefault(); // Enter 키의 기본 동작을 방지
+
+    // 검색어 유효성 검사 (handleSearch 함수 내에서만 검사)
+    if (!searchQuery.trim()) {
+      mySwal("단어 검색 실패", "단어에 공백이 들어있습니다.", "error");
+      return;
+    }
+
+    // 한국어 검색어 필터링 (영어 알파벳으로만 이루어진 단어가 아니면 처리)
+    const koreanRegex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+    if (koreanRegex.test(searchQuery)) {
+      mySwal("단어 검색 실패", "단어에 한국어가 들어있습니다.", "error");
+      return;
+    }
 
     try {
-      // getWord API 호출
       const response = await useWordApi.getWord(searchQuery);
       const result = response;
-      console.log(result, "[API] 호출된 데이터 확인");
 
-      // 결과가 있으면 검색된 단어 객체에 저장하고, 의미 리스트를 설정
       if (result && result.id && Array.isArray(result.data)) {
-        setSearchedWord({ id: result.id, word: result.word }); // 단어의 id와 word 저장
-        setSearchedWords(result.data); // 단어 리스트 저장
+        setSearchedWord({ id: result.id, word: result.word });
+        setSearchedWords(result.data);
       } else {
-        setSearchedWord(null); // 검색 결과가 없으면 초기화
+        mySwal("단어 검색 실패", "다른 단어를 입력해주세요.", "error");
+        setSearchedWord(null);
         setSearchedWords([]);
       }
     } catch (error) {
       console.error("Error fetching word data:", error);
-      setSearchedWord(null); // 에러 발생 시 초기화
-      setSearchedWords([]); // 리스트 초기화
+      setSearchedWord(null);
+      setSearchedWords([]);
     }
+  };
+
+  // 알림 표시 함수 (중복 방지)
+  const showAlert = (message: string) => {
+    if (isAlertVisible) return; // 이미 알림이 표시 중일 때는 중복 표시하지 않음
+    setIsAlertVisible(true);
+    alert(message);
+    setTimeout(() => setIsAlertVisible(false), 1000); // 1초 후 중복 방지 해제
   };
 
   return (
@@ -93,24 +124,24 @@ const WordSearch = ({
           onClick={(e) => e.stopPropagation()}
         >
           <div className={styles.inputContainer}>
-            {/* 검색어 입력 인풋 */}
             <input
               type="text"
               placeholder="검색어를 입력해주세요."
               value={searchQuery}
-              onChange={handleSearchInputChange} // 입력 값 업데이트
+              onChange={handleSearchInputChange}
               className={styles.inputBar}
               onKeyDown={(e) => {
-                if (e.key === "Enter") handleSearch(); // Enter 키 입력 시 검색 실행
+                if (e.key === "Enter") handleSearch(e); // Enter 키 입력 시 검색 실행
               }}
             />
-            {/* 검색 버튼 */}
-            <button onClick={handleSearch} className={styles.searchButton}>
+            <button
+              onClick={() => handleSearch()}
+              className={styles.searchButton}
+            >
               <FaSearch size={"20"} />
             </button>
           </div>
 
-          {/* 단어장에 단어 추가 버튼 */}
           {searchedWord && (
             <div className={styles.addButtonContainer}>
               <button className={styles.addButton} onClick={addWordToVoca}>
@@ -119,7 +150,6 @@ const WordSearch = ({
             </div>
           )}
 
-          {/* 검색 결과 리스트 */}
           <div className={styles.searchedWords}>
             {searchedWords.length > 0 ? (
               searchedWords.map((wordData, index) => (
