@@ -11,8 +11,9 @@ spring:
 
   data:
     redis:
-      host: localhost
+      host: j11e103.p.ssafy.io
       port: 6379
+      password: ${redis-secret.password}
   profiles:
     include: "jwt, oauth, secret"
     active: prod
