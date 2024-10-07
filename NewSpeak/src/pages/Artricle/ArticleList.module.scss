@@ -1,0 +1,76 @@
+.container {
+  width: 100%;
+  height: 100%;
+  padding: 5px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .categoryNavbarContainer {
+    display: flex;
+    align-items: center;
+    height: 110px;
+    margin-bottom: 20px;
+    position: relative;
+
+    .categoryNavbar {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      justify-content: center;
+      margin-bottom: 20px;
+      height: 100px;
+      position: relative;
+
+      @media (max-width: 1440px) {
+        grid-template-columns: repeat(5, 1fr);
+        overflow-y: scroll;
+        scroll-behavior: smooth;
+      }
+
+      @media (max-width: 1024px) {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .categoryButton {
+        width: 110px;
+        height: 40px;
+        padding: 10px 15px;
+        margin: 5px;
+        border: 1px solid var(--backgound-color);
+        background-color: var(--main-color);
+        border-radius: 5px;
+
+        &.active {
+          border-bottom: 4px solid var(--contrast-color);
+          background-color: var(--main-color);
+          color: var(--contrast-color);
+        }
+
+        &:hover {
+          background-color: var(--contrast-color);
+        }
+      }
+    }
+
+    .upDownButtons {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      transform: translateY(-10%);
+      right: -50px;
+      width: 50px;
+      gap: 10px;
+      border-radius: 5px;
+      justify-content: center;
+      align-items: center;
+
+      > svg {
+        cursor: pointer;
+        transition: transform 0.2s ease-in-out;
+        &:hover {
+          transform: scale(1.2);
+        }
+      }
+    }
+  }
+}

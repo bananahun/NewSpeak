@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import ReactDOM from 'react-dom';
+import React, { useEffect } from "react";
+import ReactDOM from "react-dom";
 // import useVocaStore from '../../store/VocaStore';
-import styles from './AddWordModal.module.scss';
-import { useVocaStore } from '../../store/VocaStore';
-import userApi from '../../apis/UserApi';
-import { useSelectedSentenceStore } from '../../store/selectedSentenceStore';
+import styles from "./AddWordModal.module.scss";
+import { useVocaStore } from "../../store/VocaStore";
+import userApi from "../../apis/UserApi";
+import { useSelectedSentenceStore } from "../../store/selectedSentenceStore";
 
 interface AddWordModalProps {
   word: string;
@@ -29,7 +29,7 @@ const AddWordModal = ({
           const fetchedVocaId = await userApi.getMyVocas();
           setVocaId(fetchedVocaId); // 가져온 데이터를 상태에 저장
         } catch (error) {
-          console.error('Error fetching vocaIds:', error);
+          console.error("Error fetching vocaIds:", error);
         }
       };
 
@@ -40,14 +40,14 @@ const AddWordModal = ({
 
   const handleAddWord = async () => {
     if (!selectedSentenceId) {
-      alert('단어 추가에 실패했습니다. 다시 시도해주세요');
-      console.log('sentenceId 가져오기 실패');
+      alert("단어 추가에 실패했습니다. 다시 시도해주세요");
+      console.log("sentenceId 가져오기 실패");
       return;
     }
 
     if (!vocaId) {
-      alert('단어 추가에 실패했습니다. 다시 시도해주세요');
-      console.log('vocaId 가져오기 실패');
+      alert("단어 추가에 실패했습니다. 다시 시도해주세요");
+      console.log("vocaId 가져오기 실패");
       return;
     }
 
@@ -56,18 +56,18 @@ const AddWordModal = ({
         articleId,
         vocaId,
         word,
-        selectedSentenceId,
+        selectedSentenceId
       );
       console.log(response);
       if (response && response.status === 200) {
-        alert('단어가 성공적으로 추가되었습니다.'); // 성공 메시지
+        alert("단어가 성공적으로 추가되었습니다."); // 성공 메시지
       } else {
-        alert('단어가 추가되지 않았습니다.');
+        alert("단어가 추가되지 않았습니다.");
       }
       onClose(); // 모달 닫기
     } catch (error) {
-      console.error('Error adding word:', error);
-      alert('단어 추가에 실패했습니다. 다시 시도해주세요.'); // 오류 메시지
+      console.error("Error adding word:", error);
+      alert("단어 추가에 실패했습니다. 다시 시도해주세요."); // 오류 메시지
       onClose();
     }
   };
@@ -84,7 +84,7 @@ const AddWordModal = ({
         </div>
       </div>
     </div>,
-    document.body,
+    document.body
   );
 };
 

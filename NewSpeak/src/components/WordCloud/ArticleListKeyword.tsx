@@ -52,11 +52,10 @@ const ArticleListKeyword: React.FC<ArticleListKeywordProps> = ({
     navigate('/article');
   };
 
-  // 날짜 형식을 변환하는 함수
   const formatDate = (dateString: string) => {
     try {
       const dateObject = new Date(dateString);
-      return dateObject.toLocaleDateString(); // 기본 형식 (e.g., "9/15/2024")
+      return dateObject.toLocaleDateString();
     } catch (error) {
       console.error('Date format error:', error);
       return '';
@@ -76,7 +75,6 @@ const ArticleListKeyword: React.FC<ArticleListKeywordProps> = ({
               }}
             >
               <div className={styles.imageContainer}>
-                {/* 이미지 URL이 있으면 이미지, 없으면 아이콘 표시 */}
                 {article.imageUrl ? (
                   <img
                     src={article.imageUrl}
@@ -90,7 +88,6 @@ const ArticleListKeyword: React.FC<ArticleListKeywordProps> = ({
               <div className={styles.articleInfo}>
                 <p className={styles.title}>{article.title}</p>
               </div>
-              {/* 날짜 변환 함수 formatDate를 사용하여 표시 */}
               <p className={styles.publishedDate}>
                 {formatDate(article.publishedDate)} <strong>|</strong>{' '}
                 {article.publisher}

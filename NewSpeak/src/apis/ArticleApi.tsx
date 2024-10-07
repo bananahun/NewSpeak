@@ -1,9 +1,11 @@
 import axiosInstance from "./axiosConfig";
 
 // 기사 리스트 조회
-const getArticleList = async () => {
+const getArticleList = async (page: number) => {
   try {
-    const response = await axiosInstance.get("/articles");
+    const response = await axiosInstance.get("/articles", {
+      params: { page },
+    });
     console.log(response.data, "[API] getArticleList 호출 결과");
     return response.data.data;
   } catch (error) {
@@ -11,11 +13,13 @@ const getArticleList = async () => {
   }
 };
 
-const getArticleLevel = async (level: number) => {
+const getArticleLevel = async (level: number, page: number) => {
   try {
-    const response = await axiosInstance.get(`/articles/level/${level}`);
+    const response = await axiosInstance.get(`/articles/level/${level}`, {
+      params: { page },
+    });
     console.log(response.data, "[API] getArticleLevel 호출 결과");
-    return response.data;
+    return response.data.data;
   } catch (error) {
     console.error("[API] getArticleLevel 에러:", error);
   }
@@ -98,7 +102,7 @@ const getWord = async (word: string) => {
   try {
     const response = await axiosInstance.get(`/words/${word}/meaning`);
     console.log(response.data, "[API] getWord 호출 결과");
-    return response.data.data;
+    return response.data;
   } catch (error) {
     console.error("[API] getWord 에러:", error);
   }

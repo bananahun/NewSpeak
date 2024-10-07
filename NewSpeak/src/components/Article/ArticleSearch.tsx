@@ -1,48 +1,96 @@
-import React, { useState, useEffect } from 'react';
-import useElasticApi from '../../apis/ElasticApi'; // Elastic 관련 API 사용
+import React, { useState, useEffect, useRef } from 'react';
+import useElasticApi from '../../apis/ElasticApi';
 import styles from './ArticleSearch.module.scss';
 import { useNavigate } from 'react-router-dom';
 import useThemeStore from '../../store/ThemeStore';
 import useArticleStore from '../../store/ArticleStore';
-import useAuthStore from '../../store/AuthStore'; // AuthStore에서 로그인 상태를 가져오기 위해 추가
 import logo from '../../assets/NewSpeak.png';
 import logoWhite from '../../assets/NewSpeakWhite.png';
+import useArticleApi from '../../apis/ArticleApi';
+import LoadingModal from '../Modal/LoadingModal';
+import {
+  FaAngleLeft,
+  FaAnglesLeft,
+  FaAngleRight,
+  FaAnglesRight,
+  FaPlus,
+} from 'react-icons/fa6';
 
 interface Article {
   id: number;
   title: string;
+  content: string;
   imageUrl: string;
-  publishedDate: string;
+  date: string;
   publisher: string;
 }
 
-const ArticleSearch: React.FC = () => {
+const ArticleSearch = () => {
   const { setArticleMeta } = useArticleStore();
   const { theme } = useThemeStore();
   const [mainLogo, setMainLogo] = useState(logo);
-  const [searchQuery, setSearchQuery] = useState<string>(''); // 검색어 상태
-  const [searchTitle, setSearchTitle] = useState<string>(''); // 제목 입력 상태
-  const [searchContent, setSearchContent] = useState<string>(''); // 본문 입력 상태
-  const [searchType, setSearchType] = useState<string>('title'); // 선택된 검색 타입
-  const [startDate, setStartDate] = useState<string>(''); // 시작 날짜
-  const [endDate, setEndDate] = useState<string>(''); // 종료 날짜
-  const [articles, setArticles] = useState<Article[]>([]); // 검색 결과 상태
-  const [showResults, setShowResults] = useState<boolean>(false); // 결과 표시 여부
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchType, setSearchType] = useState<string>('title');
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
+  const [level, setLevel] = useState<number>(1);
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [showResults, setShowResults] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [fetchLoading, setFetchLoading] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const articleRef = useRef<HTMLDivElement>(null);
 
-  const { isLoggedIn } = useAuthStore(); // 로그인 상태를 가져옴
-  const navigate = useNavigate(); // 라우팅을 위한 네비게이션 훅
+  const navigate = useNavigate();
 
-  // 검색 타입 변경 시, 관련 입력 필드를 초기화
+  useEffect(() => {
+    setMainLogo(theme === 'light' ? logo : logoWhite);
+  }, [theme]);
+
   useEffect(() => {
     setSearchQuery('');
-    setSearchTitle('');
-    setSearchContent('');
     setStartDate('');
     setEndDate('');
-    setShowResults(false); // 검색 옵션이 바뀌면 이전 검색 결과를 숨김
+    setLevel(1);
+    setShowResults(false);
+    setArticles([]);
   }, [searchType]);
 
-  // 드롭다운에서 검색 타입 변경 핸들러
+  useEffect(() => {});
+
+  const loadArticleDetail = (article: Article) => {
+    setArticleMeta({
+      id: article.id,
+      title: article.title,
+      imageUrl: article.imageUrl,
+    });
+    navigate('/article');
+  };
+
+  const handleMoveLeft = () => {
+    if (articleRef.current) {
+      articleRef.current.scrollLeft -= 575;
+    }
+  };
+
+  const handleMoveLeftEnd = () => {
+    if (articleRef.current) {
+      articleRef.current.scrollLeft = 0;
+    }
+  };
+
+  const handleMoveRight = () => {
+    if (articleRef.current) {
+      articleRef.current.scrollLeft += 575;
+    }
+  };
+
+  const handleMoveRightEnd = () => {
+    if (articleRef.current) {
+      articleRef.current.scrollLeft = articleRef.current.scrollWidth;
+    }
+  };
+
   const handleSearchTypeChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
@@ -51,14 +99,6 @@ const ArticleSearch: React.FC = () => {
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
-  };
-
-  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTitle(event.target.value);
-  };
-
-  const handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchContent(event.target.value);
   };
 
   const handleStartDateChange = (
@@ -71,41 +111,61 @@ const ArticleSearch: React.FC = () => {
     setEndDate(event.target.value);
   };
 
+  const handleLevelChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setLevel(Number(event.target.value));
+  };
+
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
-      handleSearch(); // 검색 함수 실행
+      handleSearch(0, true);
     }
   };
 
-  const handleSearch = async () => {
-    if (!isLoggedIn) {
-      alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
-      navigate('/login'); // 로그인 페이지로 리다이렉트
-      return; // 로그인되지 않은 경우 검색 함수 중단
+  const handleSearch = async (page: number = 0, reset: boolean = false) => {
+    if (reset) {
+      setCurrentPage(0);
+      setArticles([]);
     }
-
+    setFetchLoading(true);
     try {
-      let result: Article[] | undefined;
+      let result;
+      let title = '';
+      let content = '';
+
+      if (searchType === 'titleContentDate') {
+        const splitIndex = searchQuery.indexOf(':');
+        if (splitIndex !== -1) {
+          title = searchQuery.slice(0, splitIndex).trim();
+          content = searchQuery.slice(splitIndex + 1).trim();
+        } else {
+          title = searchQuery;
+          content = searchQuery;
+        }
+      }
 
       switch (searchType) {
         case 'title':
-          result = await useElasticApi.getElasticByKeyword(searchQuery, 0);
+          result = await useElasticApi.getElasticByKeyword(searchQuery, page);
           break;
         case 'content':
-          result = await useElasticApi.getElasticByContent(searchQuery, 0);
+          result = await useElasticApi.getElasticByContent(searchQuery, page);
           break;
         case 'contentKR':
-          result = await useElasticApi.getElasticByContentKR(searchQuery, 0);
+          result = await useElasticApi.getElasticByContentKR(searchQuery, page);
           break;
         case 'date':
-          result = await useElasticApi.getElasticByDate(startDate, endDate, 0);
+          result = await useElasticApi.getElasticByDate(
+            startDate,
+            endDate,
+            page,
+          );
           break;
         case 'titleDate':
           result = await useElasticApi.getElasticByTitleDate(
             startDate,
             endDate,
             searchQuery,
-            0,
+            page,
           );
           break;
         case 'contentDate':
@@ -113,46 +173,56 @@ const ArticleSearch: React.FC = () => {
             startDate,
             endDate,
             searchQuery,
-            0,
+            page,
           );
           break;
         case 'titleContentDate':
           result = await useElasticApi.getElasticByTitleContentDate(
             startDate,
             endDate,
-            searchTitle,
-            searchContent,
-            0,
+            title,
+            content,
+            page,
           );
+          break;
+        case 'level':
+          result = await useArticleApi.getArticleLevel(level, page);
           break;
         default:
           result = [];
       }
-
-      setArticles(result || []); // 결과 설정
-      setShowResults(true); // 검색 결과를 표시
+      if (result && Array.isArray(result)) {
+        const formattedArticles = result.map(article => ({
+          id: article.id,
+          title: article.title,
+          content: article.content || '',
+          imageUrl: article.imageUrl,
+          date: article.publishedDate,
+          publisher: article.publisher,
+        }));
+        if (articles.length === 0) {
+          setArticles(formattedArticles);
+        } else {
+          setArticles(prev => {
+            return [...prev, ...formattedArticles];
+          });
+        }
+        setShowResults(true);
+        setLoading(false);
+        setFetchLoading(false);
+      }
     } catch (error) {
       console.error(`"${searchQuery}"로 검색한 기사 가져오기 에러:`, error);
-      setArticles([]); // 오류 발생 시 빈 배열로 설정하여 오류 방지
+      setArticles([]);
+      setFetchLoading(false);
     }
   };
 
-  const loadArticleDetail = (article: Article) => {
-    setArticleMeta({
-      id: article.id,
-      title: article.title,
-      imageUrl: article.imageUrl,
-    });
-    navigate('/article');
+  const loadMoreArticles = () => {
+    if (loading || fetchLoading) return;
+    handleSearch(currentPage + 1);
+    setCurrentPage(prevPage => prevPage + 1);
   };
-
-  useEffect(() => {
-    if (theme === 'light') {
-      setMainLogo(logo);
-    } else {
-      setMainLogo(logoWhite);
-    }
-  }, [theme]);
 
   return (
     <div className={styles.searchSection}>
@@ -161,7 +231,6 @@ const ArticleSearch: React.FC = () => {
           showResults ? styles.moveUp : ''
         }`}
       >
-        {/* 검색 타입 선택 드롭다운 */}
         <select
           value={searchType}
           onChange={handleSearchTypeChange}
@@ -174,100 +243,105 @@ const ArticleSearch: React.FC = () => {
           <option value="titleDate">날짜 + 제목 검색</option>
           <option value="contentDate">날짜 + 본문 검색</option>
           <option value="titleContentDate">날짜 + 제목 + 본문 검색</option>
+          <option value="level">난이도별 검색</option>
         </select>
 
-        {/* 날짜 입력 칸 (옵션에 따라 표시) */}
-        {(searchType.includes('Date') || searchType === 'date') && (
-          <div className={styles.dateInputContainer}>
-            <input
-              type="date"
-              value={startDate}
-              onChange={handleStartDateChange}
-              placeholder="시작 날짜"
-              className={styles.dateInput}
-            />
-            <input
-              type="date"
-              value={endDate}
-              onChange={handleEndDateChange}
-              placeholder="종료 날짜"
-              className={styles.dateInput}
-            />
-          </div>
-        )}
-
-        {/* 검색 인풋 (기본 인풋 필드) */}
-        {searchType !== 'date' && searchType !== 'titleContentDate' && (
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            onKeyPress={handleKeyPress}
-            placeholder="검색어를 입력하세요"
-            className={styles.searchInput}
-          />
-        )}
-
-        {/* 제목과 본문을 따로 입력할 수 있는 필드 */}
-        {searchType === 'titleContentDate' && (
-          <div className={styles.multiInputContainer}>
+        <div className={styles.inputContainer}>
+          {searchType !== 'date' && (
             <input
               type="text"
-              value={searchTitle}
-              onChange={handleTitleChange}
+              value={searchQuery}
+              onChange={handleSearchChange}
               onKeyPress={handleKeyPress}
-              placeholder="제목을 입력하세요"
+              placeholder="검색어를 입력하세요"
               className={styles.searchInput}
             />
-            <input
-              type="text"
-              value={searchContent}
-              onChange={handleContentChange}
-              onKeyPress={handleKeyPress}
-              placeholder="본문을 입력하세요"
-              className={styles.searchInput}
-            />
-          </div>
-        )}
+          )}
 
-        <button onClick={handleSearch} className={styles.searchButton}>
-          검색
-        </button>
-      </div>
-
-      {/* 검색 결과 표시 */}
-      {showResults && (
-        <div className={styles.searchResults}>
-          {articles && articles.length > 0 ? (
-            articles.map(article => (
-              <div
-                key={article.id}
-                className={styles.articleCard}
-                onClick={() => loadArticleDetail(article)}
-              >
-                <div className={styles.imageContainer}>
-                  <img
-                    src={article.imageUrl || mainLogo}
-                    alt={article.title}
-                    className={styles.articleImage}
-                  />
-                </div>
-                <div className={styles.articleInfo}>
-                  <h4 className={styles.title}>{article.title}</h4>
-                  <p className={styles.meta}>
-                    {new Date(article.publishedDate).toLocaleDateString()}{' '}
-                    <strong>|</strong> {article.publisher}
-                  </p>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className={styles.noArticlesMessage}>
-              검색 결과가 없습니다.
+          {(searchType.includes('Date') || searchType === 'date') && (
+            <div className={styles.dateInputContainer}>
+              <input
+                type="date"
+                value={startDate}
+                onChange={handleStartDateChange}
+                className={styles.dateInput}
+              />
+              부터
+              <input
+                type="date"
+                value={endDate}
+                onChange={handleEndDateChange}
+                className={styles.dateInput}
+              />
+              까지
             </div>
           )}
         </div>
-      )}
+
+        <button
+          onClick={() => handleSearch(0, true)}
+          className={styles.searchButton}
+        >
+          검색
+        </button>
+      </div>
+      <div className={styles.articleListComponent}>
+        {showResults && !loading && (
+          <>
+            {articles.length > 0 ? (
+              <>
+                <div className={styles.searchResults} ref={articleRef}>
+                  {articles.map((article, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className={styles.articleCard}
+                        onClick={() => loadArticleDetail(article)}
+                      >
+                        <div className={styles.imageContainer}>
+                          <img
+                            src={article.imageUrl ? article.imageUrl : mainLogo}
+                            alt={article.title || 'Default News Image'}
+                            className={styles.articleImage}
+                          />
+                        </div>
+                        <div className={styles.articleInfo}>
+                          <h4 className={styles.title}>{article.title}</h4>
+                          <p className={styles.meta}>
+                            {new Date(article.date).toLocaleDateString()}{' '}
+                            <strong>|</strong> {article.publisher}
+                          </p>
+                          <p className={styles.content}>{article.content}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {fetchLoading ? (
+                    <LoadingModal />
+                  ) : (
+                    <div
+                      className={styles.loadMoreButton}
+                      onClick={loadMoreArticles}
+                    >
+                      <FaPlus size={20} />
+                    </div>
+                  )}
+                </div>
+                <div className={styles.scrollButtons}>
+                  <FaAnglesLeft size={30} onClick={handleMoveLeftEnd} />
+                  <FaAngleLeft size={30} onClick={handleMoveLeft} />
+                  <FaAngleRight size={30} onClick={handleMoveRight} />
+                  <FaAnglesRight size={30} onClick={handleMoveRightEnd} />
+                </div>
+              </>
+            ) : (
+              <div className={styles.noArticlesMessage}>
+                검색 결과가 없습니다.
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };

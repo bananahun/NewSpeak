@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './Home.module.scss';
 import WordCloud from '../../components/WordCloud/WordCloud';
 import WordSlider from '../../components/Slider/WordSlider';
-import ArticleList from '../../components/Article/ArticleList';
+import PreferredArticleList from '../../components/Article/PreferredArticleList';
 import ArticleListKeyword from '../../components/WordCloud/ArticleListKeyword';
 import ArticleSearch from '../../components/Article/ArticleSearch';
 import { fullpageScroll } from './ScrollUtils';
@@ -73,32 +73,29 @@ const Home = () => {
   return (
     <div className={styles.home}>
       <div className={`${styles.section} ${styles.wordSection}`}>
-        <div className={styles.home1container}>
-          <div>
-            <div className={styles.wordCloudSlider}>
-              <WordSlider
-                words={words}
-                onWordChange={handleWordChange}
-                selectedWordIndex={selectedWordIndex}
-                resetTrigger={resetTrigger}
-              />
-            </div>
-            <div className={styles.wordCloudContainer}>
-              <WordCloud data={wordData} onWordClick={handleWordClick} />
-            </div>
+        <div className={styles.wordCloud}>
+          <div className={styles.wordCloudSlider}>
+            <WordSlider
+              words={words}
+              onWordChange={handleWordChange}
+              selectedWordIndex={selectedWordIndex}
+              resetTrigger={resetTrigger}
+            />
           </div>
-          <div className={styles.articleListKeywordContainer}>
-            {/* selectedWordId가 null이 아닐 때 ArticleListKeyword 표시 */}
-            {selectedWordId && (
-              <ArticleListKeyword selectedWordId={selectedWordId} />
-            )}
+          <div className={styles.wordCloudContainer}>
+            <WordCloud data={wordData} onWordClick={handleWordClick} />
           </div>
+        </div>
+        <div className={styles.articleListKeywordContainer}>
+          {selectedWordId && (
+            <ArticleListKeyword selectedWordId={selectedWordId} />
+          )}
         </div>
       </div>
       <div className={`${styles.section} ${styles.articleSection}`}>
-        <ArticleList />
+        <PreferredArticleList />
       </div>
-      <div className={styles.section}>
+      <div className={`${styles.section} ${styles.searchSection}`}>
         <ArticleSearch />
       </div>
     </div>

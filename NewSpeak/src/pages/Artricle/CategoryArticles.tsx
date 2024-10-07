@@ -38,7 +38,13 @@ const CategoryArticles: React.FC<CategoryArticlesProps> = ({ categoryId }) => {
   const fetchArticles = async (categoryId: number, page: number) => {
     setLoading(true);
     try {
-      const result = await useArticleApi.getArticleCategory(categoryId, page);
+      let result;
+      if (categoryId === 0) {
+        result = await useArticleApi.getArticleList(page);
+      } else {
+        result = await useArticleApi.getArticleCategory(categoryId, 0);
+      }
+
       if (result.length === 0) {
         setHasMore(false);
       } else {
@@ -61,7 +67,7 @@ const CategoryArticles: React.FC<CategoryArticlesProps> = ({ categoryId }) => {
     setArticleMeta({
       id: article.id,
       title: article.title,
-      imageUrl: article.imageUrl,
+      imageUrl: article.imageUrl || null,
     });
     navigate('/article');
   };
@@ -80,9 +86,9 @@ const CategoryArticles: React.FC<CategoryArticlesProps> = ({ categoryId }) => {
               />
             ) : (
               <img
-                src={noImage} // 이미지가 없는 경우 대체 이미지 사용
+                src={noImage}
                 alt="No Image Available"
-                className={`${styles.articleImage} ${styles.noImage}`} // 스타일 추가
+                className={`${styles.articleImage} ${styles.noImage}`}
               />
             )}
             <div className={styles.articleInfo}>
