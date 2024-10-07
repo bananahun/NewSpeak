@@ -60,7 +60,7 @@ const getMyVocas = async (): Promise<number | null> => {
     }
   } catch (error) {
     console.error("[API] getMyVocas 에러:", error);
-    return null; // 오류 발생 시 빈 배열 반환
+    return null; 
   }
 };
 
