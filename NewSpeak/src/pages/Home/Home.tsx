@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Home.module.scss';
+import sectionStyles from '../../styles/section.module.scss';
 import WordCloud from '../../components/WordCloud/WordCloud';
 import WordSlider from '../../components/Slider/WordSlider';
 import PreferredArticleList from '../../components/Article/PreferredArticleList';
 import ArticleListKeyword from '../../components/WordCloud/ArticleListKeyword';
 import ArticleSearch from '../../components/Article/ArticleSearch';
-import { fullpageScroll } from './ScrollUtils';
+import { fullpageScroll } from '../../utils/ScrollUtils';
 import useArticleApi from '../../apis/ArticleApi';
+import useAuthStore from '../../store/AuthStore';
+import { useNavigate } from 'react-router-dom';
 
 interface WordCloudItem {
   content: string;
@@ -21,6 +24,8 @@ interface FormattedWordData {
 }
 
 const Home = () => {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuthStore();
   const [wordData, setWordData] = useState<FormattedWordData[]>([]);
   const [words, setWords] = useState<FormattedWordData[]>([]);
   const [selectedWordId, setSelectedWordId] = useState<number | null>(null);
@@ -30,6 +35,9 @@ const Home = () => {
   const [resetTrigger, setResetTrigger] = useState<number>(0);
 
   useEffect(() => {
+    if (!isLoggedIn) {
+      navigate('/welcome');
+    }
     fullpageScroll();
 
     const fetchWordData = async () => {
@@ -72,7 +80,7 @@ const Home = () => {
 
   return (
     <div className={styles.home}>
-      <div className={`${styles.section} ${styles.wordSection}`}>
+      <div className={`${sectionStyles.section} ${sectionStyles.wordSection}`}>
         <div className={styles.wordCloud}>
           <div className={styles.wordCloudSlider}>
             <WordSlider
@@ -92,10 +100,14 @@ const Home = () => {
           )}
         </div>
       </div>
-      <div className={`${styles.section} ${styles.articleSection}`}>
+      <div
+        className={`${sectionStyles.section} ${sectionStyles.articleSection}`}
+      >
         <PreferredArticleList />
       </div>
-      <div className={`${styles.section} ${styles.searchSection}`}>
+      <div
+        className={`${sectionStyles.section} ${sectionStyles.searchSection}`}
+      >
         <ArticleSearch />
       </div>
     </div>

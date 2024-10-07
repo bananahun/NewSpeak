@@ -4,60 +4,41 @@
   color: var(--font-color);
   height: 100%;
   width: 100%;
-  overflow-y: hidden;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
-.section {
-  height: 100%;
-  width: 100%;
+.wordCloud {
   display: flex;
+  width: 250px;
+  height: 100%;
   flex-direction: column;
-  align-items: start;
-  position: relative;
-  overflow-y: hidden;
 
-  .wordCloud {
+  .wordCloudSlider {
+    width: 250px;
+    height: 10vh;
     display: flex;
-    width: fit-content;
-    height: 100%;
-    flex-direction: column;
+    position: relative;
+  }
 
-    .wordCloudSlider {
-      width: 30vh;
-      height: 10vh;
-      display: flex;
-      position: relative;
-    }
-
-    .wordCloudContainer {
-      width: 30vh;
-      height: 60vh;
-    }
+  .wordCloudContainer {
+    width: 30vh;
+    height: 60vh;
   }
 }
 
-.wordSection {
-  display: flex;
-  flex-direction: row;
-}
-
 @media (max-width: 1024px) {
-  .wordSection {
-    flex-direction: column;
-    .wordCloud {
-      width: 100%;
-      align-items: center;
-      display: flex;
+  .wordCloud {
+    width: 100%;
+    align-items: center;
+    display: flex;
+    height: 10vh;
+    .wordCloudSlider {
+      width: fit-content;
       height: 10vh;
-      .wordCloudSlider {
-        width: fit-content;
-        height: 10vh;
-      }
     }
-    .wordCloudContainer {
-      display: none;
-    }
+  }
+  .wordCloudContainer {
+    display: none;
   }
 }
 
@@ -68,7 +49,7 @@
 }
 
 .showArticle {
-  top: 0; // 스크롤 시 ArticleList가 보이도록 설정
+  top: 0;
 }
 
 .articleListKeywordContainer {

@@ -19,20 +19,18 @@ import useThemeStore from './store/ThemeStore';
 import useAuthStore from './store/AuthStore';
 import './App.scss';
 import OAuthCallback from './utils/OAuthCallback';
-import PrivateRoute from './components/Login/PrivateRoute'; // PrivateRoute 가져오기
-
-///
-import TestApiComponent from './pages/Test';
-///
+import PrivateRoute from './components/Login/PrivateRoute';
+import Landing from './pages/Landing/Landing';
 
 function App() {
   const { theme } = useThemeStore();
   const location = useLocation();
 
-  const isAuthPage =
+  const hideNav =
     location.pathname === '/register' ||
     location.pathname === '/login' ||
-    location.pathname === '/notfound';
+    location.pathname === '/notfound' ||
+    location.pathname === '/welcome';
 
   const { checkAuth } = useAuthStore();
 
@@ -42,10 +40,11 @@ function App() {
 
   return (
     <div className={`theme ${theme}`}>
-      {!isAuthPage && <Nav />}
-      <main className={`${isAuthPage ? 'authMain' : 'main'}`}>
+      {!hideNav && <Nav />}
+      <main className={`${hideNav ? 'authMain' : 'main'}`}>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/welcome" element={<Landing />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/login/oauth2/code/kakao" element={<OAuthCallback />} />
