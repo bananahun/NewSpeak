@@ -7,7 +7,7 @@
   bottom: 0; /* 하단에서의 위치를 0으로 설정 */
   left: 0; /* 왼쪽으로부터 0 */
   width: 100%; /* 전체 너비 차지 */
-  background-color: white; /* 필요 시 배경색 추가 */
+  background-color: var(--background-color); /* 필요 시 배경색 추가 */
   // z-index: 1000; /* 다른 요소들 위에 배치 */
 }
 
@@ -24,7 +24,7 @@
   border: 2px solid var(--main-color);
   font-size: 16px;
   font-weight: bold;
-  color: white;
+  color: var(--font-color);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 
@@ -68,7 +68,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   transition: all 0.5s ease;
   position: relative;
-  height:fit-content;
+  height:190px;
 }
 
 .card:hover {
@@ -101,7 +101,7 @@
 
 .iconButton {
   flex: 1;
-  height:120px;
+  height:114px;
   border: none;
   padding: 20px;
   cursor: pointer;

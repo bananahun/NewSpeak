@@ -29,19 +29,19 @@
   h1 {
     font-size: 2rem; /* 제목 크기 */
     margin-bottom: 10px; /* 아래쪽 여백 */
-    color: #333; /* 제목 색상 */
+    color: var(--font-color); /* 제목 색상 */
   }
 
   h2 {
     font-size: 1.5rem; /* 문제 의미 크기 */
     margin: 10px 0; /* 위 아래 여백 */
-    color: #555; /* 문제 의미 색상 */
+    color: var(--font-color); /* 문제 의미 색상 */
   }
 
   p {
     font-size: 1rem; /* 일반 문장 크기 */
     margin: 5px 0; /* 위 아래 여백 */
-    color: #666; /* 일반 문장 색상 */
+    color: var(--font-color); /* 일반 문장 색상 */
   }
 }
 

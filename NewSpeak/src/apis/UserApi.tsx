@@ -124,8 +124,8 @@ interface Article {
   id: number;
   title: string;
   publishedDate: string; // API에서 오는 publishedDate의 타입
-  // imageUrl,
-  // publisher,
+  imageUrl:string,
+  publisher:string,
 }
 // 스크랩한 기사 목록 가져오기
 const getMyArticles = async (page: number, size: number) => {
@@ -144,8 +144,8 @@ const getMyArticles = async (page: number, size: number) => {
       title: article.title,
       publishedDate: new Date(article.publishedDate),
 
-      // imageUrl:article.imageUrl,
-      // publisher: article.publisher,
+      imageUrl:article.imageUrl,
+      publisher: article.publisher,
     }));
 
     const filteredData = {

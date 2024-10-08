@@ -66,6 +66,7 @@ const ArticleListComponent = ({
       } else {
         result = await useArticleApi.getArticleCategory(categoryId, page);
       }
+      console.log(result);
       if (result && Array.isArray(result)) {
         const formattedArticles = result.map(article => ({
           id: article.id,
@@ -163,7 +164,7 @@ const ArticleListComponent = ({
                     <h4 className={styles.title}>{article.title}</h4>
                     <p className={styles.meta}>
                       {new Date(article.date).toLocaleDateString()}{' '}
-                      <strong>|</strong> {article.publisher}
+                      <p className={styles.slash}>|</p> {article.publisher}
                     </p>
                     <p className={styles.content}>{article.content}</p>
                   </div>
