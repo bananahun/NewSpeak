@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import useArticleStore from '../../store/ArticleStore';
 import {
   Button,
@@ -35,6 +35,7 @@ interface Word {
 const ArticleListKeyword: React.FC = () => {
   const navigate = useNavigate();
   const { setArticleMeta } = useArticleStore();
+  const location = useLocation();
   const [articles, setArticles] = useState<Article[]>([]);
   const [words, setWords] = useState<Word[]>([]);
   const [selectedWordId, setSelectedWordId] = useState<number | null>(null);
@@ -64,6 +65,9 @@ const ArticleListKeyword: React.FC = () => {
 
   useEffect(() => {
     fetchWordData();
+    if (location.state) {
+      setSelectedWordId(location.state);
+    }
   }, []);
 
   useEffect(() => {
