@@ -62,12 +62,24 @@ const Dashboard = () => {
     null,
   );
   const [resetTrigger, setResetTrigger] = useState<number>(0);
-  const [reportData, setReportData] = useState<Report[]>([]);
-  const [recentReport, setRecentReport] = useState<any[]>([]);
+  const [reportData, setReportData] = useState<any[]>([]);
+  const [lastReport, setLastReport] = useState<Report | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 1024);
+    };
+
+    handleResize(); // 초기 렌더 시 체크
+    window.addEventListener('resize', handleResize); // 창 크기 변경 시 체크
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchWordData = async () => {
+      setIsLoading(true);
       try {
         const result: WordCloudItem[] = await useArticleApi.getWordCloud();
         const formattedData: FormattedWordData[] = result
@@ -88,8 +100,12 @@ const Dashboard = () => {
         console.error('Error fetching word cloud data:', error);
       }
     };
+    fetchWordData();
+  }, []);
 
+  useEffect(() => {
     const getReports = async () => {
+      setIsLoading(true);
       try {
         const response = await getReportList();
         const rawData = response.reports;
@@ -102,40 +118,15 @@ const Dashboard = () => {
             content: parsedContent.content,
           };
         });
-
+        console.log(parsedData);
         setReportData(parsedData);
+        setIsLoading(false);
       } catch (error) {
         console.error(error);
       }
     };
-
-    fetchWordData();
     getReports();
   }, []);
-
-  useEffect(() => {
-    const parseReport = () => {
-      if (reportData.length > 0) {
-        const parsedData = reportData.map(report => ({
-          id: report.id,
-          title: report.content.title || report.title || 'Untitled Report',
-          score: report.content.score,
-          feedback: report.content.feedback,
-          suggestions: report.content.suggestions.join(', '),
-          conversation: report.content.conversation,
-        }));
-
-        const lastReports = parsedData.slice(-3);
-        setRecentReport(lastReports);
-        console.log(lastReports);
-      }
-    };
-    parseReport();
-  }, [reportData]);
-
-  useEffect(() => {
-    setIsLoading(false);
-  }, [recentReport]);
 
   const handleWordChange = (word: FormattedWordData) => {
     setSelectedWordId(word.id);
@@ -163,6 +154,23 @@ const Dashboard = () => {
     navigate('/report', { state: { reportId } });
   };
 
+  useEffect(() => {
+    if (reportData.length > 0) {
+      const lastData = reportData.slice(-1);
+      const parsedContent = {
+        id: lastData[0].id,
+        title: lastData[0].title,
+        content: lastData[0].content,
+      };
+      // console.log(parsedContent);
+      setLastReport(parsedContent);
+    }
+  }, [reportData]);
+
+  useEffect(() => {
+    console.log(lastReport);
+  }, [lastReport]);
+
   return (
     <>
       <div className={styles.dashboard}>
@@ -171,11 +179,7 @@ const Dashboard = () => {
         </div>
         <div className={styles.dashboardContent}>
           <div className={`${styles.gridBlock} ${styles.wordCloud}`}>
-            <WordCloud
-              data={words}
-              dashboard={true}
-              onWordClick={handleWordClick}
-            />
+            <WordCloud data={words} onWordClick={handleWordClick} />
           </div>
           <div className={`${styles.gridBlock} ${styles.wordSlide}`}>
             <p className={styles.wordSlideTitle}>
@@ -193,49 +197,47 @@ const Dashboard = () => {
             <strong onClick={handleCountClick}>{selectedWordCount}</strong>
             &nbsp;times
           </div>
-          <div className={`${styles.gridBlock} ${styles.example}`}>
-            회화 튜토리얼 보기
-          </div>
-          <div className={`${styles.gridBlock} ${styles.example}`}>
-            기사 전체 조회
-          </div>
-          <div className={`${styles.gridBlock} ${styles.report}`}>
-            {isLoading ? (
-              <LoadingModal />
-            ) : (
-              <>
-                <h1 className={styles.reportGridHeader}>
-                  Recent {Math.min(reportData.length, 3)} Reports
-                </h1>
-                {recentReport.length > 0 ? (
-                  <>
-                    {recentReport.map((report, index) => (
+          {!isMobile && (
+            <div className={`${styles.gridBlock} ${styles.report}`}>
+              {isLoading ? (
+                <LoadingModal />
+              ) : (
+                <>
+                  {lastReport !== null ? (
+                    <>
                       <div
-                        key={report.id}
                         className={styles.reportCard}
-                        onClick={() => handleReportClick(report.id)}
+                        onClick={() => handleReportClick(lastReport.id)}
                       >
+                        <div className={styles.cardHeader}>Last Report</div>
                         <div className={styles.chartHeader}>
-                          {reportData.length <= 2
-                            ? index == reportData.length - 1 && <>new!</>
-                            : index == 2 && <>new!</>}
+                          <p>{lastReport.title}</p>
+                          <p>score: {lastReport.content.score}</p>
                         </div>
                         <div className={styles.chartContainer}>
-                          score: {report.score}
-                          {renderRadarChart(report, true)}
+                          <p className={styles.innerScore}>
+                            score: {lastReport.content.score}
+                          </p>
+                          {renderRadarChart(lastReport.content, true)}
                         </div>
                       </div>
-                    ))}
-                  </>
-                ) : (
-                  <div className={styles.blankReport}>
-                    <h1 className={styles.blankTitle}>
-                      아직 생성된 회화 보고서가 없어요
-                    </h1>
-                  </div>
-                )}
-              </>
-            )}
+                    </>
+                  ) : (
+                    <div className={styles.blankReport}>
+                      <h1 className={styles.blankTitle}>
+                        아직 생성된 회화 보고서가 없어요
+                      </h1>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+          <div className={`${styles.gridBlock} ${styles.example}`}>
+            단어 검색
+          </div>
+          <div className={`${styles.gridBlock} ${styles.example}`}>
+            단어 검색 결과
           </div>
         </div>
       </div>

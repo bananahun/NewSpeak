@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { useMediaQuery } from '@mui/material';
 import logoWhite from '../assets/NewSpeakWhite.png';
 import logoBlack from '../assets/NewSpeak.png';
 
@@ -10,6 +11,7 @@ export enum Theme {
 interface ThemeState {
   theme: Theme;
   setTheme: (theme: Theme) => void;
+  syncWithSystemTheme: () => void;
 }
 
 const getStoredTheme = (): Theme => {
@@ -25,6 +27,12 @@ const useThemeStore = create<ThemeState>(set => ({
   setTheme: (theme: Theme) => {
     set({ theme });
     localStorage.setItem('theme', theme);
+  },
+  syncWithSystemTheme: () => {
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+    const systemTheme = prefersDarkMode ? Theme.Dark : Theme.Light;
+    set({ theme: systemTheme });
+    localStorage.setItem('theme', systemTheme);
   },
 }));
 
