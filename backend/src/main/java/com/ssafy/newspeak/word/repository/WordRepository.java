@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Repository
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class WordRepository {
             return query.getSingleResult();
         } catch (NoResultException e) {
             // 결과가 없는 경우
-            return null;
+            throw new NoSuchElementException("word not found");
         } catch (NonUniqueResultException e) {
             // 결과가 여러 개인 경우
             throw new RuntimeException("Multiple results found for content: " + content);

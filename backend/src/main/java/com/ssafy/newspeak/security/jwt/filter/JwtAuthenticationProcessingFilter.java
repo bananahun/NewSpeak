@@ -35,7 +35,7 @@ import java.util.Optional;
  * 1. RefreshToken이 없고, AccessToken이 유효한 경우 -> 인증 성공 처리, RefreshToken을 재발급하지는 않는다.
  * 2. RefreshToken이 없고, AccessToken이 없거나 유효하지 않은 경우 -> 인증 실패 처리, 403 ERROR
  * 3. RefreshToken이 있는 경우 -> DB의 RefreshToken과 비교하여 일치하면 AccessToken 재발급, RefreshToken 재발급(RTR 방식)
- *                              인증 성공 처리는 하지 않고 실패 처리
+ *                              인증 성공 처리 필터 통과 controller 정상 작동
  *
  */
 @RequiredArgsConstructor
@@ -127,6 +127,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         String reIssuedRefreshToken = jwtService.createRefreshToken(user.getId());
         user.updateRefreshToken(reIssuedRefreshToken);
         userRepo.saveAndFlush(user);
+        log.info("reIssueRefreshToken in jwtFilter");
         return reIssuedRefreshToken;
     }
 
@@ -146,26 +147,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                 .ifPresent(accessToken -> jwtService.extractUserId(accessToken)
                         .ifPresent(userId -> userRepo.findById(userId)
                                 .ifPresent(this::saveAuthentication)));
-    }
-
-
-    public boolean checkAccessTokenAndAuthentication(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        return Optional.ofNullable(request.getCookies())
-                .flatMap(cookies -> Arrays.stream(cookies)
-                        .filter(cookie -> "accessToken".equals(cookie.getName()))
-                        .map(Cookie::getValue)
-                        .findFirst())
-                .filter(jwtService::isTokenValid) // 토큰 유효성 검사
-                .flatMap(accessToken -> jwtService.extractUserId(accessToken)) // Id 추출
-                .flatMap(
-                        userId
-                                -> userRepo.findById(userId)) // ID로 사용자 조회
-                .map(user -> {
-                    // 사용자가 존재하면 true 반환
-                    saveAuthentication(user);
-                    return true;
-                })
-                .orElse(false); // 모든 조건을 만족하지 않으면 false 반환
     }
 
     /**
@@ -189,11 +170,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             password = PasswordUtil.generateRandomPassword();
         }
 
-//        UserDetails userDetailsUser = org.springframework.security.core.userdetails.User.builder()
-//                .username(myUser.getEmail())
-//                .password(password)
-//                .roles(myUser.getRole().name())
-//                .build();
         MyUserDetails userDetailsUser=new MyUserDetails(myUser,myUser.getRole().name());
 
         Authentication authentication =

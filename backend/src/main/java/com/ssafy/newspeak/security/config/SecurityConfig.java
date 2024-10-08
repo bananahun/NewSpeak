@@ -63,6 +63,9 @@ public class SecurityConfig {
     @Value("${frontUrl}")
     private String frontUrl;
 
+    @Value("${mainUrl}")
+    private String mainUrl;
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
         return web -> web.ignoring()
@@ -102,6 +105,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/signUp","/api/v1/auth/email").hasRole("GUEST")
                         .requestMatchers("/api/**").hasRole("USER")
                         .anyRequest().authenticated())
+
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oAuth2LoginSuccessHandler)
                         .failureHandler(oAuth2LoginFailureHandler)
@@ -110,8 +114,7 @@ public class SecurityConfig {
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint())
                 )
-                .addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class)
-                .addFilterBefore(jwtAuthenticationProcessingFilter(), CustomJsonUsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationProcessingFilter(),LogoutFilter.class);
 
         return http.build();
     }
