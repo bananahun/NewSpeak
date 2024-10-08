@@ -107,11 +107,11 @@ For building and running the application you need:
 
 **BackEnd**
 
-> OpenAi 챗봇 기능 구현
-> TTS를 활용한 회화 기능 구현
-> 회화 보고서 완성을 위한 OpenAi Assistant 활용
-> Google Cloud Storage를 활용한 저장소 확보
-> Oauth 2.0 을 활용한 JWT 인증
+> - OpenAi 챗봇 기능 구현
+> - TTS를 활용한 회화 기능 구현
+> - 회화 보고서 완성을 위한 OpenAi Assistant 활용
+> - Google Cloud Storage를 활용한 저장소 확보
+> - Oauth 2.0 을 활용한 JWT 인증
 
 ---
 
