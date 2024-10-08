@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -118,16 +119,13 @@ public class ProService {
 
                 JsonElement scoreElement = returnObject.get("score");
 
-                if (scoreElement != null && scoreElement.isJsonPrimitive() && scoreElement.getAsJsonPrimitive().isNumber()) {
-                    try {
-                        score = scoreElement.getAsDouble();
-                    } catch (NumberFormatException e) {
-                        // score가 숫자 형식이 아니면 기본값(0)을 유지
-                        System.out.println("Score is not a valid double, using default value 0");
-                    }
-                } else {
-                    System.out.println("Score is missing or not a number, using default value 0");
+                try {
+                    score = scoreElement.getAsDouble();
+                } catch (NumberFormatException e) {
+                    // score가 숫자 형식이 아니면 기본값(0)을 유지
+                    System.out.println("Score is not a valid double, using default value 0");
                 }
+
 
                 Pronounce pronounce = Pronounce.builder()
                         .proScore(score)
@@ -135,15 +133,16 @@ public class ProService {
                         .build();
                 proRepository.save(pronounce);
                 return ProResponse.from(score);
-            }
 
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Failed to connect to API.", e);
-            throw new RuntimeException("Failed to connect to API.", e);
-        } finally {
-            if (con != null) {
+            } catch (IOException e) {
+                LOGGER.log(Level.SEVERE, "Failed to connect to API.", e);
+                throw new RuntimeException("Failed to connect to API.", e);
+            } finally {
                 con.disconnect();
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
+
