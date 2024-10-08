@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useArticleStore from '../../store/ArticleStore';
 import {
   Button,
   Card,
@@ -11,10 +12,10 @@ import {
   MenuItem,
   IconButton,
   Tooltip,
-} from "@mui/material";
-import ArrowDropDownCircleIcon from "@mui/icons-material/ArrowDropDownCircle";
-import useArticleApi from "../../apis/ArticleApi";
-import noImage from "../../assets/NewSpeak.png";
+} from '@mui/material';
+import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
+import useArticleApi from '../../apis/ArticleApi';
+import noImage from '../../assets/NewSpeak.png';
 
 interface Article {
   id: number;
@@ -33,6 +34,7 @@ interface Word {
 
 const ArticleListKeyword: React.FC = () => {
   const navigate = useNavigate();
+  const { setArticleMeta } = useArticleStore();
   const [articles, setArticles] = useState<Article[]>([]);
   const [words, setWords] = useState<Word[]>([]);
   const [selectedWordId, setSelectedWordId] = useState<number | null>(null);
@@ -46,7 +48,7 @@ const ArticleListKeyword: React.FC = () => {
       const formattedData = Array.isArray(wordData) ? wordData : wordData?.data;
       setWords(formattedData || []);
     } catch (error) {
-      console.error("Error fetching word data:", error);
+      console.error('Error fetching word data:', error);
     }
   };
 
@@ -56,7 +58,7 @@ const ArticleListKeyword: React.FC = () => {
       const result = await useArticleApi.getArticleWordCloud(wordId, 0);
       setArticles(result);
     } catch (error) {
-      console.error("Error fetching articles:", error);
+      console.error('Error fetching articles:', error);
     }
   };
 
@@ -81,7 +83,12 @@ const ArticleListKeyword: React.FC = () => {
   };
 
   const loadArticleDetail = (article: Article) => {
-    navigate("/article", { state: { articleId: article.id } });
+    setArticleMeta({
+      id: article.id,
+      title: article.title,
+      imageUrl: article.imageUrl,
+    });
+    navigate('/article');
   };
 
   const formatDate = (dateString: string) => {
@@ -89,13 +96,13 @@ const ArticleListKeyword: React.FC = () => {
       const dateObject = new Date(dateString);
       return dateObject.toLocaleDateString();
     } catch (error) {
-      console.error("Date format error:", error);
-      return "";
+      console.error('Date format error:', error);
+      return '';
     }
   };
 
   return (
-    <Box sx={{ padding: "20px", margin: "20px", textAlign: "center" }}>
+    <Box sx={{ padding: '20px', margin: '20px', textAlign: 'center' }}>
       <Typography variant="h4" gutterBottom>
         핫 키워드 뉴스
       </Typography>
@@ -107,10 +114,10 @@ const ArticleListKeyword: React.FC = () => {
               <IconButton
                 onClick={handleMenuOpen}
                 sx={{
-                  border: "1px solid #ddd",
-                  borderRadius: "50%",
-                  padding: "10px",
-                  backgroundColor: "#f5f5f5",
+                  border: '1px solid #ddd',
+                  borderRadius: '50%',
+                  padding: '10px',
+                  backgroundColor: '#f5f5f5',
                 }}
               >
                 <ArrowDropDownCircleIcon fontSize="large" color="primary" />
@@ -121,10 +128,10 @@ const ArticleListKeyword: React.FC = () => {
               open={isMenuOpen}
               onClose={handleMenuClose}
               PaperProps={{
-                sx: { width: 200, backgroundColor: "#f7f7f7" },
+                sx: { width: 200, backgroundColor: '#f7f7f7' },
               }}
             >
-              {words.map((word) => (
+              {words.map(word => (
                 <MenuItem
                   key={word.id}
                   onClick={() => {
@@ -132,8 +139,8 @@ const ArticleListKeyword: React.FC = () => {
                     handleMenuClose();
                   }}
                   sx={{
-                    fontSize: "1rem",
-                    "&:hover": { backgroundColor: "#eeeeee" },
+                    fontSize: '1rem',
+                    '&:hover': { backgroundColor: '#eeeeee' },
                   }}
                 >
                   {word.content}
@@ -142,10 +149,10 @@ const ArticleListKeyword: React.FC = () => {
             </Menu>
           </>
         ) : (
-          words.map((word) => (
+          words.map(word => (
             <Button
               key={word.id}
-              variant={word.id === selectedWordId ? "contained" : "outlined"}
+              variant={word.id === selectedWordId ? 'contained' : 'outlined'}
               onClick={() => setSelectedWordId(word.id)}
               sx={{ margin: 1, fontSize: `${word.size * 0.08 + 12}px` }}
             >
@@ -155,7 +162,7 @@ const ArticleListKeyword: React.FC = () => {
         )}
       </Box>
 
-      <Box sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
         {selectedWordId === null && (
           <Typography variant="body1" color="textSecondary">
             Please select a word to view related articles.
@@ -163,11 +170,11 @@ const ArticleListKeyword: React.FC = () => {
         )}
 
         {selectedWordId !== null && articles.length > 0
-          ? articles.map((article) => (
+          ? articles.map(article => (
               <Card
                 key={article.id}
                 onClick={() => loadArticleDetail(article)}
-                sx={{ maxWidth: 600, margin: 2, cursor: "pointer" }}
+                sx={{ maxWidth: 600, margin: 2, cursor: 'pointer' }}
               >
                 <CardMedia
                   component="img"
