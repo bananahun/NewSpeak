@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
-import styles from "./Home.module.scss";
-import WordCloud from "../../components/WordCloud/WordCloud";
-import WordSlider from "../../components/Slider/WordSlider";
-import ArticleList from "../../components/Article/ArticleList";
-import ArticleListKeyword from "../../components/WordCloud/ArticleListKeyword";
-import ArticleSearch from "../../components/Article/ArticleSearch";
-import { fullpageScroll } from "./ScrollUtils";
-import useArticleApi from "../../apis/ArticleApi";
+import React, { useEffect, useState } from 'react';
+import styles from './Home.module.scss';
+import sectionStyles from '../../styles/section.module.scss';
+import WordCloud from '../../components/WordCloud/WordCloud';
+import WordSlider from '../../components/Slider/WordSlider';
+import PreferredArticleList from '../../components/Article/PreferredArticleList';
+import ArticleListKeyword from '../../components/WordCloud/ArticleListKeyword';
+import ArticleSearch from '../../components/Article/ArticleSearch';
+import { fullpageScroll } from '../../utils/ScrollUtils';
+import useArticleApi from '../../apis/ArticleApi';
+import useAuthStore from '../../store/AuthStore';
+import { useNavigate } from 'react-router-dom';
 
 interface WordCloudItem {
   content: string;
@@ -21,13 +24,21 @@ interface FormattedWordData {
 }
 
 const Home = () => {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuthStore();
   const [wordData, setWordData] = useState<FormattedWordData[]>([]);
   const [words, setWords] = useState<FormattedWordData[]>([]);
   const [selectedWordId, setSelectedWordId] = useState<number | null>(null);
   const [selectedWordIndex, setSelectedWordIndex] = useState<number | null>(
-    null
+    null,
   );
   const [resetTrigger, setResetTrigger] = useState<number>(0);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate('/welcome');
+    }
+  }, [isLoggedIn]);
 
   useEffect(() => {
     fullpageScroll();
@@ -42,10 +53,17 @@ const Home = () => {
             size: item.cnt,
             id: item.id,
           }));
+
         setWordData(formattedData);
         setWords(formattedData);
+
+        // 첫 번째 단어의 ID를 선택된 단어 ID로 설정
+        if (formattedData.length > 0) {
+          setSelectedWordId(formattedData[0].id);
+          setSelectedWordIndex(0); // 첫 번째 인덱스로 설정
+        }
       } catch (error) {
-        console.error("Error fetching word cloud data:", error);
+        console.error('Error fetching word cloud data:', error);
       }
     };
 
@@ -58,37 +76,39 @@ const Home = () => {
 
   const handleWordClick = (_word: string, id: number) => {
     setSelectedWordId(id);
-    const wordIndex = words.findIndex((item) => item.id === id);
+    const wordIndex = words.findIndex(item => item.id === id);
     setSelectedWordIndex(wordIndex);
-    setResetTrigger((prev) => prev + 1);
+    setResetTrigger(prev => prev + 1);
   };
 
   return (
     <div className={styles.home}>
-      <div className={`${styles.section} ${styles.wordSection}`}>
-        <div className={styles.home1container}>
-          <div>
-            <div className={styles.wordCloudSlider}>
-              <WordSlider
-                words={words}
-                onWordChange={handleWordChange}
-                selectedWordIndex={selectedWordIndex}
-                resetTrigger={resetTrigger}
-              />
-            </div>
-            <div className={styles.wordCloudContainer}>
-              <WordCloud data={wordData} onWordClick={handleWordClick} />
-            </div>
+      <div className={`${sectionStyles.section} ${sectionStyles.wordSection}`}>
+        <div className={styles.wordCloud}>
+          <div className={styles.wordCloudSlider}>
+            <WordSlider
+              words={words}
+              onWordChange={handleWordChange}
+              selectedWordIndex={selectedWordIndex}
+              resetTrigger={resetTrigger}
+            />
           </div>
-          <div className={styles.articleListKeywordContainer}>
-            <ArticleListKeyword selectedWordId={selectedWordId} />
+          <div className={styles.wordCloudContainer}>
+            <WordCloud data={wordData} onWordClick={handleWordClick} />
           </div>
         </div>
+        <div className={styles.articleListKeywordContainer}>
+          {selectedWordId && <ArticleListKeyword />}
+        </div>
       </div>
-      <div className={`${styles.section} ${styles.articleSection}`}>
-        <ArticleList />
+      <div
+        className={`${sectionStyles.section} ${sectionStyles.articleSection}`}
+      >
+        <PreferredArticleList />
       </div>
-      <div className={styles.section}>
+      <div
+        className={`${sectionStyles.section} ${sectionStyles.searchSection}`}
+      >
         <ArticleSearch />
       </div>
     </div>

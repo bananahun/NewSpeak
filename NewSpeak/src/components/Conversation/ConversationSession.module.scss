@@ -1,6 +1,3 @@
-.conversationSession {
-}
-
 .botMessage,
 .userMessage {
   display: flex;
@@ -12,14 +9,6 @@
   justify-content: flex-start;
 }
 
-.userMessage {
-  justify-content: flex-end;
-}
-
-.botIcon {
-  margin-right: 10px;
-}
-
 .messageContent {
   background-color: var(--main-color);
   padding: 10px 15px;
@@ -28,6 +17,22 @@
   font-size: 1rem;
   line-height: 1.5;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.userMessage {
+  justify-content: flex-end;
+  .messageContent {
+    background-color: var(--sub-color);
+    color: var(--font-color);
+  }
+}
+
+.botIcon {
+  margin-right: 10px;
+  .messageContent {
+    background-color: var(--main-color);
+    color: var(--font-color);
+  }
 }
 
 @keyframes fadeIn {
@@ -49,12 +54,13 @@
   justify-content: flex-end;
   align-items: center;
   margin-bottom: 15px;
+  color: var(--font-color);
   gap: 10px;
 
   .messageContent {
     background-color: var(--sub-color);
     max-width: 100%;
-    color: var(--background-color);
+    color: var(--font-color);
   }
 
   .buttonContainer {
@@ -78,4 +84,26 @@
     border-radius: 10px;
     ime-mode: disabled;
   }
+}
+
+.recommendMessage {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  cursor: pointer;
+  margin-bottom: 15px;
+  opacity: 0;
+  animation: fadeIn 3s forwards;
+  animation-delay: 7s;
+
+  .messageContent {
+    background-color: var(--main-color);
+    width: fit-content;
+  }
+}
+
+.firstRecommend {
+  animation-delay: 0s;
 }

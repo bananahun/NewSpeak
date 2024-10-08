@@ -14,6 +14,7 @@ interface ConversationData {
   recommendedAnswers: string[];
   conversation: Conversation[];
   reportCreated: boolean;
+  isGeneratingResponse: boolean;
   isGeneratingReport: boolean;
   setConvThreadId: (id: string) => void;
   setConvRunId: (id: string) => void;
@@ -22,6 +23,7 @@ interface ConversationData {
   setCurrentAnswer: (answer: string) => void;
   setRecommendedAnswers: (answers: string[]) => void;
   setReportCreated: (bool: boolean) => void;
+  setIsGeneratingResponse: (bool: boolean) => void;
   setIsGeneratingReport: (bool: boolean) => void;
   addConversation: (sender: 'user' | 'assistant', content: string) => void;
   clearConvData: () => void;
@@ -37,6 +39,7 @@ const useConversationStore = create<ConversationData>(set => ({
   recommendedAnswers: [],
   conversation: [],
   reportCreated: false,
+  isGeneratingResponse: false,
   isGeneratingReport: false,
   setConvThreadId: (id: string) => set({ convThreadId: id }),
   setConvRunId: (id: string) => set({ convRunId: id }),
@@ -46,6 +49,8 @@ const useConversationStore = create<ConversationData>(set => ({
   setRecommendedAnswers: (answers: string[]) =>
     set({ recommendedAnswers: answers }),
   setReportCreated: (bool: boolean) => set({ reportCreated: bool }),
+  setIsGeneratingResponse: (bool: boolean) =>
+    set({ isGeneratingResponse: bool }),
   setIsGeneratingReport: (bool: boolean) => set({ isGeneratingReport: bool }),
   addConversation: (sender: 'user' | 'assistant', content: string) =>
     set(state => ({

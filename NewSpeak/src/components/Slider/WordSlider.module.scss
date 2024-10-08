@@ -1,17 +1,42 @@
 .wordSlider {
-  top: 20px;
-  width: 35vh;
-  height: 20vh;
+  position: relative;
+  width: 250px;
+  height: 60px;
   text-align: center;
+
+  .slide {
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+
+    .wordText {
+      font-size: 40px;
+      font-family: Impact;
+      color: var(--font-color);
+    }
+  }
 }
 
-.slide {
-  justify-content: center;
-  align-items: center;
+.slideButton {
+  position: absolute;
+  left: 50%;
+  bottom: -35px;
+  transform: translateX(-50%);
+  animation: blink 1s both;
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateX(-50%) scale(1.2);
+  }
 }
 
-.wordText {
-  font-size: 40px;
-  font-family: Impact;
-  color: --var(font-color);
+@keyframes blink {
+  0%,
+  75% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }

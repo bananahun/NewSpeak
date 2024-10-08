@@ -1,11 +1,48 @@
 .wordlist {
-  justify-content: center;
+  justify-content: right;
   display: flex;
-  align-items: flex-start; /* 왼쪽 정렬 */
-  gap: 20px; /* 카드 간 간격 */
-  padding-bottom: 20px;
+  gap: 40px; /* 카드 간 간격 */
+  padding: 40px;
+  position: absolute; /* 하단에 고정 */
+  bottom: 0; /* 하단에서의 위치를 0으로 설정 */
+  left: 0; /* 왼쪽으로부터 0 */
+  width: 100%; /* 전체 너비 차지 */
+  background-color: white; /* 필요 시 배경색 추가 */
+  // z-index: 1000; /* 다른 요소들 위에 배치 */
 }
 
+.container {
+  display: flex;
+  flex-direction: column; /* 세로 방향으로 정렬 */
+  height: 75vh; /* 전체 뷰포트 높이에 맞춤 */
+
+}
+
+.testButton {
+  margin-top: 10px;
+  background: var(--main-color);
+  border: 2px solid var(--main-color);
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: var(--contrast-color);
+    border-color: var(--contrast-color);
+    color: var(--background-color);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    background: var(--main-color);
+    color: #ffffff;
+    transform: translateY(0);
+    box-shadow: none;
+  }
+}
 .wordlist2 {
   display: grid; /* 그리드 레이아웃 사용 */
   grid-template-columns: repeat(
@@ -14,6 +51,12 @@
   ); /* 카드의 최소 너비를 설정 */
   gap: 10px; /* 카드 간의 간격 */
   width: 100%; /* 전체 폭 차지 */
+  flex: 1;
+  overflow-y: auto; /* 수직 스크롤 활성화 */
+  padding: 10px; /* 스크롤바 여유 공간을 위해 패딩 추가 (필요 시) */
+  box-shadow: 0 4px 6px 0px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  background-color: var(--background-color);
 }
 
 .card {
@@ -22,14 +65,74 @@
   border-radius: 8px;
   padding: 15px;
   background-color: var(--background-color);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: box-shadow 0.3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.5s ease;
+  position: relative;
+  height:fit-content;
 }
 
 .card:hover {
   box-shadow: 0 8px 8px var(--contrast-color); /* 호버 시 그림자 효과 */
+  background-color: rgba(0, 0, 0, 0.05);
+
 }
 
+.card:hover .detailButton {
+  display: block; /* 호버 시 표시 */
+}
+
+.detailButton:hover {
+  color: black; /* 호버 시에도 텍스트는 검정색 유지 */
+
+}
+
+.detailButton {
+  flex: 1;
+  height:100px;
+  border: none;
+  padding: 10px;
+  background-color: var(--contrast-color);
+  color: black;
+  border-radius: 5px;
+  cursor: pointer;
+  display: none;
+  transition: all 0.3s ease;
+}
+
+.iconButton {
+  flex: 1;
+  height:120px;
+  border: none;
+  padding: 20px;
+  cursor: pointer;
+  font-size: 20px; /* 아이콘 크기 조정 */
+  // margin-right: 10px; /* 버튼 간 간격 */
+  transition: all 0.3s ease;
+  display: none;
+}
+
+.iconButton:hover {
+  transform: scale(1.1) !important; /* 호버 시 크기 증가 */
+  color:var(--contrast-color)
+}
+
+
+.deleteButton {
+  cursor: pointer;
+  font-size: 24px; /* 아이콘 크기 조정 */
+  margin-right: 10px; /* 버튼 간 간격 */
+  transition: transform 0.2s; /* 호버 애니메이션 */
+}
+
+.deleteButton:hover {
+  transform: scale(1.1); /* 호버 시 크기 증가 */
+}
+
+.card:hover .iconButton{
+  display: block;
+  transform: none;
+  
+}
 .cardInner {
   display: flex;
   flex-direction: column;
@@ -38,16 +141,32 @@
 .cardContent {
   display: flex;
   flex-direction: column;
+  height: 100%;
+}
+
+.cardContentTitle {
+  display: flex;
+  justify-content: space-between; /* 양쪽 극단 정렬 */
+  align-items: center;
+  position: relative;
 }
 
 .meaningsContainer {
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap; /* 줄 바꿈 가능 */
   gap: 10px; /* 박스 간 간격 */
   margin-top: 10px;
+  min-height: 100px;
+  justify-content: flex-start; 
+}
+
+.card:hover .meaningsContainer {
+  display: none;
 }
 
 .meaningBox {
+  max-height: 50px;
   background-color: var(--main-color);
   border-radius: 5px;
   padding: 10px;
@@ -65,20 +184,13 @@
 
 .buttonContainer {
   display: flex;
-  justify-content: flex-start; /* 가로 정렬 */
+  width: 100%;
+  height: 100%;
+  justify-content: center; 
+  gap: 20px; /* 박스 간 간격 */
   margin-top: 10px;
 }
 
-.iconButton {
-  cursor: pointer;
-  font-size: 24px; /* 아이콘 크기 조정 */
-  margin-right: 10px; /* 버튼 간 간격 */
-  transition: transform 0.2s; /* 호버 애니메이션 */
-}
-
-.iconButton:hover {
-  transform: scale(1.1); /* 호버 시 크기 증가 */
-}
 
 .backButton {
   margin-top: 10px;

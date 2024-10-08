@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import SentenceDetailModal from '../Modal/SentenceDetailModal';
 import styles from './ArticleTranslation.module.scss';
-
+interface Sentence {
+  id: number;
+  content: string;
+  translation: string;
+}
 const ArticleDetail = ({
   sentences,
   translatedSentences,
 }: {
-  sentences: string[];
+  sentences: Sentence[];
   translatedSentences: string[];
 }) => {
   const [hoveredId, setHoveredId] = useState<number | null>(null);
@@ -60,10 +64,10 @@ const ArticleDetail = ({
               }`}
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={handleMouseLeave}
-              onClick={() => openSentenceDetail(sentence)}
+              onClick={() => openSentenceDetail(sentence.content)}
               style={{ height: sentenceHeights[index] || 'auto' }}
             >
-              <p className={styles.sentence}>{sentence}</p>
+              <p className={styles.sentence}>{sentence.content}</p>
             </div>
           ))}
         </div>

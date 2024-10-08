@@ -1,45 +1,50 @@
 import { create } from 'zustand';
-import { fetchEmail, getUserInfo } from '../apis/AuthApi';
+import { getUserInfo, logoutWithOAuth } from '../apis/AuthApi';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthState {
   isLoggedIn: boolean;
   user: null | any;
-  logout: () => void;
+  logout: (navigate: any) => void;
   checkAuth: () => void;
 }
 
 const useAuthStore = create<AuthState>(set => ({
-  isLoggedIn: false,
-  user: null,
+  isLoggedIn: localStorage.getItem('isLoggedIn') === 'true' || false, // 새로고침 시 로그인 상태 유지
+  user: JSON.parse(localStorage.getItem('user') || 'null'), // 새로고침 시 유저 정보 유지
 
-  logout: () => {
+  logout: navigate => {
+    console.log('로그아웃에 성공했어요');
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('user');
     set({ isLoggedIn: false, user: null });
+    logoutWithOAuth(navigate);
   },
 
   checkAuth: async () => {
-    try {
-      const userEmail = await fetchEmail();
-      console.log(userEmail.status);
-      if (userEmail) {
-        if (userEmail.status === 403) {
-          set({ isLoggedIn: true });
+    return new Promise<void>(async (resolve, reject) => {
+      try {
+        const userInfo = await getUserInfo();
+        if (userInfo) {
+          console.log('로그인에 성공했어요!', userInfo);
+          set({ isLoggedIn: true, user: userInfo });
+          localStorage.setItem('isLoggedIn', 'true');
+          localStorage.setItem('user', JSON.stringify(userInfo));
+        } else {
+          console.log('로그인에 실패!', userInfo);
+          set({ isLoggedIn: false, user: null });
+          localStorage.removeItem('isLoggedIn');
+          localStorage.removeItem('user');
         }
+        resolve();
+      } catch (error) {
+        console.error('로그인에 실패하였습니다.', error);
+        set({ isLoggedIn: false, user: null });
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('user');
+        reject(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-    // try {
-    //   const userInfo = await getUserInfo();
-    //   console.log(userInfo);
-    // } catch (error) {
-    //   console.error('Failed to fetch user info:', error);
-    //   set({ isLoggedIn: false });
-    // }
-    // if (token) {
-    //   set({ isLoggedIn: true });
-    // } else {
-    //   set({ isLoggedIn: false });
-    // }
+    });
   },
 }));
 

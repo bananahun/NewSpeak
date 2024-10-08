@@ -4,11 +4,19 @@ import ArticleOriginal from '../../components/Article/ArticleOriginal';
 import ArticleTranslation from '../../components/Article/ArticleTranslation';
 import useArticleStore from '../../store/ArticleStore';
 import useConversationStore from '../../store/ConversationStore';
+import { useWordSelectorState } from '../../store/ModalStore';
+import WordSelector from '../../components/Modal/WordSelector';
+import ArticleAbout from '../../components/Article/ArticleAbout';
+import WSHelpAbout from '../../components/Article/WSHelpAbout';
 import useArticleApi from '../../apis/ArticleApi';
-import { getLogo } from '../../store/ThemeStore';
-import { FaRegBookmark, FaBookmark } from 'react-icons/fa6';
-import styles from './Article.module.scss';
+import {
+  FaRegBookmark,
+  FaBookmark,
+  FaRegCircleQuestion,
+} from 'react-icons/fa6';
+import { IoSearch } from 'react-icons/io5';
 import { IconButton } from '@mui/material';
+import styles from './Article.module.scss';
 import userApi from '../../apis/UserApi'; // API 파일 임포트
 
 interface ArticleDetail {
@@ -23,7 +31,7 @@ interface ArticleDetail {
   publishedDate: string;
   publisher: string;
   writer: string;
-  sentences: string[];
+  sentences: ArticleSentences[];
 }
 
 interface Sentence {
@@ -33,15 +41,16 @@ interface Sentence {
 }
 
 interface ArticleSentences {
-  sentences: string[];
+  sentences: Sentence[];
   translatedSentences: string[];
 }
 
 const Article = () => {
   const navigate = useNavigate();
-  const articleMeta = useArticleStore.getState().articleMeta;
+  const { articleMeta, setArticleMeta } = useArticleStore();
   const { clearConvData } = useConversationStore();
-  const logo = getLogo();
+  const { isOpen, setIsOpen } = useWordSelectorState();
+  const [wordSelectorMode, setWordSelectorMode] = useState(false);
   const [articleData, setArticleData] = useState<ArticleDetail | null>(null);
   const [articleSentences, setArticleSentences] =
     useState<ArticleSentences | null>(null);
@@ -49,12 +58,25 @@ const Article = () => {
   const [activeTranslateMessage, setActiveTranslateMessage] =
     useState('전문 번역');
   const [isScrapped, setIsScrapped] = useState(false); // 스크랩 상태 관리
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [isOpenHelpModal, setIsOpenHelpModal] = useState(false);
+  const [isOpenWSHelpModal, setIsOpenWSHelpModal] = useState(true);
 
   const getOrDefault = (value: any, defaultValue: string = 'Loading..') => {
     if (typeof value === 'string' && !isNaN(Date.parse(value))) {
       return new Date(value).toDateString();
     }
     return value || defaultValue;
+  };
+
+  const openWordSelector = () => {
+    setWordSelectorMode(true);
+    setIsOpen(true);
+  };
+
+  const closeWordSelector = () => {
+    setWordSelectorMode(false);
+    setIsOpen(false);
   };
 
   const toggleTranslate = () => {
@@ -82,8 +104,12 @@ const Article = () => {
           await userApi.createMyArticles(articleId);
         }
 
-        // DB의 상태를 다시 확인
-        checkIfScrapped(articleId);
+        checkIfScrapped();
+
+        setIsAnimating(true);
+        setTimeout(() => {
+          setIsAnimating(false);
+        }, 1000);
       } catch (error) {
         console.error('스크랩 처리 중 오류 발생:', error);
       }
@@ -93,11 +119,11 @@ const Article = () => {
   const handleGetArticleDetail = async (articleId: number) => {
     const response = await useArticleApi.getArticleDetail(articleId);
     setArticleData(response);
-
+    if (!articleMeta?.imageUrl) {
+      setArticleMeta(response);
+    }
     if (response && response.sentences) {
-      const sentences = response.sentences.map(
-        (sentence: Sentence) => sentence.content,
-      );
+      const sentences = response.sentences;
       const translatedSentences = response.sentences.map(
         (sentence: Sentence) => sentence.translation,
       );
@@ -110,30 +136,49 @@ const Article = () => {
     if (articleMeta) {
       const articleId = articleMeta.id;
 
-      // API 호출
-      const response = await userApi.getMyArticles(0, 10000);
-      // 응답 데이터에서 content 배열을 추출
-      const scrappedArticles = response.data; // 여기서 content 배열을 할당
+      try {
+        // API 호출
+        const response = await userApi.getMyArticles(0, 10000);
 
-      // some() 메서드를 사용하여 해당 articleId가 있는지 확인
-      const isAlreadyScrapped = scrappedArticles.some(
-        (article: { id: number }) => article.id === articleId,
-      );
+        let scrappedArticles = [];
 
-      setIsScrapped(isAlreadyScrapped);
+        if (response && response.data) {
+          scrappedArticles = response.data;
+        }
+
+        // some() 메서드를 사용하여 해당 articleId가 있는지 확인
+        const isAlreadyScrapped = scrappedArticles.some(
+          (article: { id: number }) => article.id === articleId,
+        );
+
+        setIsScrapped(isAlreadyScrapped);
+      } catch (error) {
+        console.error('스크랩 확인 중 오류:', error);
+      }
     }
   };
 
-  // 페이지 로드 시 스크랩 상태 확인
-  useEffect(() => {
-    if (articleMeta && articleMeta.id) {
-      checkIfScrapped(articleMeta.id); // DB에서 스크랩 상태 확인
-    }
-  }, [articleMeta]);
+  const openHelpModal = () => {
+    setIsOpenHelpModal(true);
+  };
+
+  const closeHelpModal = () => {
+    setIsOpenHelpModal(false);
+  };
+
+  const openWSHelpModal = () => {
+    setIsOpenWSHelpModal(true);
+  };
+
+  const closeWSHelpModal = () => {
+    setIsOpenWSHelpModal(false);
+  };
 
   useEffect(() => {
-    if (articleMeta) {
+    if (articleData) return;
+    if (articleMeta && articleMeta.id) {
       handleGetArticleDetail(articleMeta.id);
+      checkIfScrapped(); // DB에서 스크랩 상태 확인
     }
   }, [articleMeta]);
 
@@ -175,21 +220,35 @@ const Article = () => {
               </p>
             </div>
           </div>
-          <IconButton onClick={e => toggleScrap(e)} className={styles.bookmark}>
-            {isScrapped ? <FaBookmark /> : <FaRegBookmark />}{' '}
-            {/* 스크랩 상태에 따라 아이콘 변경 */}
-          </IconButton>
+          <div className={styles.articleButtonContainer}>
+            <div
+              onMouseEnter={openHelpModal}
+              onMouseLeave={closeHelpModal}
+              className={styles.helpButton}
+            >
+              <FaRegCircleQuestion />
+            </div>
+            <IconButton
+              onClick={openWordSelector}
+              onMouseEnter={openWSHelpModal}
+              onMouseLeave={closeWSHelpModal}
+              className={styles.wordSelectorButton}
+            >
+              <IoSearch />
+            </IconButton>
+            <IconButton
+              onClick={e => toggleScrap(e)}
+              className={`${styles.bookmark} ${
+                isAnimating ? styles.animate : ''
+              }`}
+            >
+              {isScrapped ? <FaBookmark /> : <FaRegBookmark />}{' '}
+              {/* 스크랩 상태에 따라 아이콘 변경 */}
+            </IconButton>
+          </div>
         </div>
         <div className={styles.articleBackground}>
           <div className={styles.articleContainer}>
-            {!isTranslateOpen && (
-              <div className={styles.articleImageContainer}>
-                <img
-                  className={styles.articleImage}
-                  src={articleMeta?.imageUrl || logo}
-                />
-              </div>
-            )}
             {isTranslateOpen ? (
               <ArticleTranslation
                 sentences={articleSentences?.sentences || []}
@@ -216,6 +275,11 @@ const Article = () => {
           <p>회화 시작</p>
         </button>
       </div>
+      {isOpenHelpModal && <ArticleAbout />}
+      {isOpenWSHelpModal && <WSHelpAbout />}
+      {wordSelectorMode && (
+        <WordSelector closeWordSelector={closeWordSelector} />
+      )}
     </>
   );
 };

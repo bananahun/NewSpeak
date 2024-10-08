@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useThemeStore from '../../store/ThemeStore';
+import useAuthStore from '../../store/AuthStore';
 import { loginWithOAuth } from '../../apis/AuthApi';
 import styles from './Login.module.scss';
 import logo from '../../assets/NewSpeak.png';
@@ -9,8 +10,10 @@ import googleLogo from '../../assets/google_login.png';
 import kakaoLogo from '../../assets/kakao_login_medium_narrow.png';
 
 const Login = () => {
+  const navigate = useNavigate();
   const { theme } = useThemeStore();
   const [mainLogo, setMainLogo] = useState(logo);
+  const { isLoggedIn } = useAuthStore();
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -19,6 +22,12 @@ const Login = () => {
       setMainLogo(logo);
     }
   }, [theme]);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/');
+    }
+  }, [isLoggedIn]);
 
   const loginWith = loginWithOAuth;
 

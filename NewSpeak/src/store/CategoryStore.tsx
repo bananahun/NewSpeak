@@ -3,44 +3,52 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import axiosInstance from '../apis/axiosConfig';
 
 interface CategoryState {
-  id: number;  // 카테고리 ID
-  setCategory: (id: number, category: string) => void;
+  id: number; // 카테고리 ID
+  setCategory: (id: number, category: number) => void;
 }
 
 // 선호 카테고리 상태 정의
 interface PreferredCategoryState {
-  preferredCategories: string[]|null; // 선호 카테고리 배열
-  getPreferredCategory: () => Promise<void>; // 선호 카테고리 추가 함수
-  updatePreferredCategory: (categoris: string[]) => Promise<void>; // 선호 카테고리 제거 함수
+  preferredCategories: number[]; // 선호 카테고리 배열
+  getPreferredCategory: (handleAuthError: () => void) => Promise<void>; // 선호 카테고리 추가 함수
+  updatePreferredCategory: (
+    categoris: number[],
+    handleAuthError: () => void,
+  ) => Promise<void>; // 선호 카테고리 제거 함수
 }
 
 const usePreferredCategoryStore = create(
   persist<PreferredCategoryState>(
     set => ({
-      preferredCategories: null, // 초기값을 빈 배열로 설정
-      getPreferredCategory: async () => {
+      preferredCategories: [], // 초기값을 빈 배열로 설정
+      getPreferredCategory: async handleAuthError => {
         try {
-          // 서버에 카테고리 추가 요청 보내기
           const response = await axiosInstance.get('/my/categories');
-          // 요청이 성공하면 상태 업데이트
-          const categories = response.data.categoryList.map((cat: { categoryId: number; categoryName: string }) => cat.categoryName);
-
-          set({ preferredCategories: categories }); // 서버에서 받은 카테고리 이름으로 업데이트
-
+          const selectedCategories = response.data.categoryList.map(
+            (cat: { categoryId: number; categoryName: string }) =>
+              cat.categoryId,
+          );
+          console.log(selectedCategories);
+          set({ preferredCategories: selectedCategories });
         } catch (error) {
           console.error('[API] getPreferredCategory 에러:', error);
+          handleAuthError();
         }
       },
-      updatePreferredCategory: async (categories: string[]) => {
+      updatePreferredCategory: async (
+        categories: number[],
+        handleAuthError,
+      ) => {
         try {
           // 서버에 카테고리 제거 요청 보내기
-          await axiosInstance.put(`/my/categories`);
+          await axiosInstance.post('/my/categories', categories);
           // 요청이 성공하면 상태 업데이트
           set({
             preferredCategories: categories, // 카테고리 제거
           });
         } catch (error) {
           console.error('[API] removePreferredCategory 에러:', error);
+          handleAuthError();
         }
       },
     }),

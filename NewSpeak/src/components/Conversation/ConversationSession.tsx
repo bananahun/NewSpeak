@@ -10,16 +10,13 @@ const ConversationSession = ({
 }: {
   setConversationCount: React.Dispatch<React.SetStateAction<number>>;
 }) => {
-  const {
-    convRunId,
-    recommendedAnswers,
-    createThread,
-    postSpeechToThread,
-    getResponseAudio,
-  } = useConversationApi();
+  const { convRunId, createThread, postSpeechToThread, getResponseAudio } =
+    useConversationApi();
   const {
     currentAnswer,
     conversation,
+    recommendedAnswers,
+    isGeneratingResponse,
     setCurrentAnswer,
     addConversation,
     clearConversation,
@@ -28,14 +25,32 @@ const ConversationSession = ({
   const [isFirstMessage, setIsFirstMessage] = useState(true);
   const [activeAnswer, setActiveAnswer] = useState(currentAnswer);
   const [editedAnswer, setEditedAnswer] = useState('');
-  const [byteMp3, setByteMp3] = useState('');
+  // const [byteMp3, setByteMp3] = useState('');
+  const [base64Mp3, setBase64Mp3] = useState('');
   const [activeResponse, setActiveResponse] = useState('');
   const [isFirstRender, setIsFirstRender] = useState(true);
+  const [toggleStates, setToggleStates] = useState<boolean[]>([]);
+  const [showRecommend, setShowRecommend] = useState<boolean[]>([]);
+
+  useEffect(() => {
+    if (conversation && conversation.length > 0) {
+      setToggleStates(prevStates => [
+        ...prevStates,
+        ...new Array(conversation.length - prevStates.length).fill(false),
+      ]);
+    }
+  }, [conversation]);
+
+  useEffect(() => {
+    if (recommendedAnswers && recommendedAnswers.length > 0) {
+      setShowRecommend(new Array(recommendedAnswers.length).fill(false));
+    }
+  }, [recommendedAnswers]);
 
   useEffect(() => {
     if (isFirstRender) {
       clearConversation();
-      // createThread();
+      createThread();
       setIsFirstRender(false);
       setIsFirstMessage(true);
       return;
@@ -50,6 +65,10 @@ const ConversationSession = ({
   useEffect(() => {
     console.log(recommendedAnswers);
   }, [recommendedAnswers]);
+
+  useEffect(() => {
+    console.log(isGeneratingResponse);
+  }, [isGeneratingResponse]);
 
   const submitAnswer = () => {
     addConversation('user', currentAnswer);
@@ -66,16 +85,26 @@ const ConversationSession = ({
       return;
     }
     if (convRunId) {
-      const getByteMp3 = async () => {
+      // const getByteMp3 = async () => {
+      //   try {
+      //     const response = await getResponseAudio();
+      //     setByteMp3(response.audio.body.byteArray);
+      //     setActiveResponse(response.dialog.assistant);
+      //   } catch (error) {
+      //     console.error(error);
+      //   }
+      // };
+      // getByteMp3();
+      const getBaseMp3 = async () => {
         try {
           const response = await getResponseAudio();
-          setByteMp3(response.audio.body.byteArray);
+          setBase64Mp3(response.audio.body);
           setActiveResponse(response.dialog.assistant);
         } catch (error) {
           console.error(error);
         }
       };
-      getByteMp3();
+      getBaseMp3();
     }
   }, [convRunId]);
 
@@ -89,28 +118,33 @@ const ConversationSession = ({
 
   const base64ToArrayBuffer = (base64: string) => {
     const binaryString = atob(base64);
-    const len = binaryString.length;
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
+    try {
+      const len = binaryString.length;
+      const bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      return bytes.buffer;
+    } catch (error) {
+      console.error(error);
     }
-    return bytes.buffer;
   };
 
   const byteToMp3 = (byteData: string) => {
     const arrayBuffer = base64ToArrayBuffer(byteData);
+    if (!arrayBuffer) return;
     const blob = new Blob([arrayBuffer], { type: 'audio/mpeg' });
     const url: string = URL.createObjectURL(blob);
     return url;
   };
 
   useEffect(() => {
-    if (byteMp3) {
-      const audio = new Audio(byteToMp3(byteMp3));
+    if (base64Mp3) {
+      const audio = new Audio(byteToMp3(base64Mp3));
       audio.play();
-      setByteMp3('');
+      setBase64Mp3('');
     }
-  }, [byteMp3]);
+  }, [base64Mp3]);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -135,13 +169,21 @@ const ConversationSession = ({
     }
   };
 
-  // TODO: 추천받은 문장 어디 띄우지
-  // TODO: 녹음다하고 수정할 때 영어만 적을 수 있게 + 255자 제한
-  // TODO: mp3 플레이될 때 녹음하기 비활성화 찍기
-  // TODO: ai 응답 스크립트 on / off
+  const toggleShowText = (index: number) => {
+    setToggleStates(prev =>
+      prev.map((state, idx) => (idx === index ? !state : state)),
+    );
+  };
+
+  const handleShowRecommend = (index: number) => {
+    setShowRecommend(prev =>
+      prev.map((state, idx) => (idx === index ? !state : state)),
+    );
+  };
+
   return (
     <>
-      <div className={styles.converSationSession}>
+      <div className={styles.conversationSession}>
         {conversation.map((conv, index) => {
           return (
             <div key={index}>
@@ -152,7 +194,16 @@ const ConversationSession = ({
                     : styles.botMessage
                 }
               >
-                <div className={styles.messageContent}>{conv.content}</div>
+                <div
+                  className={styles.messageContent}
+                  onClick={() => toggleShowText(index)}
+                >
+                  {conv.sender === 'user' ? (
+                    <>{conv.content}</>
+                  ) : (
+                    <> {toggleStates[index] ? conv.content : '클릭해서 열기'}</>
+                  )}
+                </div>
               </div>
             </div>
           );
@@ -194,6 +245,37 @@ const ConversationSession = ({
           </>
         )}
       </div>
+      {isGeneratingResponse && (
+        <div className={styles.botMessage}>
+          <div className={styles.messageContent}>
+            SPEKAO가 대답을 준비중이에요
+          </div>
+        </div>
+      )}
+      {!isGeneratingResponse && (
+        <div
+          className={`${styles.recommendMessage} ${
+            isFirstMessage ? styles.firstRecommend : ''
+          }`}
+        >
+          <div className={styles.messageContent}>SPEAKO의 추천 문장</div>
+          {recommendedAnswers.map((message, idx) => {
+            return (
+              <div
+                key={idx}
+                className={styles.messageContent}
+                onClick={() => handleShowRecommend(idx)}
+              >
+                {showRecommend[idx] ? (
+                  <>{`${idx + 1}. ${message}`}</>
+                ) : (
+                  <>{`${idx + 1}. 클릭해서 열기`}</>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </>
   );
 };

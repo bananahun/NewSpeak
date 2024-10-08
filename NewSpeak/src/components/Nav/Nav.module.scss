@@ -1,82 +1,15 @@
-.navbar {
-  position: fixed;
-  top: 0;
-  height: 100vh;
-  width: 12rem;
-  background-color: var(--background-color);
-  color: var(--font-color);
-  padding: 12px;
-  border-right: 0.1px solid var(--font-color);
+// Nav.scss
+.navLink {
+  font-size: 14px;
+  padding: 0.5rem;
+  color: #555;
 
-  .logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .switcher {
-    margin-top: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .links {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-
-    li {
-      border-radius: 12px;
-      cursor: pointer;
-      border-bottom: 1px solid var(--font-color);
-      background-color: var(--background-color);
-      color: var(--font-color);
-      font-size: 20px;
-    }
-
-    li > a {
-      border-radius: 12px;
-      border: none;
-
-      span {
-        display: flex;
-        justify-content: center;
-      }
-    }
-
-    li > a:hover {
-      background-color: var(--main-color) !important;
-      font-weight: bold;
-    }
-  }
-
-  a {
-    text-decoration: none;
+  &:hover {
+    background-color: #ddd;
+    color: #333;
   }
 }
 
-.navbar .links .active > a {
-  background-color: var(--main-color) !important;
-  color: white !important;
-  font-weight: bold !important;
-}
-
-.searchBar {
-  position: fixed;
-  z-index: 1;
-}
-
-.logout {
-  display: flex;
-  align-items: center;
-  justify-self: center;
-  cursor: pointer;
-}
-
-.addWord {
-  display: flex;
-  align-items: center;
-  justify-self: center;
-  cursor: pointer;
+.MuiListItemIcon-root {
+  color: #666;
 }

@@ -1,20 +1,41 @@
 .resultContainer {
-  padding: 20px;
+
+  padding: 30px;
+  height: 80vh;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 10px;
   background-color: #f9f9f9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); // 그림자 추가
+  max-width: 800px; /* 최대 너비 제한 */
+  margin-top: 30px;
+  margin-left: auto; /* 중앙 정렬을 위한 여백 */
+  margin-right:auto;
+  overflow-y: auto; /* 수직 스크롤 활성화 */
+  position: relative;
+
+  .headContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
   h2 {
     margin-bottom: 10px;
+    font-size: 1.5rem; // 제목 크기 조정
+    color: #333; // 제목 색상 조정
   }
 
   p {
     margin-bottom: 20px;
+    font-size: 1.1rem; // 본문 크기 조정
+    color: #555; // 본문 색상 조정
   }
 
   .answersContainer {
     display: flex;
     justify-content: space-between;
+    margin-top: 30px;
+    margin-bottom: auto;
   }
 
   .leftColumn,
@@ -23,7 +44,7 @@
   }
 
   .answer {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
   }
@@ -36,15 +57,55 @@
   .correct {
     color: green;
     margin-left: 10px;
+    font-size: 1.2rem; // 정답 아이콘 크기 조정
   }
 
   .incorrect {
     color: red;
     margin-left: 10px;
+    font-size: 1.2rem; // 오답 아이콘 크기 조정
   }
 
   .correctAnswer {
     margin-left: 10px;
     color: gray;
+    font-style: italic; // 정답을 기울임체로
+  }
+  .returnContainer {
+    display: flex;
+    justify-content: center; /* 중앙 정렬 */
+    padding: 20px 0; /* 여백 추가 */
+    position: absolute; /* 수정된 부분 */
+    bottom: 20px; /* 부모 요소의 아래쪽에 위치 */
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+  }
+
+  
+  .returnButton {
+    margin-top: 10px;
+    background: var(--main-color);
+    border: 2px solid var(--main-color);
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  
+    &:hover {
+      background: var(--contrast-color);
+      border-color: var(--contrast-color);
+      color: var(--background-color);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+  
+    &:active {
+      background: var(--main-color);
+      color: #ffffff;
+      transform: translateY(0);
+      box-shadow: none;
+    }
   }
 }

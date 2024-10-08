@@ -14,8 +14,8 @@
     padding: 20px;
     border-radius: 8px;
     text-align: center;
-    background-color: #8b7d70; // 모달 배경색
-    color: #fdfdfd;
+    background-color:var(--background-color); // 모달 배경색
+    color: var(--font-color);
     box-shadow: 0 4px 10px var(--contrast-color); // 그림자 효과
 
     button {

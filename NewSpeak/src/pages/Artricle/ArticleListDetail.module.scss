@@ -1,4 +1,8 @@
 .article-list-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
@@ -6,7 +10,6 @@
 
   h1 {
     font-size: 24px;
-    margin-bottom: 20px;
   }
 
   .article-list {
@@ -20,6 +23,7 @@
       border: 1px solid #ddd;
       border-radius: 8px;
       padding: 10px;
+      text-decoration: none;
       transition: box-shadow 0.3s ease, transform 0.3s ease; /* transform 이동 효과 추가 */
 
       &:hover {
@@ -53,5 +57,11 @@
         }
       }
     }
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
   }
 }

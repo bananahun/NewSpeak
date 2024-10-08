@@ -3,55 +3,59 @@
   background-color: var(--background-color);
   color: var(--font-color);
   height: 100%;
-  overflow-y: hidden;
-  overflow-x: hidden;
+  width: 100%;
+  overflow: hidden;
 }
 
-.home1container {
+.wordCloud {
   display: flex;
-  flex-direction: row;
+  width: 250px;
+  height: 100%;
+  flex-direction: column;
+
+  .wordCloudSlider {
+    width: 250px;
+    height: 10vh;
+    display: flex;
+    position: relative;
+  }
+
+  .wordCloudContainer {
+    width: 30vh;
+    height: 60vh;
+  }
 }
-.wordCloudContainer {
-  position: relative;
-  width: 30vh;
-  height: 60vh;
+
+@media (max-width: 1024px) {
+  .wordCloud {
+    width: 100%;
+    align-items: center;
+    display: flex;
+    height: 10vh;
+    .wordCloudSlider {
+      width: fit-content;
+      height: 10vh;
+    }
+  }
+  .wordCloudContainer {
+    display: none;
+  }
 }
 
 .articleListContainer {
-  flex: 1;
+  flex-grow: 1;
   height: 100%;
+  width: 100%;
 }
 
 .showArticle {
-  top: 0; // 스크롤 시 ArticleList가 보이도록 설정
-}
-
-.section {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  position: relative;
-  overflow-y: hidden;
-}
-
-/* 슬라이딩 텍스트 스타일 */
-.wordCloudSlider {
-  position: relative;
   top: 0;
-  left: 0;
-  width: 30vh;
-  height: 10vh;
-  display: flex;
-  pointer-events: none; /* 사용자 상호작용 방지 */
 }
 
 .articleListKeywordContainer {
   display: flex;
-  width: fit-content;
+  width: 100%;
   justify-content: center;
-  align-content: center;
-  top: 0;
   overflow-y: hidden;
   padding-left: 20px;
 }
