@@ -1,13 +1,13 @@
-@import "./styles/variables";
+@import './styles/variables';
 
 @font-face {
-  font-family: "NanumBarunpen";
-  src: url("./assets/font/NanumBarunpenR.ttf");
+  font-family: 'NanumBarunpen';
+  src: url('./assets/font/NanumBarunpenR.ttf');
 }
 
 @font-face {
-  font-family: "GmarketSans";
-  src: url("./assets/font/GmarketSansTTFMedium.ttf");
+  font-family: 'GmarketSans';
+  src: url('./assets/font/GmarketSansTTFMedium.ttf');
 }
 
 * {
@@ -35,7 +35,7 @@ body {
 }
 
 body * {
-  font-family: "GmarketSans", sans-serif;
+  font-family: 'GmarketSans', sans-serif;
   font-size: 18px;
 }
 
@@ -80,4 +80,10 @@ strong {
   margin-top: 0 !important;
   overflow: scroll !important;
   // height: 100vh;
+}
+
+.MuiToolbar-root {
+  .MuiStack-root {
+    display: none !important;
+  }
 }
