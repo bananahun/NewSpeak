@@ -4,7 +4,7 @@ import styles from './WordList.module.scss';
 import { FaMicrophone, FaBook } from 'react-icons/fa';
 import { GiSpeaker } from 'react-icons/gi';
 import PronounceModal from '../Modal/PronounceModal';
-import userApi from '../../apis/UserApi'; 
+import userApi from '../../apis/UserApi';
 import { useVocaStore } from '../../store/VocaStore';
 import WordModal from '../Modal/WordModal';
 
@@ -21,23 +21,23 @@ const WordList = () => {
     }[];
   }
 
-  
   const [words, setWords] = useState<Word[]>([]);
   const [flipped, setFlipped] = useState<number | null>(null);
   const [isPronounceModalOpen, setPronounceModalOpen] = useState(false);
   const [selectedText, setSelectedText] = useState<string>('');
   const [isWordModalOpen, setWordModalOpen] = useState<boolean>(false); // 모달 상태 추가
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
-  const {vocaId,setVocaId} = useVocaStore() 
-  const nav = useNavigate()
+  const { vocaId, setVocaId } = useVocaStore();
+  const nav = useNavigate();
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   useEffect(() => {
     const fetchWordDetails = async () => {
       try {
-        if (vocaId != null) { // vocaId가 null이 아닐 경우에만 호출
+        if (vocaId != null) {
+          // vocaId가 null이 아닐 경우에만 호출
           const fetchedWords = await userApi.getMyVocasDetail(vocaId); // API 호출
-          console.log(fetchedWords)
+          console.log(fetchedWords);
           setWords(fetchedWords); // 받아온 데이터를 상태로 저장
         } else {
           const fetchedVocaId = await userApi.getMyVocas();
@@ -48,10 +48,9 @@ const WordList = () => {
         console.error('[WordList] 단어 데이터를 가져오는 중 오류:', error);
       }
     };
-  
 
     fetchWordDetails(); // 컴포넌트가 처음 렌더링될 때 API 호출
-  }, [vocaId,setVocaId]);
+  }, [vocaId, setVocaId]);
 
   const handleExampleClick = (index: number) => {
     setFlipped(flipped === index ? null : index);
@@ -76,16 +75,16 @@ const WordList = () => {
     setSelectedWord(null); // 선택한 단어 초기화
   };
 
-
   const handleTestButtonClick = () => {
-    if (words.length <= 10) {
+    console.log(words);
+    if (words.length < 10) {
       alert('단어 수가 10개 이하입니다. 더 많은 단어를 추가하세요.');
     } else {
-      nav('/wordlist/test')
+      nav('/wordlist/test');
     }
   };
 
-  const handleSpeak = (word:string) => {
+  const handleSpeak = (word: string) => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
       const speech = new SpeechSynthesisUtterance(word);
@@ -113,7 +112,7 @@ const WordList = () => {
 
   const handleWordDeleteClick = async (wordId: number) => {
     if (!vocaId) {
-      return
+      return;
     }
     if (window.confirm('이 단어를 삭제하시겠습니까?')) {
       try {
@@ -128,20 +127,19 @@ const WordList = () => {
     }
   };
 
-
   return (
     <div>
-      {(!words || words.length === 0) &&  (
-            <div>단어가 없습니다.</div>
-          )}
-      
+      {(!words || words.length === 0) && <div>단어가 없습니다.</div>}
+
       <div className={styles.container}>
         <div className={styles.wordlist2}>
-          {words && words.length !== 0 && words.map((word, index) => (
-            <div key={index} className={styles.card}>
-              <div className={styles.cardInner}>
-                <div className={styles.cardContent}>
-                  {/* {flipped === index ? (
+          {words &&
+            words.length !== 0 &&
+            words.map((word, index) => (
+              <div key={index} className={styles.card}>
+                <div className={styles.cardInner}>
+                  <div className={styles.cardContent}>
+                    {/* {flipped === index ? (
                     <>
                       <h3>{word.content}</h3>
                       <div className={styles.examplesContainer}>
@@ -164,32 +162,35 @@ const WordList = () => {
                     <div className={styles.cardContentTitle}>
                       <h3>{word.content}</h3>
                       <div
-                          className={styles.deleteButton}
-                          title="단어 삭제"
-                          onClick={() => handleWordDeleteClick(word.wordId)} // 단어 삭제 핸들러 호출
-                        >
-                          x
-                        </div>
+                        className={styles.deleteButton}
+                        title="단어 삭제"
+                        onClick={() => handleWordDeleteClick(word.wordId)} // 단어 삭제 핸들러 호출
+                      >
+                        x
                       </div>
-                      <div className={styles.meaningsContainer}>
-                        {word.meaningDatas.slice(0,2).map((meaning, meaningIndex) => (
+                    </div>
+                    <div className={styles.meaningsContainer}>
+                      {word.meaningDatas
+                        .slice(0, 2)
+                        .map((meaning, meaningIndex) => (
                           <div key={meaningIndex} className={styles.meaningBox}>
                             <p>{meaning.meaning}</p>
                           </div>
                         ))}
-                      </div>
-                      <div className={styles.buttonContainer}>
-                          <FaBook
-                          className={styles.iconButton}
-                          title="예문 확인"
-                          onClick={() => openWordModal(word)}/>
-                          <GiSpeaker
-                          className={styles.iconButton}
-                          title="발음 듣기"
-                          onClick={() => handleSpeak(word.content)}                          
-                           />
-                      </div>
-                      {/* <div className={styles.buttonContainer}>
+                    </div>
+                    <div className={styles.buttonContainer}>
+                      <FaBook
+                        className={styles.iconButton}
+                        title="예문 확인"
+                        onClick={() => openWordModal(word)}
+                      />
+                      <GiSpeaker
+                        className={styles.iconButton}
+                        title="발음 듣기"
+                        onClick={() => handleSpeak(word.content)}
+                      />
+                    </div>
+                    {/* <div className={styles.buttonContainer}>
                         <div
                           className={styles.iconButton}
                           title="발음 평가"
@@ -211,17 +212,16 @@ const WordList = () => {
                       </div> */}
                     {/* </>
                   )} */}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-          
+            ))}
         </div>
       </div>
       <div className={styles.wordlist}>
-          <button className={styles.testButton}  onClick={handleTestButtonClick}>
-            테스트
-          </button>
+        <button className={styles.testButton} onClick={handleTestButtonClick}>
+          테스트
+        </button>
       </div>
       {/* 발음 평가 모달창 */}
       <PronounceModal

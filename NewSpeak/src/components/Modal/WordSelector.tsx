@@ -43,6 +43,7 @@ const WordSelector = ({
 
     const handleContextMenu = (e: MouseEvent) => {
       e.preventDefault();
+      closeModal();
       closeWordSelector();
     };
 
@@ -63,13 +64,15 @@ const WordSelector = ({
         const startOfWord = beforeCursor.search(/\S+$/); // 커서 앞쪽에서 마지막 단어의 시작을 찾음
         const endOfWord = afterCursor.search(/\s/); // 커서 뒤쪽에서 첫 번째 공백을 찾음
         console.log(startOfWord, endOfWord);
-        
-        const word = 
-          (startOfWord === -1 ? '' : beforeCursor.slice(startOfWord)) + 
-          afterCursor.slice(0, endOfWord === -1 ? afterCursor.length : endOfWord);
-        
+
+        const word =
+          (startOfWord === -1 ? '' : beforeCursor.slice(startOfWord)) +
+          afterCursor.slice(
+            0,
+            endOfWord === -1 ? afterCursor.length : endOfWord,
+          );
+
         return word.trim();
-        
       }
 
       return '';
@@ -80,7 +83,7 @@ const WordSelector = ({
       if (target.closest(`.${styles.modal}`)) {
         return; // 모달 내부에서 클릭된 경우
       }
-      
+
       const selectedText = getWordAtCursor(e); // 클릭한 위치의 단어 가져오기
       if (!selectedSentenceId) {
         console.log('id없음');
@@ -90,13 +93,12 @@ const WordSelector = ({
       const cleanedWord = cleanWord(selectedText); // 양 끝에서 영어가 아닌 문자 제거
 
       if (cleanedWord) {
-        if (hasNonEnglishCharacters(cleanedWord)) { 
+        if (hasNonEnglishCharacters(cleanedWord)) {
           alert('단어 중간에 영어가 아닌 문자가 포함되어 있습니다.'); // 중간에 영어가 아닌 문자가 있을 경우 알림
           return;
         }
         openModal(cleanedWord); // 모달 열기
-
-      } 
+      }
       window.getSelection()?.removeAllRanges(); // 선택 영역 초기화
     };
 
