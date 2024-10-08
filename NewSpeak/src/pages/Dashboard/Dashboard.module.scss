@@ -32,7 +32,7 @@
       padding: 16px;
       text-align: center;
       cursor: pointer;
-
+      border: 1px solid var(--border-color);
       &:hover {
         transform: scale(1.03);
       }
@@ -92,7 +92,7 @@
       grid-row: span 3;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
+      justify-content: center;
       overflow: scroll;
       position: relative;
 
@@ -103,111 +103,137 @@
         top: 15px;
         animation: accent 1s linear infinite;
         color: rgb(188, 188, 8);
+        background-color: var(--background-color);
+        &:hover {
+          transform: scale(1);
+        }
+
+        @media (max-width: 1024px) {
+          visibility: hidden;
+        }
+
+        .reportGridHeader {
+          position: absolute;
+          top: 10px;
+        }
+
+        .blankReport {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
       }
 
-      @media (max-width: 1024px) {
-        visibility: hidden;
-      }
-
-      .reportGridHeader {
-        position: absolute;
-        top: 10px;
-      }
-
-      .blankReport {
-        width: 100%;
-        height: 100%;
+      .wordSearch {
+        grid-column: span 2;
+        grid-row: span 1;
+        padding: 12px;
         display: flex;
+        height: 107px;
+        justify-content: flex-start;
         align-items: center;
-        justify-content: center;
+        overflow: scroll;
+        position: relative;
+
+        @media (max-width: 1024px) {
+          grid-column: span 1;
+        }
+
+        .wordSearchInput {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .wordButtonContainer {
+          position: absolute;
+          display: flex;
+          gap: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          right: 15px;
+        }
+      }
+
+      .selected {
+        grid-column: 1/ 5;
+        grid-row: 1 / 5;
+        z-index: 1;
+        transition: all 0.5s ease-in-out;
+        &:hover {
+          transform: scale(1);
+        }
       }
     }
+  }
 
-    .wordSearch {
-      grid-column: span 2;
-      grid-row: span 1;
-      padding: 12px;
+  .dashboardFooter {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+  }
+
+  .reportCard {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--background-color);
+    justify-content: flex-start;
+    align-items: center;
+    padding: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    width: 80%;
+    height: 80%;
+    margin: 8px;
+    margin-top: 50px;
+    overflow: scroll;
+    position: relative;
+    &:hover {
+      transform: scale(1.02);
+    }
+
+    .cardHeader {
+      position: absolute;
       display: flex;
-      height: 107px;
-      justify-content: flex-start;
       align-items: center;
-      overflow: scroll;
+      top: -45px;
+      animation: accent 1s linear infinite;
+      color: var(--main-color);
+    }
+
+    .chartHeader {
+    }
+
+    .chartContainer {
+      position: absolute;
+      bottom: -30px;
       position: relative;
-
-      @media (max-width: 1024px) {
-        grid-column: span 1;
-      }
-
-      .wordSearchInput {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .wordButtonContainer {
+      .innerScore {
         position: absolute;
-        display: flex;
-        gap: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        right: 15px;
-      }
-    }
-
-    .selected {
-      grid-column: 1/ 5;
-      grid-row: 1 / 5;
-      z-index: 1;
-      transition: all 0.5s ease-in-out;
-      &:hover {
-        transform: scale(1);
+        bottom: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        visibility: hidden;
+        @media (max-width: 1024px) {
+          visibility: visible;
+        }
       }
     }
   }
-}
 
-.dashboardFooter {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 60px;
-}
-
-.reportCard {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--background-color);
-  justify-content: flex-start;
-  align-items: center;
-  filter: brightness(80%);
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s;
-  width: 80%;
-  height: 80%;
-  margin: 8px;
-  margin-top: 50px;
-  overflow: scroll;
-  position: relative;
-  &:hover {
-    transform: scale(1.02);
-  }
-
-  .chartHeader {
-  }
-
-  .chartContainer {
-  }
-}
-
-@keyframes accent {
-  0% {
-    transform: translateY(0%);
-  }
-  50% {
-    transform: translateY(20%);
-  }
-  100% {
-    transform: translateY(0%);
+  @keyframes accent {
+    0% {
+      transform: translateY(0%);
+    }
+    50% {
+      transform: translateY(20%);
+    }
+    100% {
+      transform: translateY(0%);
+    }
   }
 }
