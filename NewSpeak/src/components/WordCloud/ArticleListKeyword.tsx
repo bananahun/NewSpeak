@@ -133,6 +133,7 @@ const ArticleListKeyword: React.FC = () => {
                   }}
                   sx={{
                     fontSize: "1rem",
+                    color: "black",
                     "&:hover": { backgroundColor: "#eeeeee" },
                   }}
                 >
@@ -167,7 +168,12 @@ const ArticleListKeyword: React.FC = () => {
               <Card
                 key={article.id}
                 onClick={() => loadArticleDetail(article)}
-                sx={{ maxWidth: 600, margin: 2, cursor: "pointer" }}
+                sx={{
+                  maxWidth: 600,
+                  margin: 2,
+                  cursor: "pointer",
+                  border: "1px solid white",
+                }}
               >
                 <CardMedia
                   component="img"
