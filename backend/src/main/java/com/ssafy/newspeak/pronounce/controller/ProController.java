@@ -5,6 +5,7 @@ import com.ssafy.newspeak.pronounce.dto.ProResponse;
 import com.ssafy.newspeak.pronounce.dto.PronounceClientRequest;
 import com.ssafy.newspeak.pronounce.service.AudioFileUploadService;
 import com.ssafy.newspeak.pronounce.service.ProService;
+import io.github.bucket4j.Bucket;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +26,19 @@ public class ProController {
 
     private final ProService proService;
 
+    private final Bucket gcsBucket;
+
     @PostMapping
     public ResponseEntity<ProResponse> evaluatePronunciation(
             @RequestPart("audioFile") MultipartFile audioFile) throws IOException {
+        if (gcsBucket.tryConsume(1)) {
             String audioFileUrl = audioFileUploadService.uploadFile(audioFile);
             ProRequest request = new ProRequest("english", audioFileUrl);
             ProResponse result = proService.evaluatePronunciation(request);
             return ResponseEntity.status(OK).body(result);
+        } else {
+            return ResponseEntity.status(TOO_MANY_REQUESTS)
+                    .body(ProResponse.errorResponse(429, "잠시 후 시도해주세요"));
+        }
     }
 }

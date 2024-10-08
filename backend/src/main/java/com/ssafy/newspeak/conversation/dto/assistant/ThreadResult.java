@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
 @Getter
-@AllArgsConstructor(staticName = "of")
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ThreadResult {
 
@@ -19,4 +19,16 @@ public class ThreadResult {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private ResponseEntity<String> audio;
+
+    private int statusCode;
+
+    private String message;
+
+    public static ThreadResult of(RunThreadResponse dialog, ResponseEntity<String> audio) {
+        return new ThreadResult(dialog, audio, 200, "response ok");
+    }
+
+    public static ThreadResult error() {
+        return new ThreadResult(null, null, 500, "response error");
+    }
 }

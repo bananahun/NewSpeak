@@ -15,6 +15,7 @@ import com.ssafy.newspeak.conversation.service.ReportService;
 import com.ssafy.newspeak.pronounce.service.AudioFileUploadService;
 import com.ssafy.newspeak.security.jwt.MyUserDetails;
 import com.ssafy.newspeak.security.util.AuthUtil;
+import io.github.bucket4j.Bucket;
 import org.aspectj.lang.annotation.After;
 import org.springframework.ai.openai.OpenAiAudioSpeechModel;
 import org.springframework.ai.openai.OpenAiAudioSpeechOptions;
@@ -52,11 +53,14 @@ public class GptAssistantService {
     private final RestTemplate assistantTemplate;
     private final ObjectMapper objectMapper;
 
-    public GptAssistantService(@Qualifier("assistant") RestTemplate assistantTemplate, ObjectMapper objectMapper, AudioFileUploadService audioFileUploadService, OpenAiAudioSpeechModel openAiAudioSpeechClient, ReportService reportService) {
+    private final Bucket openAiBucket;
+
+    public GptAssistantService(@Qualifier("assistant") RestTemplate assistantTemplate, ObjectMapper objectMapper, AudioFileUploadService audioFileUploadService, OpenAiAudioSpeechModel openAiAudioSpeechClient, ReportService reportService, Bucket openAiBucket) {
         this.assistantTemplate = assistantTemplate;
         this.objectMapper = objectMapper;
         this.openAiAudioSpeechClient = openAiAudioSpeechClient;
         this.reportService = reportService;
+        this.openAiBucket = openAiBucket;
     }
 
     // 스레드를 만듭니다. (대화의 기초 시작)
@@ -115,6 +119,7 @@ public class GptAssistantService {
     }
 
     public ThreadResult response(String threadId, String runId) throws JsonProcessingException , IOException {
+        if (openAiBucket.tryConsume(1)) {
         String checkURL = DEFAULT_URL + "/" + threadId + "/runs/" + runId;
         ThreadRunResponse checkRes = Optional.ofNullable(assistantTemplate.getForObject(checkURL, ThreadRunResponse.class))
                 .orElseThrow(RuntimeException::new);
@@ -130,10 +135,14 @@ public class GptAssistantService {
         RunThreadResponse dialog = objectMapper.readValue(response.getLast(), RunThreadResponse.class);
         String result =  objectMapper.readValue(response.getLast(), RunThreadResponse.class).getAssistant();
         ResponseEntity<String> audioFile = responseAudio(result);
+            System.out.println("openAiBucket.getAvailableTokens() = " + openAiBucket.getAvailableTokens());
         try {
             return ThreadResult.of(dialog, audioFile);
         } catch (Exception e) {
             throw new JsonException(e);
+        }
+        } else {
+            return ThreadResult.error();
         }
     }
 
@@ -151,7 +160,6 @@ public class GptAssistantService {
         SpeechResponse response = openAiAudioSpeechClient.call(speechPrompt);
         byte[] audioDataBytes = response.getResult().getOutput();
         String base64EncodedAudio = Base64.getEncoder().encodeToString(audioDataBytes);
-//        ThreadAudio byteArrayResource = new ThreadAudio(audioDataBytes);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("audio/mpeg"))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"output.mp3\"")

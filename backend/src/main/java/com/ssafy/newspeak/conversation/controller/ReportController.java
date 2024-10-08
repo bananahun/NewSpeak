@@ -10,6 +10,7 @@ import com.ssafy.newspeak.conversation.service.gpt.GptAssistantService;
 //import com.ssafy.newspeak.user.dto.UserAuthDto;
 import com.ssafy.newspeak.security.jwt.MyUserDetails;
 import com.ssafy.newspeak.security.util.AuthUtil;
+import io.github.bucket4j.Bucket;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.After;
@@ -29,6 +30,8 @@ public class ReportController {
     private final ReportService reportService;
     private final ArticleService articleService;
     private final GptAssistantService gptAssistantService;
+
+    private final Bucket openAiBucket;
 
 
     // 생성된 보고서에 대한 api입니다.
