@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import styles from './Home.module.scss';
-import sectionStyles from '../../styles/section.module.scss';
-import WordCloud from '../../components/WordCloud/WordCloud';
-import WordSlider from '../../components/Slider/WordSlider';
-import PreferredArticleList from '../../components/Article/PreferredArticleList';
-import ArticleListKeyword from '../../components/WordCloud/ArticleListKeyword';
-import ArticleSearch from '../../components/Article/ArticleSearch';
-import { fullpageScroll } from '../../utils/ScrollUtils';
-import useArticleApi from '../../apis/ArticleApi';
-import useAuthStore from '../../store/AuthStore';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import styles from "./Home.module.scss";
+import sectionStyles from "../../styles/section.module.scss";
+import WordCloud from "../../components/WordCloud/WordCloud";
+import WordSlider from "../../components/Slider/WordSlider";
+import PreferredArticleList from "../../components/Article/PreferredArticleList";
+import ArticleListKeyword from "../../components/WordCloud/ArticleListKeyword";
+import ArticleSearch from "../../components/Article/ArticleSearch";
+import { fullpageScroll } from "../../utils/ScrollUtils";
+import useArticleApi from "../../apis/ArticleApi";
+import useAuthStore from "../../store/AuthStore";
+import { useNavigate } from "react-router-dom";
 
 interface WordCloudItem {
   content: string;
@@ -30,13 +30,13 @@ const Home = () => {
   const [words, setWords] = useState<FormattedWordData[]>([]);
   const [selectedWordId, setSelectedWordId] = useState<number | null>(null);
   const [selectedWordIndex, setSelectedWordIndex] = useState<number | null>(
-    null,
+    null
   );
   const [resetTrigger, setResetTrigger] = useState<number>(0);
 
   useEffect(() => {
     if (!isLoggedIn) {
-      navigate('/welcome');
+      navigate("/welcome");
     }
   }, [isLoggedIn]);
 
@@ -63,7 +63,7 @@ const Home = () => {
           setSelectedWordIndex(0); // 첫 번째 인덱스로 설정
         }
       } catch (error) {
-        console.error('Error fetching word cloud data:', error);
+        console.error("Error fetching word cloud data:", error);
       }
     };
 
@@ -76,9 +76,9 @@ const Home = () => {
 
   const handleWordClick = (_word: string, id: number) => {
     setSelectedWordId(id);
-    const wordIndex = words.findIndex(item => item.id === id);
+    const wordIndex = words.findIndex((item) => item.id === id);
     setSelectedWordIndex(wordIndex);
-    setResetTrigger(prev => prev + 1);
+    setResetTrigger((prev) => prev + 1);
   };
 
   return (

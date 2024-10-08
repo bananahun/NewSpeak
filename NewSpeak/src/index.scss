@@ -75,3 +75,9 @@ button {
 strong {
   color: var(--main-color);
 }
+
+.MuiBox-root {
+  margin-top: 0 !important;
+  overflow: scroll !important;
+  // height: 100vh;
+}

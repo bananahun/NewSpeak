@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { usePreferredCategoryStore } from '../../store/CategoryStore'; // zustand store import
-import styles from './PreferredArticleList.module.scss';
-import ArticleListComponent from './ArticleListComponent';
-import { categories } from '../../utils/Categories';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { usePreferredCategoryStore } from "../../store/CategoryStore";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import ArticleListComponent from "./ArticleListComponent";
+import { categories } from "../../utils/Categories";
 
-const PreferredArticleList = () => {
+const PreferredArticleList: React.FC = () => {
   const { preferredCategories, getPreferredCategory } =
     usePreferredCategoryStore();
   const [selectedCategory, setSelectedCategory] = useState<number>(1);
@@ -14,7 +14,7 @@ const PreferredArticleList = () => {
 
   useEffect(() => {
     getPreferredCategory(() => {
-      console.error('Authentication error occurred');
+      console.error("Authentication error occurred");
     });
   }, []);
 
@@ -30,30 +30,45 @@ const PreferredArticleList = () => {
   };
 
   return (
-    <div className={styles.articleListContainer}>
-      <div className={styles.categoryButtons}>
-        <div className={styles.categoryButtonContainer}>
-          {preferredCategories.map(id => (
-            <button
-              key={id}
-              className={`${styles.categoryButton} ${
-                selectedCategory === id ? styles.active : ''
-              }`}
-              onClick={() => handleCategoryChange(id)}
-            >
-              {categories[id]}
-            </button>
-          ))}
-        </div>
-        <button
-          className={styles.addButton}
-          onClick={() => navigate('/articlelist')}
-        >
-          ALL
-        </button>
-      </div>
-      {!isLoading && <ArticleListComponent categoryId={selectedCategory} />}
-    </div>
+    <Box sx={{ padding: 2, textAlign: "center" }}>
+      {/* 카테고리 버튼 컨테이너 */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: 1,
+          marginBottom: 3,
+        }}
+      >
+        {preferredCategories.map((id) => (
+          <Button
+            key={id}
+            variant={selectedCategory === id ? "contained" : "outlined"}
+            color="primary"
+            onClick={() => handleCategoryChange(id)}
+            sx={{
+              fontSize: "0.875rem",
+              padding: "8px 16px",
+              minWidth: "80px",
+              borderRadius: "20px",
+            }}
+          >
+            {categories[id]}
+          </Button>
+        ))}
+      </Box>
+
+      {/* 로딩 상태 표시 */}
+      {isLoading ? (
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+          <CircularProgress color="primary" />
+        </Box>
+      ) : (
+        <ArticleListComponent categoryId={selectedCategory} />
+      )}
+    </Box>
   );
 };
 
