@@ -5,9 +5,9 @@ import styles from './Word.module.scss';
 
 const Word = () => {
   return (
-    <div>
+    <div className={styles.container}>
       <div className={styles.title}>나의 단어장</div>
-      <div className={styles.container}>
+      <div>
         <WordList />
       </div>
     </div>

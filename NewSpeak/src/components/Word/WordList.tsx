@@ -130,7 +130,7 @@ const WordList = () => {
 
 
   return (
-    <div>
+    <div >
       {(!words || words.length === 0) &&  (
             <div>단어가 없습니다.</div>
           )}
@@ -141,26 +141,6 @@ const WordList = () => {
             <div key={index} className={styles.card}>
               <div className={styles.cardInner}>
                 <div className={styles.cardContent}>
-                  {/* {flipped === index ? (
-                    <>
-                      <h3>{word.content}</h3>
-                      <div className={styles.examplesContainer}>
-                        {word.meaningDatas.map((meaning, meaningIndex) => (
-                          <div key={meaningIndex} className={styles.exampleBox}>
-                            <p>예문: {meaning.example}</p>
-                            <p>예문 (한국어): {meaning.exampleKorean}</p>
-                          </div>
-                        ))}
-                      </div>
-                      <button
-                        className={styles.backButton}
-                        onClick={() => setFlipped(null)}
-                      >
-                        단어 확인
-                      </button>
-                    </>
-                  ) : (
-                    <> */}
                     <div className={styles.cardContentTitle}>
                       <h3>{word.content}</h3>
                       <div
@@ -189,28 +169,6 @@ const WordList = () => {
                           onClick={() => handleSpeak(word.content)}                          
                            />
                       </div>
-                      {/* <div className={styles.buttonContainer}>
-                        <div
-                          className={styles.iconButton}
-                          title="발음 평가"
-                          onClick={() => openPronounceModal(word.content)} // 발음 평가 모달 열기
-                        >
-                          <FaMicrophone />
-                        </div>
-                        <div className={styles.iconButton} title="발음 듣기">
-                          <GiSpeaker />
-                        </div>
-                        <div
-                          className={styles.iconButton}
-                          title="예문 확인"
-                          onClick={() => openWordModal(word)}
-                        >
-                          <FaBook />
-                        </div>
-                        
-                      </div> */}
-                    {/* </>
-                  )} */}
                 </div>
               </div>
             </div>
