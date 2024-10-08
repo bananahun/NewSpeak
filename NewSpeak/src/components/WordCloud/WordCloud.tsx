@@ -24,7 +24,6 @@ interface WordData {
 
 interface WordCloudProps {
   data: WordData[];
-  dashboard?: boolean;
   onWordClick?: (word: string, id: number) => void; // 클릭 시 단어와 ID 전달
 }
 
@@ -35,11 +34,9 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, onWordClick }) => {
     const drawWordCloud = () => {
       const container = containerRef.current;
       if (!container) return;
-      let width: number;
-      let height: number;
 
-      width = Math.max(container.clientWidth - 160, 160);
-      height = container.clientHeight;
+      const width = container.clientWidth;
+      const height = container.clientHeight;
 
       const maxSize = Math.max(...data.map(d => d.size));
       const minSize = Math.min(...data.map(d => d.size));

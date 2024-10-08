@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Radar,
   RadarChart,
@@ -58,8 +58,8 @@ export const renderRadarChart = (report: any, inDashboard: boolean = false) => {
     return `hsl(${hue}, 100%, 50%)`;
   };
 
-  const width = inDashboard ? 110 : 220;
-  const height = inDashboard ? 100 : 220;
+  const width = 220;
+  const height = 220;
 
   return (
     <RadarChart
@@ -83,6 +83,7 @@ export const renderRadarChart = (report: any, inDashboard: boolean = false) => {
         stroke={getColorByScore(report.score)}
         fill={getColorByScore(report.score)}
         fillOpacity={0.6}
+        isAnimationActive={false}
       />
     </RadarChart>
   );
