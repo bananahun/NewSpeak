@@ -71,11 +71,7 @@ export const renderRadarChart = (report: any, inDashboard: boolean = false) => {
       data={data}
     >
       <PolarGrid />
-      {inDashboard ? (
-        <></>
-      ) : (
-        <PolarAngleAxis dataKey="subject" tick={renderCustomTick} />
-      )}
+      <PolarAngleAxis dataKey="subject" tick={renderCustomTick} />
       <PolarRadiusAxis angle={30} domain={[0, 20]} tick={false} />
       <Radar
         name="Feedback"
