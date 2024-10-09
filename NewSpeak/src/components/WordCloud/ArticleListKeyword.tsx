@@ -1,187 +1,3 @@
-// import React, { useEffect, useState, useRef } from "react";
-// import { useNavigate } from "react-router-dom";
-// import useArticleStore from "../../store/ArticleStore";
-// import styles from "./ArticleListKeyword.module.scss";
-// import useArticleApi from "../../apis/ArticleApi";
-// import {
-//   FaAngleLeft,
-//   FaAnglesLeft,
-//   FaAngleRight,
-//   FaAnglesRight,
-//   FaPlus,
-// } from "react-icons/fa6";
-
-// interface Article {
-//   id: number;
-//   title: string;
-//   content: string;
-//   imageUrl: string;
-//   date: string;
-//   publisher: string;
-// }
-
-// interface Word {
-//   id: number;
-//   content: string;
-//   size: number;
-// }
-
-// const ArticleListKeyword: React.FC = () => {
-//   const navigate = useNavigate();
-//   const { setArticleMeta } = useArticleStore();
-//   const [articles, setArticles] = useState<Article[]>([]);
-//   const [words, setWords] = useState<Word[]>([]);
-//   const [selectedWordId, setSelectedWordId] = useState<number | null>(null);
-//   const [currentPage, setCurrentPage] = useState<number>(0);
-//   const articleRef = useRef<HTMLDivElement>(null);
-
-//   useEffect(() => {
-//     fetchWordData();
-//   }, []);
-
-//   // 단어 데이터를 가져오는 함수
-//   const fetchWordData = async () => {
-//     try {
-//       const wordData = await useArticleApi.getWordCloud();
-//       const formattedData = Array.isArray(wordData) ? wordData : wordData?.data;
-//       setWords(formattedData || []);
-//     } catch (error) {
-//       console.error("Error fetching word data:", error);
-//     }
-//   };
-
-//   // 선택된 단어 ID에 맞는 기사 데이터를 가져오는 함수
-//   const fetchArticlesById = async (wordId: number, page: number = 0) => {
-//     try {
-//       const result = await useArticleApi.getArticleWordCloud(wordId, page);
-//       if (result && Array.isArray(result)) {
-//         const formattedArticles = result.map((article) => ({
-//           id: article.id,
-//           title: article.title,
-//           content: article.content || "",
-//           imageUrl: article.imageUrl,
-//           date: article.publishedDate,
-//           publisher: article.publisher,
-//         }));
-//         setArticles((prev) => [...prev, ...formattedArticles]);
-//       }
-//     } catch (error) {
-//       console.error("Error fetching articles:", error);
-//     }
-//   };
-
-//   useEffect(() => {
-//     if (selectedWordId !== null) {
-//       setArticles([]); // 새로운 단어 선택 시 기존 기사 초기화
-//       fetchArticlesById(selectedWordId, 0);
-//     }
-//   }, [selectedWordId]);
-
-//   const loadArticleDetail = (article: Article) => {
-//     setArticleMeta({
-//       id: article.id,
-//       title: article.title,
-//       imageUrl: article.imageUrl,
-//     });
-//     navigate("/article");
-//   };
-
-//   // 스크롤 관련 핸들러
-//   const handleMoveLeft = () => {
-//     if (articleRef.current) {
-//       articleRef.current.scrollLeft -= 575;
-//     }
-//   };
-
-//   const handleMoveLeftEnd = () => {
-//     if (articleRef.current) {
-//       articleRef.current.scrollLeft = 0;
-//     }
-//   };
-
-//   const handleMoveRight = () => {
-//     if (articleRef.current) {
-//       articleRef.current.scrollLeft += 575;
-//     }
-//   };
-
-//   const handleMoveRightEnd = () => {
-//     if (articleRef.current) {
-//       articleRef.current.scrollLeft = articleRef.current.scrollWidth;
-//     }
-//   };
-
-//   return (
-//     <div className={styles.articleListKeyword}>
-//       <div className={styles.wordSelection}>
-//         {words.length > 0 ? (
-//           words.map((word) => (
-//             <span
-//               key={word.id}
-//               className={`${styles.wordItem} ${word.id === selectedWordId ? styles.selectedWord : ""}`}
-//               onClick={() => setSelectedWordId(word.id)}
-//             >
-//               {word.content}
-//             </span>
-//           ))
-//         ) : (
-//           <p>No words available</p>
-//         )}
-//       </div>
-
-//       <div className={styles.articleListComponent}>
-//         {articles.length > 0 ? (
-//           <>
-//             <div className={styles.articleListContent} ref={articleRef}>
-//               {articles.map((article, index) => (
-//                 <div
-//                   key={index}
-//                   className={styles.articleCard}
-//                   onClick={() => loadArticleDetail(article)}
-//                 >
-//                   <div className={styles.imageContainer}>
-//                     <img
-//                       src={article.imageUrl || "default_image.png"}
-//                       alt={article.title || "Default News Image"}
-//                       className={styles.articleImage}
-//                     />
-//                   </div>
-//                   <div className={styles.articleInfo}>
-//                     <h4 className={styles.title}>{article.title}</h4>
-//                     <p className={styles.meta}>
-//                       {new Date(article.date).toLocaleDateString()} |{" "}
-//                       {article.publisher}
-//                     </p>
-//                     <p className={styles.content}>{article.content}</p>
-//                   </div>
-//                 </div>
-//               ))}
-//               <div
-//                 className={styles.loadMoreButton}
-//                 onClick={() =>
-//                   fetchArticlesById(selectedWordId!, currentPage + 1)
-//                 }
-//               >
-//                 <FaPlus size={20} />
-//               </div>
-//             </div>
-//             <div className={styles.scrollButtons}>
-//               <FaAnglesLeft size={30} onClick={handleMoveLeftEnd} />
-//               <FaAngleLeft size={30} onClick={handleMoveLeft} />
-//               <FaAngleRight size={30} onClick={handleMoveRight} />
-//               <FaAnglesRight size={30} onClick={handleMoveRightEnd} />
-//             </div>
-//           </>
-//         ) : (
-//           <div className={styles.noArticlesMessage}>No articles available.</div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ArticleListKeyword;
-
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useArticleStore from "../../store/ArticleStore";
@@ -293,30 +109,30 @@ const ArticleListKeyword: React.FC = () => {
   const handleMoveDown = () => {
     if (keywordRef.current) keywordRef.current.scrollTop += 50;
   };
-  // 스크롤 관련 핸들러
-  const handleMoveLeft = () => {
-    if (articleRef.current) {
-      articleRef.current.scrollLeft -= 575;
-    }
-  };
+  // // 스크롤 관련 핸들러
+  // const handleMoveLeft = () => {
+  //   if (articleRef.current) {
+  //     articleRef.current.scrollLeft -= 575;
+  //   }
+  // };
 
-  const handleMoveLeftEnd = () => {
-    if (articleRef.current) {
-      articleRef.current.scrollLeft = 0;
-    }
-  };
+  // const handleMoveLeftEnd = () => {
+  //   if (articleRef.current) {
+  //     articleRef.current.scrollLeft = 0;
+  //   }
+  // };
 
-  const handleMoveRight = () => {
-    if (articleRef.current) {
-      articleRef.current.scrollLeft += 575;
-    }
-  };
+  // const handleMoveRight = () => {
+  //   if (articleRef.current) {
+  //     articleRef.current.scrollLeft += 575;
+  //   }
+  // };
 
-  const handleMoveRightEnd = () => {
-    if (articleRef.current) {
-      articleRef.current.scrollLeft = articleRef.current.scrollWidth;
-    }
-  };
+  // const handleMoveRightEnd = () => {
+  //   if (articleRef.current) {
+  //     articleRef.current.scrollLeft = articleRef.current.scrollWidth;
+  //   }
+  // };
   return (
     <div className={styles.articleListKeyword}>
       {/* 카테고리와 동일한 키워드 나열 레이아웃 */}
@@ -371,20 +187,6 @@ const ArticleListKeyword: React.FC = () => {
                   </div>
                 </div>
               ))}
-              <div
-                className={styles.loadMoreButton}
-                onClick={() =>
-                  fetchArticlesById(selectedWordId!, currentPage + 1)
-                }
-              >
-                <FaPlus size={20} />
-              </div>
-            </div>
-            <div className={styles.scrollButtons}>
-              <FaAnglesLeft size={30} onClick={handleMoveLeftEnd} />
-              <FaAngleLeft size={30} onClick={handleMoveLeft} />
-              <FaAngleRight size={30} onClick={handleMoveRight} />
-              <FaAnglesRight size={30} onClick={handleMoveRightEnd} />
             </div>
           </>
         ) : (
