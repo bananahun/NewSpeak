@@ -2,7 +2,8 @@
   0% {
     transform: translateY(0%);
   }
-  50% {
+  30%,
+  80% {
     transform: translateY(10%);
   }
   100% {
@@ -21,9 +22,9 @@
   height: 300px;
   padding: 20px;
 
-  button {
-    width: fit-content;
-  }
+  // button {
+  //   width: fit-content;
+  // }
 
   .modalHeader {
     display: flex;
@@ -34,23 +35,19 @@
 
     .title {
       width: 100%;
-      height: 100%;
       font-weight: 500;
-      text-align: center;
-      align-items: center;
-      display: flex;
-      gap: 12px;
       p,
       span {
         font-size: 24px;
       }
-      .spacebar {
-        display: inline-block;
-        width: 150px;
-        animation: accent 1s linear infinite;
-        > img {
-          width: 100%;
-        }
+    }
+
+    .spacebar {
+      display: inline-block;
+      width: 150px;
+      animation: accent 2s linear infinite;
+      > img {
+        width: 100%;
       }
     }
 
@@ -64,6 +61,13 @@
       text-align: center;
       padding: 0;
       background-color: inherit;
+      transition: all 0.2s ease;
+      border-radius: 12px;
+
+      &:hover {
+        transform: scale(1.15);
+        background-color: var(--main-color);
+      }
     }
   }
 
@@ -82,10 +86,57 @@
     position: absolute;
     bottom: 20px;
     width: 100%;
+
+    > button {
+      font-size: 14px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+
+      &:hover {
+        background-color: var(--main-color);
+        transform: scale(1.05);
+      }
+
+      &:disabled:hover {
+        box-shadow: none;
+        color: gray;
+      }
+    }
   }
 }
 
-.spacebar {
-  width: 150px;
-  // height: 80px;
+.sttButton {
+  position: relative;
+}
+
+.isRecording::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -6.5px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: var(--font-color);
+  animation: ping 2s ease infinite;
+}
+
+@keyframes ping {
+  0% {
+    -webkit-transform: scale(0.2);
+    transform: scale(0.2);
+    opacity: 0.8;
+  }
+  80% {
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: scale(2.2);
+    transform: scale(2.2);
+    opacity: 0;
+  }
 }

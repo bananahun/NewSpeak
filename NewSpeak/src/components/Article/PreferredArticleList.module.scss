@@ -6,26 +6,33 @@
   flex-direction: column;
   align-items: center;
 
-  .categoryButtonContainer > button {
-    width: 110px;
-    height: 40px;
-    padding: 10px 15px;
-    margin: 5px;
-    border: 1px solid var(--backgound-color);
-    background-color: var(--main-color);
-    border-radius: 5px;
-    overflow: hidden;
-    font-size: 14px;
+  .categoryButtonContainer {
+    height: 110px;
+    min-height: 110px;
+    width: 100%;
+    margin-bottom: 20px;
 
-    &.active {
-      border-bottom: 4px solid var(--contrast-color);
+    > button {
+      width: 110px;
+      height: 40px;
+      padding: 10px 15px;
+      margin: 5px;
+      border: 1px solid var(--backgound-color);
       background-color: var(--main-color);
-      color: var(--contrast-color);
-    }
+      border-radius: 5px;
+      overflow: hidden;
+      font-size: 14px;
 
-    &:hover {
-      background-color: var(--contrast-color);
-      color: var(--main-color);
+      &.active {
+        border-bottom: 4px solid var(--contrast-color);
+        background-color: var(--main-color);
+        color: var(--contrast-color);
+      }
+
+      &:hover {
+        background-color: var(--contrast-color);
+        color: var(--main-color);
+      }
     }
   }
 }

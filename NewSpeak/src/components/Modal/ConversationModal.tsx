@@ -32,7 +32,6 @@ const ConversationModal = ({
 
   const completeRecord = () => {
     if (!transcript) {
-      // 녹음된거 없을때, 3번정도 누르면 직접 입력하게 해도 ㄱㅊ을듯
       setCurrentAnswer('Empty Answer');
     }
     submitResponse();
@@ -89,12 +88,8 @@ const ConversationModal = ({
       <div className={styles.modalHeader}>
         <div className={styles.title}>
           <p>Press </p>
-          <img
-            src={spacebarLogo}
-            alt="'spacebar'"
-            className={styles.spacebar}
-          />
         </div>
+        <img src={spacebarLogo} alt="'spacebar'" className={styles.spacebar} />
         <button onClick={() => closeModal()}>x</button>
       </div>
       <div className={styles.modalContainer}>
@@ -102,12 +97,14 @@ const ConversationModal = ({
       </div>
       <div className={styles.sttButton}>
         {isListening ? (
-          <CiMicrophoneOn size="48" />
+          <>
+            <CiMicrophoneOn size="48" />
+            <div className={styles.isRecording}></div>
+          </>
         ) : (
           <CiMicrophoneOff size="48" />
         )}
       </div>
-      <div className={styles.buttonContainer}></div>
       <div className={styles.footer}>
         <button onClick={resetTranscript}>다시 녹음할래요</button>
         <button onClick={completeRecord}>잘 녹음 됐어요</button>

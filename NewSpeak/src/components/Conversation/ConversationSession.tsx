@@ -25,7 +25,6 @@ const ConversationSession = ({
   const [isFirstMessage, setIsFirstMessage] = useState(true);
   const [activeAnswer, setActiveAnswer] = useState(currentAnswer);
   const [editedAnswer, setEditedAnswer] = useState('');
-  // const [byteMp3, setByteMp3] = useState('');
   const [base64Mp3, setBase64Mp3] = useState('');
   const [activeResponse, setActiveResponse] = useState('');
   const [isFirstRender, setIsFirstRender] = useState(true);
@@ -85,16 +84,6 @@ const ConversationSession = ({
       return;
     }
     if (convRunId) {
-      // const getByteMp3 = async () => {
-      //   try {
-      //     const response = await getResponseAudio();
-      //     setByteMp3(response.audio.body.byteArray);
-      //     setActiveResponse(response.dialog.assistant);
-      //   } catch (error) {
-      //     console.error(error);
-      //   }
-      // };
-      // getByteMp3();
       const getBaseMp3 = async () => {
         try {
           const response = await getResponseAudio();

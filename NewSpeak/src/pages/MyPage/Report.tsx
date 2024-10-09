@@ -99,7 +99,7 @@ const Report = () => {
 
     return (
       // <ResponsiveContainer width={`${100 / (2 - itemsPerPage)}%`} height="100%">
-      <ResponsiveContainer width="100%" height={480}>
+      <ResponsiveContainer width="100%" height="100%" minHeight={574.4}>
         <BarChart
           data={data}
           margin={{ top: 20, right: 10, left: -20, bottom: 5 }}

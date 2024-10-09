@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from "react";
-import styles from "./Dashboard.module.scss";
-import { renderRadarChart } from "../../utils/Chart";
-import useAuthStore from "../../store/AuthStore";
-import useArticleApi from "../../apis/ArticleApi";
-import { useVocaStore } from "../../store/VocaStore";
-import userApi from "../../apis/UserApi";
-import LoadingModal from "../../components/Modal/LoadingModal";
-import WordCloud from "../../components/WordCloud/WordCloud";
-import WordSlider from "../../components/Slider/WordSlider";
-import { useNavigate } from "react-router-dom";
-import { GoLightBulb } from "react-icons/go";
-import { TextField } from "@mui/material";
-import DashboardModal from "./DashboardModal";
-import { MdOutlineReplay } from "react-icons/md";
-import { GoPlus } from "react-icons/go";
-import { mySwal } from "../../components/Alert/CustomSwal";
+import React, { useEffect, useState } from 'react';
+import styles from './Dashboard.module.scss';
+import { renderRadarChart } from '../../utils/Chart';
+import useAuthStore from '../../store/AuthStore';
+import useArticleApi from '../../apis/ArticleApi';
+import { useVocaStore } from '../../store/VocaStore';
+import userApi from '../../apis/UserApi';
+import LoadingModal from '../../components/Modal/LoadingModal';
+import WordCloud from '../../components/WordCloud/WordCloud';
+import WordSlider from '../../components/Slider/WordSlider';
+import { useNavigate } from 'react-router-dom';
+import { TextField } from '@mui/material';
+import { MdOutlineReplay } from 'react-icons/md';
+import { GoPlus } from 'react-icons/go';
+import { mySwal } from '../../components/Alert/CustomSwal';
+
 interface WordCloudItem {
   content: string;
   cnt: number;
@@ -65,17 +64,17 @@ const Dashboard = () => {
   const [words, setWords] = useState<FormattedWordData[]>([]);
   const [selectedWordId, setSelectedWordId] = useState<number | null>(null);
   const [selectedWordCount, setSelectedWordCount] = useState<number | null>(
-    null
+    null,
   );
   const [selectedWordIndex, setSelectedWordIndex] = useState<number | null>(
-    null
+    null,
   );
   const [resetTrigger, setResetTrigger] = useState<number>(0);
   const [reportData, setReportData] = useState<any[]>([]);
   const [lastReport, setLastReport] = useState<Report | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isMobile, setIsMobile] = useState(false);
-  const [word, setWord] = useState("");
+  const [word, setWord] = useState('');
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
   const [searchedWord, setSearchedWord] = useState<any | null>(null);
 
@@ -85,8 +84,8 @@ const Dashboard = () => {
     };
 
     handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
@@ -109,7 +108,7 @@ const Dashboard = () => {
           setSelectedWordIndex(0);
         }
       } catch (error) {
-        console.error("Error fetching word cloud data:", error);
+        console.error('Error fetching word cloud data:', error);
       }
     };
     fetchWordData();
@@ -142,14 +141,14 @@ const Dashboard = () => {
 
   const handleWordChange = (word: FormattedWordData) => {
     setSelectedWordId(word.id);
-    setSelectedWordIndex(words.findIndex((item) => item.id === word.id));
+    setSelectedWordIndex(words.findIndex(item => item.id === word.id));
   };
 
   const handleWordClick = (_word: string, id: number) => {
     setSelectedWordId(id);
-    const wordIndex = words.findIndex((item) => item.id === id);
+    const wordIndex = words.findIndex(item => item.id === id);
     setSelectedWordIndex(wordIndex);
-    setResetTrigger((prev) => prev + 1);
+    setResetTrigger(prev => prev + 1);
   };
 
   useEffect(() => {
@@ -159,7 +158,7 @@ const Dashboard = () => {
   }, [selectedWordIndex]);
 
   const handleReportClick = (reportId: number) => {
-    navigate("/report", { state: { reportId } });
+    navigate('/report', { state: { reportId } });
   };
 
   useEffect(() => {
@@ -179,7 +178,7 @@ const Dashboard = () => {
   }, [lastReport]);
 
   const handleSearchArticle = () => {
-    navigate("/articlelist/keyword", { state: selectedWordId });
+    navigate('/articlelist/keyword', { state: selectedWordId });
   };
 
   const addWordToVoca = async () => {
@@ -194,7 +193,7 @@ const Dashboard = () => {
         setVocaId(fetchedVocaId); // 상태에 새로운 vocaId 저장
         currentVocaId = fetchedVocaId; // 업데이트된 vocaId 사용
       } catch (error) {
-        console.error("Error fetching vocaIds:", error);
+        console.error('Error fetching vocaIds:', error);
         return;
       }
     }
@@ -202,24 +201,24 @@ const Dashboard = () => {
     try {
       const response = await userApi.getMyWord(
         currentVocaId,
-        searchedWord.word
+        searchedWord.word,
       ); // vocaId 사용하여 단어 추가
       if (response && response.status === 200) {
         mySwal(
-          "단어장추가",
+          '단어장추가',
           `"${searchedWord.word}" 단어가 단어장에 추가되었습니다!`,
-          "success"
+          'success',
         );
       } else {
         mySwal(
-          "단어장추가",
+          '단어장추가',
           `"${searchedWord.word}" 단어를 추가하는 데 실패했습니다.`,
-          "error"
+          'error',
         );
       }
     } catch (error) {
-      console.error("Error adding word to voca:", error);
-      mySwal("단어장추가", "단어를 추가하는 데 실패했습니다.", "error");
+      console.error('Error adding word to voca:', error);
+      mySwal('단어장추가', '단어를 추가하는 데 실패했습니다.', 'error');
     }
   };
 
@@ -229,7 +228,7 @@ const Dashboard = () => {
       const response = await getWord(word);
       setSearchedWord(response);
     } catch (error) {
-      setSearchedWord("검색된 단어가 없습니다");
+      setSearchedWord('검색된 단어가 없습니다');
     }
   };
 
@@ -249,20 +248,16 @@ const Dashboard = () => {
         </div>
         <div
           className={`${styles.dashboardContent} ${
-            selectedSection ? styles.hasSelectedSection : ""
+            selectedSection ? styles.hasSelectedSection : ''
           }`}
         >
-          <div
-            className={`${styles.gridBlock} ${styles.wordCloud}
-            ${selectedSection === "wordCloud" ? styles.selected : ""}`}
-            onClick={() => selectSection("wordCloud")}
-          >
+          <div className={`${styles.gridBlock} ${styles.wordCloud}`}>
             <WordCloud data={words} onWordClick={handleWordClick} />
           </div>
           <div
             className={`${styles.gridBlock} ${styles.wordSlide}
-            ${selectedSection === "wordSlide" ? styles.selected : ""}`}
-            onClick={() => selectSection("wordSlide")}
+            ${selectedSection === 'wordSlide' ? styles.selected : ''}`}
+            onClick={() => selectSection('wordSlide')}
           >
             <p className={styles.wordSlideTitle}>
               <strong>Hot Topic</strong> of the Week
@@ -273,7 +268,7 @@ const Dashboard = () => {
               selectedWordIndex={selectedWordIndex}
               resetTrigger={resetTrigger}
             />
-            {selectedSection === "wordSlide" && (
+            {selectedSection === 'wordSlide' && (
               <div className={styles.wordSlideCount}>
                 <button onClick={handleSearchArticle}>
                   이 키워드로 기사 검색
@@ -296,9 +291,9 @@ const Dashboard = () => {
           {!isMobile && (
             <div
               className={`${styles.gridBlock} ${styles.report}
-              ${selectedSection === "report" ? styles.selected : ""}`}
+              ${selectedSection === 'report' ? styles.selected : ''}`}
               onClick={() => {
-                selectSection("report");
+                selectSection('report');
               }}
             >
               {isLoading ? (
@@ -325,7 +320,7 @@ const Dashboard = () => {
                     <div className={styles.blankReport}>
                       <h1 className={styles.blankTitle}>
                         아직 생성된 회화 보고서가 없어요
-                        {selectedSection === "report" && (
+                        {selectedSection === 'report' && (
                           <button>회화 하러 가기</button>
                         )}
                       </h1>
@@ -351,14 +346,14 @@ const Dashboard = () => {
               </>
             ) : (
               <div className={styles.wordSearchInput}>
-                <p style={{ width: "fit-content" }}>단어 검색하기</p>
+                <p style={{ width: 'fit-content' }}>단어 검색하기</p>
                 <form onSubmit={handleSubmit}>
                   <TextField
                     id="outlined-basic"
                     label="word"
                     variant="outlined"
                     value={word}
-                    onChange={(e) => setWord(e.target.value)}
+                    onChange={e => setWord(e.target.value)}
                   />
                 </form>
               </div>

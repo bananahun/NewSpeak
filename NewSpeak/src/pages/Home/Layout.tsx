@@ -7,24 +7,15 @@ import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import type { Router } from '@toolpad/core';
 import useThemeStore, { Theme } from '../../store/ThemeStore';
 import {
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Collapse,
-} from '@mui/material';
-import {
-  ExpandLess,
-  ExpandMore,
   Home,
   Lightbulb,
   Whatshot,
-  Article,
+  PhotoFilter,
   Category,
   FindInPage,
-  MenuBook,
+  AutoStories,
   Bookmarks,
-  Description,
+  Assessment,
 } from '@mui/icons-material';
 
 const NAVIGATION = [
@@ -35,20 +26,24 @@ const NAVIGATION = [
     title: 'Hot Articles',
     icon: <Whatshot />,
   },
-  { segment: 'preferred', title: 'Favorite Articles', icon: <Article /> },
+  { segment: 'preferred', title: 'Preferred Articles', icon: <PhotoFilter /> },
   {
     segment: 'articlelist',
     title: 'Category Articles',
     icon: <Category />,
   },
+  { segment: 'scraplist', title: 'Scrapped Articles', icon: <Bookmarks /> },
   {
     segment: 'articlesearch',
     title: 'Article Search',
     icon: <FindInPage />,
   },
-  { segment: 'scraplist', title: 'Scrap', icon: <Bookmarks /> },
-  { segment: 'word', title: 'My Voca', icon: <MenuBook /> },
-  { segment: 'reportlist', title: 'Conv. Report', icon: <Description /> },
+  { segment: 'word', title: 'Vocabulary Note', icon: <AutoStories /> },
+  {
+    segment: 'reportlist',
+    title: 'Conversation Reports',
+    icon: <Assessment />,
+  },
 ];
 
 // 테마 설정 함수

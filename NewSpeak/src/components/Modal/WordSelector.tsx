@@ -6,11 +6,7 @@ import styles from './WordSelector.module.scss';
 import { FiSearch } from 'react-icons/fi';
 import useArticleStore from '../../store/ArticleStore';
 import { useSelectedSentenceStore } from '../../store/selectedSentenceStore';
-
-const isEnglishWord = (word: string) => {
-  const englishWordPattern = /^[a-zA-Z]+$/;
-  return englishWordPattern.test(word);
-};
+import { mySwalWithTimer } from '../Alert/CustomSwal';
 
 const cleanWord = (word: string): string => {
   // 양 끝의 영어가 아닌 문자 제거
@@ -61,8 +57,8 @@ const WordSelector = ({
         const beforeCursor = text.slice(0, offset).trim();
         const afterCursor = text.slice(offset).trim();
 
-        const startOfWord = beforeCursor.search(/\S+$/); // 커서 앞쪽에서 마지막 단어의 시작을 찾음
-        const endOfWord = afterCursor.search(/\s/); // 커서 뒤쪽에서 첫 번째 공백을 찾음
+        const startOfWord = beforeCursor.search(/\S+$/);
+        const endOfWord = afterCursor.search(/\s/);
         console.log(startOfWord, endOfWord);
 
         const word =
@@ -79,6 +75,8 @@ const WordSelector = ({
     };
 
     const handleMouseUp = (e: MouseEvent) => {
+      if (e.button === 1 || e.button === 2) return;
+
       const target = e.target as HTMLElement;
       if (target.closest(`.${styles.modal}`)) {
         return; // 모달 내부에서 클릭된 경우
@@ -90,11 +88,18 @@ const WordSelector = ({
         return;
       }
 
+      const hasNumber = /\d/.test(selectedText);
+
       const cleanedWord = cleanWord(selectedText); // 양 끝에서 영어가 아닌 문자 제거
 
-      if (cleanedWord) {
-        if (hasNonEnglishCharacters(cleanedWord)) {
-          alert('단어 중간에 영어가 아닌 문자가 포함되어 있습니다.'); // 중간에 영어가 아닌 문자가 있을 경우 알림
+      if (hasNumber || cleanedWord) {
+        if (hasNonEnglishCharacters(cleanedWord) || hasNumber) {
+          mySwalWithTimer(
+            '단어 선택 오류',
+            '영어가 아닌 문자가 포함되어 있어요',
+            'warning',
+          );
+
           return;
         }
         openModal(cleanedWord); // 모달 열기

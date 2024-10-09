@@ -14,18 +14,30 @@
     padding: 20px;
     border-radius: 8px;
     text-align: center;
-    background-color:var(--background-color); // 모달 배경색
+    background-color: var(--background-color);
     color: var(--font-color);
-    box-shadow: 0 4px 10px var(--contrast-color); // 그림자 효과
+    box-shadow: 0 4px 10px var(--contrast-color);
 
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      border: none;
-      background-color: var(--main-color);
-      color: var(--font-color);
-      border-radius: 4px;
-      cursor: pointer;
+    .buttonContainer {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 12px;
+
+      > button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        border: none;
+        background-color: var(--main-color);
+        color: var(--font-color);
+        border-radius: 4px;
+        cursor: pointer;
+      }
     }
+  }
+}
+
+:global {
+  .swal2-timer-progress-bar {
+    background-color: var(--main-color) !important; /* 원하는 색상으로 변경 */
   }
 }

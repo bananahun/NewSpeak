@@ -30,6 +30,10 @@ interface WordCloudProps {
 const WordCloud: React.FC<WordCloudProps> = ({ data, onWordClick }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const handleClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+  };
+
   useEffect(() => {
     const drawWordCloud = () => {
       const container = containerRef.current;
@@ -76,14 +80,18 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, onWordClick }) => {
           .text((d: cloud.Word) => d.text as string)
           .style('cursor', 'pointer')
           .on('mouseenter', function (event, d) {
-            d3.select(this).style('transform', function () {
-              return `translate(${d.x}px, ${d.y}px) rotate(${d.rotate}deg) scale(1.05)`;
-            });
+            d3.select(this)
+              .style('transition', 'transform 0.2s ease')
+              .style('transform', function () {
+                return `translate(${d.x}px, ${d.y}px) rotate(${d.rotate}deg) scale(1.1)`;
+              });
           })
           .on('mouseleave', function (event, d) {
-            d3.select(this).style('transform', function () {
-              return `translate(${d.x}px, ${d.y}px) rotate(${d.rotate}deg) scale(1)`;
-            });
+            d3.select(this)
+              .style('transition', 'transform 0.2s ease')
+              .style('transform', function () {
+                return `translate(${d.x}px, ${d.y}px) rotate(${d.rotate}deg) scale(1)`;
+              });
           })
           .on('click', (event, d) => {
             if (onWordClick) {
@@ -116,7 +124,7 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, onWordClick }) => {
   }, [data]);
 
   return (
-    <div className={styles.wordCloudContainer}>
+    <div className={styles.wordCloudContainer} onClick={e => handleClick(e)}>
       <div
         ref={containerRef}
         id="word-cloud"
