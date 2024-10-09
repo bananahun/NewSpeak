@@ -54,17 +54,18 @@ const SentenceDetailModal = ({
   };
 
   return ReactDOM.createPortal(
+    <>
     <div className={styles.modalOverlay}>
       <div className={styles.sentenceDetailModal}>
         <button className={styles.closeButton} onClick={onClose}>
           x
         </button>
         <p>{text}</p>
-        <div>
-          <button disabled={isSpeaking} onClick={handleSpeak}>
+        <div className={styles.buttonContainer}>
+          <button className={styles.button} disabled={isSpeaking} onClick={handleSpeak}>
             문장 듣기
           </button>
-          <button onClick={openPronounceModal}>발음 평가</button>
+          <button className={styles.button} onClick={openPronounceModal}>발음 평가</button>
         </div>
       </div>
       <PronounceModal
@@ -73,8 +74,10 @@ const SentenceDetailModal = ({
         text={text}
         sourcePage={'SentenceDetailModal'}
       />
-    </div>,
-    document.body,
+    </div>
+    <div className={styles.modalOverlayShadow}> </div>
+    </>,
+    document.getElementById('modal-root'),
   );
 };
 

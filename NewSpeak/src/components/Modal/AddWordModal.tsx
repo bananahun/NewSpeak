@@ -106,7 +106,7 @@ const AddWordModal = ({
         </div>
       </div>
     </div>,
-    document.body,
+    document.getElementById('modal-root'),
   );
 };
 

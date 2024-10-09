@@ -8,13 +8,14 @@
   left: 0; /* 왼쪽으로부터 0 */
   width: 100%; /* 전체 너비 차지 */
   background-color: var(--background-color); /* 필요 시 배경색 추가 */
-  // z-index: 1000; /* 다른 요소들 위에 배치 */
+  z-index: 1000; /* 다른 요소들 위에 배치 */
 }
 
 .container {
   display: flex;
   flex-direction: column; /* 세로 방향으로 정렬 */
-  height: 55vh; /* 전체 뷰포트 높이에 맞춤 */
+  height: 70vh;
+ /* 전체 뷰포트 높이에 맞춤 */
 }
 
 .testButton {
@@ -52,6 +53,7 @@
   ); /* 카드의 최소 너비를 설정 */
   gap: 10px; /* 카드 간의 간격 */
   width: 100%; /* 전체 폭 차지 */
+  max-height: 60vh;
   flex: 1;
   overflow-y: auto; /* 수직 스크롤 활성화 */
   padding: 10px; /* 스크롤바 여유 공간을 위해 패딩 추가 (필요 시) */

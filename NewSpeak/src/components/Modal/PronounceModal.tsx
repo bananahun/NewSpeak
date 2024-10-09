@@ -68,7 +68,7 @@ const PronounceModal = ({ isOpen, onClose, text, sourcePage }: PronounceModalPro
 
   if (!isOpen) return null;
 
-  return ReactDOM.createPortal(
+  return ReactDOM.createPortal(<>
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
         <button className={styles.closeButton} onClick={onClose}>
@@ -77,9 +77,9 @@ const PronounceModal = ({ isOpen, onClose, text, sourcePage }: PronounceModalPro
         <p>{text}</p>
 
         {isRecording ? (
-          <button onClick={stopRecording}>발음테스트 중지</button>
+          <button className={styles.pronounceButton} onClick={stopRecording}>발음테스트 중지</button>
         ) : (
-          <button onClick={startRecording}>발음테스트 시작</button>
+          <button className={styles.pronounceButton} onClick={startRecording}>발음테스트 시작</button>
         )}
 
         {mp3Url && (
@@ -102,8 +102,10 @@ const PronounceModal = ({ isOpen, onClose, text, sourcePage }: PronounceModalPro
           </div>
         )}
       </div>
-    </div>,
-    document.body,
+    </div>
+    <div className={styles.modalOverlayShadow}></div>
+    </>,
+    document.getElementById('modal-root'),
   );
 };
 

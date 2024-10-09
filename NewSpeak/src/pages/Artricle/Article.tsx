@@ -292,6 +292,7 @@ const Article = () => {
       {wordSelectorMode && (
         <WordSelector closeWordSelector={closeWordSelector} />
       )}
+      <div id='modal-root'></div>
     </>
   );
 };

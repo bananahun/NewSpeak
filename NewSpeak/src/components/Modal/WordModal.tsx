@@ -2,6 +2,7 @@ import React, {useState}from "react";
 import styles from './WordModal.module.scss';
 import { FaMicrophone } from 'react-icons/fa';
 import PronounceModal from "./PronounceModal";
+import ReactDOM from 'react-dom';
 
 interface WordModalProps {
   isOpen: boolean;
@@ -25,7 +26,8 @@ const WordModal: React.FC<WordModalProps> = ({ isOpen, onClose, word, meanings }
     setPronounceModalOpen(false);
   };
 
-  return (
+  return ReactDOM.createPortal(
+    <>
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
         <h1 className={styles.wordTitle}>{word}</h1>         
@@ -55,6 +57,10 @@ const WordModal: React.FC<WordModalProps> = ({ isOpen, onClose, word, meanings }
         sourcePage={'NoWordList'}
       />
     </div>
+    <div className={styles.modalOverlayShadow}></div>
+    </>,
+    document.getElementById('modal-root'),
+
   );
 };
 

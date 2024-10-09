@@ -1,32 +1,57 @@
 .modalOverlay {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
 
   .sentenceDetailModal {
-    width: 55vw;
-    background-color: white;
-    color: black;
-    padding: 20px;
+    width: 70%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: var(--background-color);
+    padding: 40px;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    text-align: center;
     z-index: 1001;
     position: relative;
 
     > p {
       margin-bottom: 20px;
     }
+    .buttonContainer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap:20px;
+    }
+    .button {
+      background: var(--main-color);
+      border: 2px solid var(--main-color);
+      border-radius:10px;
+      font-size: 16px;
+      padding:10px 30px;
+      font-weight: bold;
+      color: var(--font-color);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      margin-top: 20px;
 
-    button {
-      color: black;
+      cursor: pointer;
+    
+      &:hover {
+        background: var(--contrast-color);
+        border-color: var(--contrast-color);
+        color: var(--font-color);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      }
 
       &:disabled {
         cursor: wait;
@@ -40,12 +65,30 @@
       display: flex;
       top: 10px;
       right: 10px;
-      width: 20px;
-      height: 20px;
+      width: 30px; /* 닫기 버튼의 크기 조정 */
+      height: 30px; /* 닫기 버튼의 크기 조정 */
+      font-size: 30px; /* 아이콘 크기 조정 */
       border: none;
       align-items: center;
       justify-content: center;
       padding: 0;
+      cursor: pointer;
+      transition: transform 0.3s; /* 애니메이션 효과 */
+      background-color: var(--background-color);
+      &:hover {
+        transform: scale(1.1); /* 호버 시 확대 효과 */
+      }
     }
   }
+}
+
+.modalOverlayShadow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
 }
