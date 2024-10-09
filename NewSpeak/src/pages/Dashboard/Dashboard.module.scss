@@ -38,6 +38,10 @@
       }
     }
 
+    &.hasSelectedSection {
+      overflow: hidden;
+    }
+
     &.hasSelectedSection .gridBlock:not(.selected) {
       opacity: 0;
       height: 0;
@@ -165,7 +169,7 @@
       grid-row: 1 / 5;
       z-index: 1;
       transition: all 0.5s ease-in-out;
-      height: auto;
+      height: 60vh;
       &:hover {
         transform: scale(1);
       }
