@@ -1,5 +1,11 @@
 import React, { useEffect } from 'react';
-import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
+import {
+  Route,
+  Routes,
+  useLocation,
+  Navigate,
+  useNavigate,
+} from 'react-router-dom';
 import Layout from './pages/Home/Layout';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
@@ -29,6 +35,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 function App() {
   const { theme } = useThemeStore();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const hideNav =
     location.pathname === '/register' ||
@@ -36,11 +43,17 @@ function App() {
     location.pathname === '/notfound' ||
     location.pathname === '/welcome';
 
-  const { checkAuth } = useAuthStore();
+  const { checkAuth, isLoggedIn } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
   }, [location]);
+
+  useEffect(() => {
+    if (location.pathname === '/' && !isLoggedIn) {
+      navigate('/welcome');
+    }
+  }, [isLoggedIn]);
 
   return (
     <>

@@ -58,7 +58,7 @@ export const renderRadarChart = (report: any, inDashboard: boolean = false) => {
     return `hsl(${hue}, 100%, 50%)`;
   };
 
-  const width = 220;
+  const width = 230;
   const height = 220;
 
   return (
