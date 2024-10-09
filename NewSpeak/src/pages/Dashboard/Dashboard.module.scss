@@ -63,7 +63,7 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      height: 140px;
+      min-height: 170px;
 
       .wordSlideTitle {
         position: absolute;
@@ -84,6 +84,7 @@
       grid-row: span 1;
       position: relative;
       flex-direction: column;
+      min-height: 170px;
       cursor: default;
     }
 
@@ -125,45 +126,46 @@
           justify-content: center;
         }
       }
+    }
 
-      .wordSearch {
-        grid-column: span 2;
-        grid-row: span 1;
-        padding: 12px;
-        display: flex;
-        height: 107px;
-        justify-content: flex-start;
-        align-items: center;
-        overflow: scroll;
-        position: relative;
+    .wordSearch {
+      grid-column: span 2;
+      grid-row: span 1;
+      padding: 12px;
+      display: flex;
+      height: 107px;
+      justify-content: flex-start;
+      align-items: center;
+      overflow: scroll;
+      position: relative;
 
-        @media (max-width: 1024px) {
-          grid-column: span 1;
-        }
-
-        .wordSearchInput {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .wordButtonContainer {
-          position: absolute;
-          display: flex;
-          gap: 12px;
-          top: 50%;
-          transform: translateY(-50%);
-          right: 15px;
-        }
+      @media (max-width: 1024px) {
+        grid-column: span 1;
       }
 
-      .selected {
-        grid-column: 1/ 5;
-        grid-row: 1 / 5;
-        z-index: 1;
-        transition: all 0.5s ease-in-out;
-        &:hover {
-          transform: scale(1);
-        }
+      .wordSearchInput {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .wordButtonContainer {
+        position: absolute;
+        display: flex;
+        gap: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 15px;
+      }
+    }
+
+    .selected {
+      grid-column: 1/ 5;
+      grid-row: 1 / 5;
+      z-index: 1;
+      transition: all 0.5s ease-in-out;
+      height: auto;
+      &:hover {
+        transform: scale(1);
       }
     }
   }
@@ -174,66 +176,60 @@
     width: 100%;
     height: 60px;
   }
+}
 
-  .reportCard {
-    display: flex;
-    flex-direction: column;
-    background-color: var(--background-color);
-    justify-content: flex-start;
-    align-items: center;
-    padding: 16px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s;
-    width: 80%;
-    height: 80%;
-    margin: 8px;
-    margin-top: 50px;
-    overflow: scroll;
-    position: relative;
-    &:hover {
-      transform: scale(1.02);
-    }
-
-    .cardHeader {
-      position: absolute;
-      display: flex;
-      align-items: center;
-      top: -45px;
-      animation: accent 1s linear infinite;
-      color: var(--main-color);
-    }
-
-    .chartHeader {
-    }
-
-    .chartContainer {
-      position: absolute;
-      bottom: -30px;
-      position: relative;
-      .innerScore {
-        position: absolute;
-        bottom: -25px;
-        left: 50%;
-        transform: translateX(-50%);
-        visibility: hidden;
-        @media (max-width: 1024px) {
-          visibility: visible;
-        }
-      }
-    }
+.reportCard {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background-color);
+  justify-content: flex-start;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+  width: 80%;
+  height: 80%;
+  margin: 8px;
+  margin-top: 50px;
+  overflow: scroll;
+  position: relative;
+  &:hover {
+    transform: scale(1.02);
   }
 
-  @keyframes accent {
-    0% {
-      transform: translateY(0%);
-    }
-    50% {
-      transform: translateY(20%);
-    }
-    100% {
-      transform: translateY(0%);
-    }
+  .cardHeader {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    top: -45px;
+    animation: accent 1s linear infinite;
+    color: var(--main-color);
+  }
+
+  .chartHeader {
+  }
+
+  .chartContainer {
+    position: absolute;
+    bottom: -30px;
+    width: 55%;
+    height: 55%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+@keyframes accent {
+  0% {
+    transform: translateY(0%);
+  }
+  50% {
+    transform: translateY(20%);
+  }
+  100% {
+    transform: translateY(0%);
   }
 }

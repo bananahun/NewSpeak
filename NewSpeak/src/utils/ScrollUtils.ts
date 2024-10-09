@@ -1,5 +1,5 @@
 // import styles from '../pages/Home/Home.module.scss';
-import styles from '../styles/section.module.scss';
+import styles from "../styles/section.module.scss";
 
 export const fullpageScroll = () => {
   let currentSectionIndex = 0;
@@ -10,13 +10,13 @@ export const fullpageScroll = () => {
     if (!isScrolling) {
       isScrolling = true;
       sections[index].scrollIntoView({
-        behavior: 'smooth',
+        behavior: "smooth",
       });
 
       // 스크롤이 완료된 후에 플래그를 다시 false로 설정
       setTimeout(() => {
         isScrolling = false;
-      }, 1200); // scrollIntoView의 전환 시간과 일치시키기
+      }, 800); // scrollIntoView의 전환 시간과 일치시키기
     }
   };
 
@@ -37,10 +37,10 @@ export const fullpageScroll = () => {
   };
 
   // 이벤트 리스너 추가
-  window.addEventListener('wheel', handleWheelEvent);
+  window.addEventListener("wheel", handleWheelEvent);
 
   // 컴포넌트 언마운트 시 이벤트 리스너 제거
   return () => {
-    window.removeEventListener('wheel', handleWheelEvent);
+    window.removeEventListener("wheel", handleWheelEvent);
   };
 };

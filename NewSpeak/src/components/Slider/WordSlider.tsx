@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
-import Slider from "react-slick";
-import { FaPause, FaPlay } from "react-icons/fa6";
-
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import styles from "./WordSlider.module.scss";
+import React, { useEffect, useRef, useState } from 'react';
+import Slider from 'react-slick';
+import { FaPause, FaPlay } from 'react-icons/fa6';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import styles from './WordSlider.module.scss';
 
 interface FormattedWordData {
   text: string;
@@ -89,13 +88,13 @@ const WordSlider = ({
   const handlePlayAutoChange = () => {
     setAutoPlay(true);
     sliderRef.current.slickPlay();
-    setAnimationKey((prev) => prev + 1);
+    setAnimationKey(prev => prev + 1);
   };
 
   const handleStopAutoChange = () => {
     setAutoPlay(false);
     sliderRef.current.slickPause();
-    setAnimationKey((prev) => prev + 1);
+    setAnimationKey(prev => prev + 1);
   };
 
   return (

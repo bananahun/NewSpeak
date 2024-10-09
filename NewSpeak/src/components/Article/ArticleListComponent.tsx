@@ -43,6 +43,14 @@ const ArticleListComponent = ({
   const articleRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (isScrap) {
+      fetchScrapArticles(0, true);
+      return;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isScrap) return;
     fetchArticles(categoryId, 0, true);
   }, [categoryId]);
 
@@ -58,10 +66,7 @@ const ArticleListComponent = ({
     setFetchLoading(true);
     try {
       let result;
-      if (isScrap) {
-        const response = await userApi.getMyArticles(page, 5);
-        result = response?.data;
-      } else if (categoryId === 0) {
+      if (categoryId === 0) {
         result = await useArticleApi.getArticleList(page);
       } else {
         result = await useArticleApi.getArticleCategory(categoryId, page);
@@ -76,18 +81,42 @@ const ArticleListComponent = ({
           date: article.publishedDate,
           publisher: article.publisher,
         }));
-        if (articles.length === 0) {
-          setArticles(formattedArticles);
-        } else {
-          setArticles(prev => {
-            return [...prev, ...formattedArticles];
-          });
-        }
-        setLoading(false);
-        setFetchLoading(false);
+
+        setArticles(prev => [...prev, ...formattedArticles]);
       }
     } catch (error) {
       setArticles([]);
+    } finally {
+      setLoading(false);
+      setFetchLoading(false);
+    }
+  };
+
+  const fetchScrapArticles = async (page: number = 0, reset = false) => {
+    if (reset) {
+      setCurrentPage(0);
+      setArticles([]);
+    }
+    setFetchLoading(true);
+    try {
+      const response = await userApi.getMyArticles(page, 5);
+      const result = response?.data;
+
+      if (result && Array.isArray(result)) {
+        const formattedArticles = result.map(article => ({
+          id: article.id,
+          title: article.title,
+          content: article.content || '',
+          imageUrl: article.imageUrl,
+          date: article.publishedDate,
+          publisher: article.publisher,
+        }));
+        setArticles(prev => [...prev, ...formattedArticles]);
+      }
+    } catch (error) {
+      setArticles([]);
+    } finally {
+      setLoading(false);
       setFetchLoading(false);
     }
   };
@@ -125,9 +154,35 @@ const ArticleListComponent = ({
     }
   };
 
+  useEffect(() => {
+    if (!articles) return;
+
+    const handleWheel = (event: WheelEvent) => {
+      if (articleRef.current) {
+        event.preventDefault();
+        articleRef.current.scrollLeft += event.deltaY * 5;
+      }
+    };
+
+    const currentRef = articleRef.current;
+    if (currentRef) {
+      currentRef.addEventListener('wheel', handleWheel);
+    }
+
+    return () => {
+      if (currentRef) {
+        currentRef.removeEventListener('wheel', handleWheel);
+      }
+    };
+  }, [articles]);
+
   const loadMoreArticles = () => {
     if (loading) return;
-    fetchArticles(categoryId, currentPage + 1);
+    if (isScrap) {
+      fetchScrapArticles(currentPage + 1);
+    } else {
+      fetchArticles(categoryId, currentPage + 1);
+    }
     setCurrentPage(prevPage => prevPage + 1);
   };
 
