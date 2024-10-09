@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './WordList.module.scss';
-import { FaMicrophone, FaBook } from 'react-icons/fa';
+import { FaBook } from 'react-icons/fa';
 import { GiSpeaker } from 'react-icons/gi';
 import PronounceModal from '../Modal/PronounceModal';
 import userApi from '../../apis/UserApi';
@@ -22,7 +22,6 @@ const WordList = () => {
   }
 
   const [words, setWords] = useState<Word[]>([]);
-  const [flipped, setFlipped] = useState<number | null>(null);
   const [isPronounceModalOpen, setPronounceModalOpen] = useState(false);
   const [selectedText, setSelectedText] = useState<string>('');
   const [isWordModalOpen, setWordModalOpen] = useState<boolean>(false); // 모달 상태 추가
@@ -51,15 +50,6 @@ const WordList = () => {
 
     fetchWordDetails(); // 컴포넌트가 처음 렌더링될 때 API 호출
   }, [vocaId, setVocaId]);
-
-  const handleExampleClick = (index: number) => {
-    setFlipped(flipped === index ? null : index);
-  };
-
-  const openPronounceModal = (text: string) => {
-    setSelectedText(text);
-    setPronounceModalOpen(true);
-  };
 
   const closePronounceModal = () => {
     setPronounceModalOpen(false);
