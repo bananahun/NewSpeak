@@ -1,12 +1,12 @@
 .articleContent {
-  position: absolute;
-  top: 80px;
+  position: fixed;
+  top: 160px;
   right: 80px;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  text-align: left;
   gap: 16px;
-  width: 300px;
+  width: 450px;
   height: 400px;
   overflow: scroll;
   border: var(--font-color) 1px solid;

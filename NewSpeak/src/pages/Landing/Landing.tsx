@@ -3,6 +3,7 @@ import styles from './Landing.module.scss';
 import sectionStyles from '../../styles/section.module.scss';
 import { fullpageScroll } from '../../utils/ScrollUtils';
 import { loginWithOAuth } from '../../apis/AuthApi';
+import background0 from '../../assets/landing/nature.jpg';
 import background1 from '../../assets/landing/timeSquare.jpg';
 import background2 from '../../assets/landing/newspaper.jpg';
 import background3 from '../../assets/landing/mic.jpg';
@@ -97,7 +98,7 @@ const Landing = () => {
             setBackground(background6);
             break;
           default:
-            setBackground('');
+            setBackground(background0);
             break;
         }
         setSectionChanging(false);
@@ -178,11 +179,11 @@ const Landing = () => {
       ) : (
         <>
           <button
-            className={styles.loginButton}
+            className={`${styles.loginButton} ${openOAuthButtonTop ? styles.open : ''}`}
             onClick={() => handleClickLoginButton('top')}
           >
             Login
-            {openOAuthButtonTop && oauthContainer()}
+            {oauthContainer()}
           </button>
         </>
       )}
@@ -270,7 +271,7 @@ const Landing = () => {
             </h2>
             {isLoggedIn ? (
               <button
-                className={styles.loginButton}
+                className={styles.startButton}
                 onClick={handleClickHomeButton}
               >
                 Home
@@ -278,11 +279,11 @@ const Landing = () => {
             ) : (
               <>
                 <button
-                  className={styles.startButton}
+                  className={`${styles.startButton} ${openOAuthButtonIn ? styles.open : ''}`}
                   onClick={() => handleClickLoginButton('in')}
                 >
                   NewSpeak 시작하기
-                  {openOAuthButtonIn && oauthContainer()}
+                  {oauthContainer()}
                 </button>
               </>
             )}

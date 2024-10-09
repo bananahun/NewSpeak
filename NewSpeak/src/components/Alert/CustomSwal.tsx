@@ -24,3 +24,22 @@ export const mySwal = (
     cancelButtonText,
   });
 };
+
+export const mySwalWithTimer = (
+  title: string,
+  text: string,
+  icon: SweetAlertIcon,
+  showConfirmButton: boolean = false,
+  showCancelButton: boolean = false,
+) => {
+  return Swal.mixin({
+    timer: 1350,
+    timerProgressBar: true,
+  }).fire({
+    title,
+    text,
+    icon,
+    showConfirmButton,
+    showCancelButton,
+  });
+};

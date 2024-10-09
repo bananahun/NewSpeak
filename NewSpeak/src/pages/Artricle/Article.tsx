@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ArticleOriginal from '../../components/Article/ArticleOriginal';
 import ArticleTranslation from '../../components/Article/ArticleTranslation';
+import useAuthStore from '../../store/AuthStore';
 import useArticleStore from '../../store/ArticleStore';
 import useConversationStore from '../../store/ConversationStore';
 import { useWordSelectorState } from '../../store/ModalStore';
@@ -47,6 +48,7 @@ interface ArticleSentences {
 
 const Article = () => {
   const navigate = useNavigate();
+  const { tutorialActive, setTutorialActive } = useAuthStore();
   const { articleMeta, setArticleMeta } = useArticleStore();
   const { clearConvData } = useConversationStore();
   const { isOpen, setIsOpen } = useWordSelectorState();
@@ -61,6 +63,9 @@ const Article = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [isOpenHelpModal, setIsOpenHelpModal] = useState(false);
   const [isOpenWSHelpModal, setIsOpenWSHelpModal] = useState(false);
+  const [helpButtonAccent, setHelpButtonAccent] = useState(true);
+  const [wordSelectorButtonAccent, setWordSelectorButtonAccent] =
+    useState(true);
 
   const getOrDefault = (value: any, defaultValue: string = 'Loading..') => {
     if (typeof value === 'string' && !isNaN(Date.parse(value))) {
@@ -164,6 +169,8 @@ const Article = () => {
 
   const closeHelpModal = () => {
     setIsOpenHelpModal(false);
+    setHelpButtonAccent(false);
+    setTutorialActive(false);
   };
 
   const openWSHelpModal = () => {
@@ -172,6 +179,8 @@ const Article = () => {
 
   const closeWSHelpModal = () => {
     setIsOpenWSHelpModal(false);
+    setWordSelectorButtonAccent(false);
+    setTutorialActive(false);
   };
 
   useEffect(() => {
@@ -192,6 +201,9 @@ const Article = () => {
 
   useEffect(() => {
     clearConvData();
+    console.log(tutorialActive);
+    setHelpButtonAccent(tutorialActive);
+    setWordSelectorButtonAccent(tutorialActive);
   }, []);
 
   return (
@@ -206,10 +218,10 @@ const Article = () => {
             <div className={styles.articleTitleWrapper}>
               <h1 className={styles.articleTitle}>
                 {getOrDefault(articleMeta?.title)}
+                {/* <span className={styles.overallTitleTooltip}>
+                  {getOrDefault(articleMeta?.title)}
+                </span> */}
               </h1>
-              <span className={styles.overallTitleTooltip}>
-                {getOrDefault(articleMeta?.title)}
-              </span>
               <div className={styles.publishDetail}>
                 <p>{getOrDefault(articleData?.writer)}</p>
                 <strong>|</strong>
@@ -224,7 +236,7 @@ const Article = () => {
             <div
               onMouseEnter={openHelpModal}
               onMouseLeave={closeHelpModal}
-              className={styles.helpButton}
+              className={`${styles.helpButton} ${helpButtonAccent ? styles.accent : ''}`}
             >
               <FaRegCircleQuestion />
             </div>
@@ -232,7 +244,7 @@ const Article = () => {
               onClick={openWordSelector}
               onMouseEnter={openWSHelpModal}
               onMouseLeave={closeWSHelpModal}
-              className={styles.wordSelectorButton}
+              className={`${styles.wordSelectorButton} ${wordSelectorButtonAccent ? styles.accent : ''}`}
             >
               <IoSearch />
             </IconButton>

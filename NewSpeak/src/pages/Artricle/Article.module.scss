@@ -1,7 +1,7 @@
 .articlePage {
   overflow-y: scroll;
   position: relative;
-  height: 100%;
+  height: calc(100vh - 200px);
 }
 
 .articleHeader {
@@ -9,7 +9,6 @@
   flex-wrap: wrap;
   align-content: center;
   justify-content: space-between;
-  align-items: center;
   position: relative;
   padding-bottom: 20px;
   height: fit-content;
@@ -17,50 +16,53 @@
   .articlePublishInfo {
     display: flex;
     flex-direction: column;
-    justify-content: left;
+    align-items: flex-start;
     gap: 10px;
     width: calc(100% - 50px);
 
     .articleTitleWrapper {
       display: flex;
       flex-direction: column;
-      justify-content: left;
+      align-items: flex-start;
       gap: 10px;
     }
 
     .articleTitle {
+      text-align: left;
       font-size: 24px;
       font-weight: bold;
       display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      text-overflow: ellipsis;
       white-space: normal;
       cursor: default;
-    }
+      position: relative;
 
-    .articleTitle:hover + .overallTitleTooltip {
-      visibility: visible;
-      opacity: 1;
-    }
+      // .overallTitleTooltip {
+      //   visibility: hidden;
+      //   opacity: 0;
+      //   border: 1px solid var(--font-color);
+      //   border-radius: 10px;
+      //   background-color: var(--main-color);
+      //   padding: 5px;
+      //   position: absolute;
+      //   bottom: 0;
+      //   z-index: 500;
+      //   left: 0;
+      //   transition:
+      //     opacity 0.3s ease,
+      //     visibility 0.3s ease;
+      // }
 
-    .overallTitleTooltip {
-      visibility: hidden;
-      opacity: 0;
-      border: 1px solid var(--font-color);
-      border-radius: 10px;
-      background-color: rgba(var(--main-rgb), 0.78);
-      padding: 5px;
-      position: absolute;
-      bottom: 30px;
-      z-index: 500;
-      left: 0;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
+      // &:hover {
+      //   .overallTitleTooltip {
+      //     visibility: visible;
+      //     opacity: 1;
+      //   }
+      // }
     }
 
     .publishDetail {
       display: flex;
+      flex-wrap: nowrap;
       gap: 10px;
     }
   }
@@ -77,25 +79,63 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: inherit;
-      width: 45px;
-      height: 45px;
-      color: var(--font-color);
     }
 
-    .wordSelectorButton {
-      background-color: inherit;
-      width: 45px;
-      height: 45px;
-      color: var(--font-color);
-    }
-
+    .helpButton,
+    .wordSelectorButton,
     .bookmark {
       background-color: inherit;
       width: 45px;
       height: 45px;
       color: var(--font-color);
+      position: relative;
     }
+
+    .accent {
+      animation: wobble-hor-bottom 1.2s linear infinite;
+    }
+
+    .wordSelectorButton,
+    .bookmark {
+      animation-delay: 0.6s;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        animation: none;
+        transform: scale(1.25);
+      }
+    }
+  }
+}
+
+@keyframes wobble-hor-bottom {
+  0%,
+  40%,
+  100% {
+    -webkit-transform: translateX(0%);
+    transform: translateX(0%);
+    -webkit-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+  }
+  50% {
+    -webkit-transform: translateX(-3px) rotate(-6deg);
+    transform: translateX(-3px) rotate(-6deg) scale(1.2);
+  }
+  60% {
+    -webkit-transform: translateX(1.5px) rotate(6deg);
+    transform: translateX(1.5px) rotate(6deg) scale(1.2);
+  }
+  70% {
+    -webkit-transform: translateX(-1.5px) rotate(-3.6deg);
+    transform: translateX(-1.5px) rotate(-3.6deg) scale(1.2);
+  }
+  80% {
+    -webkit-transform: translateX(0.9px) rotate(2.4deg);
+    transform: translateX(0.9px) rotate(2.4deg) scale(1.2);
+  }
+  90% {
+    -webkit-transform: translateX(-0.6px) rotate(-1.2deg);
+    transform: translateX(-0.6px) rotate(-1.2deg) scale(1.2);
   }
 }
 
@@ -128,7 +168,7 @@
   button {
     padding: 8px 12px;
     border-radius: 6px;
-    width: 30%;
+    width: 250px;
   }
 }
 
@@ -191,4 +231,8 @@
     -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1);
   }
+}
+
+.MuiBox-root {
+  padding-bottom: 0;
 }

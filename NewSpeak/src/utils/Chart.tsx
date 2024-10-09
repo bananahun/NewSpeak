@@ -12,27 +12,27 @@ export const renderRadarChart = (report: any, inDashboard: boolean = false) => {
     {
       subject: '명료성',
       score: report.feedback.clarity.score,
-      fullMark: 100,
+      fullMark: 20,
     },
     {
       subject: '이해력',
       score: report.feedback.comprehension.score,
-      fullMark: 100,
+      fullMark: 20,
     },
     {
       subject: '표현력',
       score: report.feedback.expressiveness.score,
-      fullMark: 100,
+      fullMark: 20,
     },
     {
       subject: '문법',
       score: report.feedback.grammar.score,
-      fullMark: 100,
+      fullMark: 20,
     },
     {
       subject: '어휘',
       score: report.feedback.vocabulary.score,
-      fullMark: 100,
+      fullMark: 20,
     },
   ];
 
@@ -72,14 +72,14 @@ export const renderRadarChart = (report: any, inDashboard: boolean = false) => {
     >
       <PolarGrid />
       <PolarAngleAxis dataKey="subject" tick={renderCustomTick} />
-      <PolarRadiusAxis angle={30} domain={[0, 20]} tick={false} />
+      <PolarRadiusAxis angle={18} domain={[0, 20]} tick={false} />
       <Radar
         name="Feedback"
         dataKey="score"
         stroke={getColorByScore(report.score)}
         fill={getColorByScore(report.score)}
-        fillOpacity={0.6}
-        isAnimationActive={false}
+        fillOpacity={0.7}
+        isAnimationActive={true}
       />
     </RadarChart>
   );

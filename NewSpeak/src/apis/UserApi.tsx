@@ -124,8 +124,8 @@ interface Article {
   id: number;
   title: string;
   publishedDate: string; // API에서 오는 publishedDate의 타입
-  imageUrl:string,
-  publisher:string,
+  imageUrl: string;
+  publisher: string;
 }
 // 스크랩한 기사 목록 가져오기
 const getMyArticles = async (page: number, size: number) => {
@@ -144,7 +144,7 @@ const getMyArticles = async (page: number, size: number) => {
       title: article.title,
       publishedDate: new Date(article.publishedDate),
 
-      imageUrl:article.imageUrl,
+      imageUrl: article.imageUrl,
       publisher: article.publisher,
     }));
 
@@ -282,7 +282,7 @@ const getReportDetails = async (reportId: number) => {
   }
 };
 
-const getMyWord = async (vocaId: number, wordContent: string) => {
+const getMyWord = async (vocaId: number | null, wordContent: string) => {
   try {
     // API 요청 보내기
     const response = await axiosInstance.post(`vocas/${vocaId}/word`, {

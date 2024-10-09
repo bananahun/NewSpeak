@@ -86,7 +86,7 @@ const Conversation = () => {
             '',
           ).then(response => {
             if (response.isConfirmed) {
-              navigate('/mypage');
+              navigate('/');
             }
           });
         });
@@ -185,20 +185,22 @@ const Conversation = () => {
 
   return (
     <>
-      <div className={styles.conversationHeader}>
-        <div className={styles.articleTitle}>
-          Selected News <strong>|</strong> {articleTitle}
-        </div>
-        <div>
-          <div className={styles.articleOriginalButton} onClick={openModal}>
-            기사 전문 보기
+      <div className={styles.conversation}>
+        <div className={styles.conversationHeader}>
+          <div className={styles.articleTitle}>
+            Selected News <strong>|</strong> {articleTitle}
           </div>
-          {isConvStarted && (
-            <div className={styles.count}>{conversationCount - 1} / 10</div>
-          )}
+          <div>
+            <div className={styles.articleOriginalButton} onClick={openModal}>
+              기사 전문 보기
+            </div>
+            {isConvStarted && (
+              <div className={styles.count}>{conversationCount - 1} / 10</div>
+            )}
+          </div>
         </div>
+        <div className={styles.conversationContainer}>{renderStep(step)}</div>
       </div>
-      <div className={styles.conversationContainer}>{renderStep(step)}</div>
       <div className={styles.buttonContainer}>
         <button onClick={leftButton}>{activeLeftButton}</button>
         <button
