@@ -1,7 +1,7 @@
 :root {
   --main-color: #3f50b5;
   --main-rgb: 63, 80, 181;
-  --contrast-color: #6a1b9a;
+  --contrast-color: #5c3fb5;
   --contrast-rgb: 106, 27, 154;
   --accent-color: #5c6bc0;
   --accent-rgb: 92, 107, 192;
@@ -18,7 +18,7 @@
 .light {
   --main-color: #7f8af1;
   --main-rgb: 63, 80, 181;
-  --contrast-color: #6a1b9a;
+  --contrast-color: #514cf7;
   --contrast-rgb: 106, 27, 154;
   --accent-color: #5c6bc0;
   --accent-rgb: 92, 107, 192;
@@ -35,13 +35,13 @@
 .dark {
   --main-color: #aeb5f1;
   --main-rgb: 40, 53, 147;
-  --contrast-color: #512da8;
+  --contrast-color: #3f3fb5;
   --contrast-rgb: 81, 45, 168;
   --accent-color: #673ab7;
   --accent-rgb: 103, 58, 183;
   --sub-color: #9fa8da;
   --sub-rgb: 159, 168, 218;
-  --border-color: #7b7b7b;
+  --border-color: #383737;
   --background-color: #1e1e1e; /* 어두운 배경색: 짙은 블루 그레이 */
   --background-rgb: 28, 30, 33;
   --font-color: #e8eaf6;

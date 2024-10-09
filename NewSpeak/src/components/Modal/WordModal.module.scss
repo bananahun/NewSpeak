@@ -1,27 +1,27 @@
 .modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  position: absolute;
+  width:calc(100% - 64px);
+  height: 100%;
+  top: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.7); /* 배경을 더 어둡게 */
-  z-index: 1000; /* 화면의 최상단 */
+  z-index: 1002; /* 화면의 최상단 */
+  margin-left: -20px;
 }
 
 .modalContent {
-  width: 70vw; /* 모달의 너비 */
+  width: 70%; /* 모달의 너비 */
   max-width: 800px; /* 최대 너비 */
-  max-height: 80vh;
-  background-color: white;
+  max-height: 70%;
+  background-color: var(--background-color);
   padding: 30px;
   padding-top: 30px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* 그림자 강도를 증가 */
   text-align: center;
-  z-index: 1001;
+  z-index: 1003;
   position: relative;
   overflow-y: auto ;
 
@@ -49,10 +49,10 @@
     padding-top: 10px; /* 아래쪽 여백 추가 */
     padding: 15px;
     text-align: left; /* 텍스트 왼쪽 정렬 */
-    background: #f0f0f0;
+    background: var(--border-color);
     border-radius: 8px;
     margin: 20px 10px ;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s;
 
@@ -66,8 +66,8 @@
       margin-right: 100px;
       padding: 8px 10px;
       background: var(--background-color);
-      border: 1px solid var(--contrast-color);
-      border-radius: 5px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
     }
   }
 
@@ -98,14 +98,13 @@
     width: 30px; /* 닫기 버튼의 크기 조정 */
     height: 30px; /* 닫기 버튼의 크기 조정 */
     font-size: 30px; /* 아이콘 크기 조정 */
-
     border: none;
     align-items: center;
     justify-content: center;
     padding: 0;
     cursor: pointer;
     transition: transform 0.3s; /* 애니메이션 효과 */
-    
+    background-color: var(--background-color);
     &:hover {
       transform: scale(1.1); /* 호버 시 확대 효과 */
     }
