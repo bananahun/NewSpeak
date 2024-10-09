@@ -1,28 +1,208 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import useArticleStore from '../../store/ArticleStore';
+// import React, { useEffect, useState, useRef } from "react";
+// import { useNavigate } from "react-router-dom";
+// import useArticleStore from "../../store/ArticleStore";
+// import styles from "./ArticleListKeyword.module.scss";
+// import useArticleApi from "../../apis/ArticleApi";
+// import {
+//   FaAngleLeft,
+//   FaAnglesLeft,
+//   FaAngleRight,
+//   FaAnglesRight,
+//   FaPlus,
+// } from "react-icons/fa6";
+
+// interface Article {
+//   id: number;
+//   title: string;
+//   content: string;
+//   imageUrl: string;
+//   date: string;
+//   publisher: string;
+// }
+
+// interface Word {
+//   id: number;
+//   content: string;
+//   size: number;
+// }
+
+// const ArticleListKeyword: React.FC = () => {
+//   const navigate = useNavigate();
+//   const { setArticleMeta } = useArticleStore();
+//   const [articles, setArticles] = useState<Article[]>([]);
+//   const [words, setWords] = useState<Word[]>([]);
+//   const [selectedWordId, setSelectedWordId] = useState<number | null>(null);
+//   const [currentPage, setCurrentPage] = useState<number>(0);
+//   const articleRef = useRef<HTMLDivElement>(null);
+
+//   useEffect(() => {
+//     fetchWordData();
+//   }, []);
+
+//   // 단어 데이터를 가져오는 함수
+//   const fetchWordData = async () => {
+//     try {
+//       const wordData = await useArticleApi.getWordCloud();
+//       const formattedData = Array.isArray(wordData) ? wordData : wordData?.data;
+//       setWords(formattedData || []);
+//     } catch (error) {
+//       console.error("Error fetching word data:", error);
+//     }
+//   };
+
+//   // 선택된 단어 ID에 맞는 기사 데이터를 가져오는 함수
+//   const fetchArticlesById = async (wordId: number, page: number = 0) => {
+//     try {
+//       const result = await useArticleApi.getArticleWordCloud(wordId, page);
+//       if (result && Array.isArray(result)) {
+//         const formattedArticles = result.map((article) => ({
+//           id: article.id,
+//           title: article.title,
+//           content: article.content || "",
+//           imageUrl: article.imageUrl,
+//           date: article.publishedDate,
+//           publisher: article.publisher,
+//         }));
+//         setArticles((prev) => [...prev, ...formattedArticles]);
+//       }
+//     } catch (error) {
+//       console.error("Error fetching articles:", error);
+//     }
+//   };
+
+//   useEffect(() => {
+//     if (selectedWordId !== null) {
+//       setArticles([]); // 새로운 단어 선택 시 기존 기사 초기화
+//       fetchArticlesById(selectedWordId, 0);
+//     }
+//   }, [selectedWordId]);
+
+//   const loadArticleDetail = (article: Article) => {
+//     setArticleMeta({
+//       id: article.id,
+//       title: article.title,
+//       imageUrl: article.imageUrl,
+//     });
+//     navigate("/article");
+//   };
+
+//   // 스크롤 관련 핸들러
+//   const handleMoveLeft = () => {
+//     if (articleRef.current) {
+//       articleRef.current.scrollLeft -= 575;
+//     }
+//   };
+
+//   const handleMoveLeftEnd = () => {
+//     if (articleRef.current) {
+//       articleRef.current.scrollLeft = 0;
+//     }
+//   };
+
+//   const handleMoveRight = () => {
+//     if (articleRef.current) {
+//       articleRef.current.scrollLeft += 575;
+//     }
+//   };
+
+//   const handleMoveRightEnd = () => {
+//     if (articleRef.current) {
+//       articleRef.current.scrollLeft = articleRef.current.scrollWidth;
+//     }
+//   };
+
+//   return (
+//     <div className={styles.articleListKeyword}>
+//       <div className={styles.wordSelection}>
+//         {words.length > 0 ? (
+//           words.map((word) => (
+//             <span
+//               key={word.id}
+//               className={`${styles.wordItem} ${word.id === selectedWordId ? styles.selectedWord : ""}`}
+//               onClick={() => setSelectedWordId(word.id)}
+//             >
+//               {word.content}
+//             </span>
+//           ))
+//         ) : (
+//           <p>No words available</p>
+//         )}
+//       </div>
+
+//       <div className={styles.articleListComponent}>
+//         {articles.length > 0 ? (
+//           <>
+//             <div className={styles.articleListContent} ref={articleRef}>
+//               {articles.map((article, index) => (
+//                 <div
+//                   key={index}
+//                   className={styles.articleCard}
+//                   onClick={() => loadArticleDetail(article)}
+//                 >
+//                   <div className={styles.imageContainer}>
+//                     <img
+//                       src={article.imageUrl || "default_image.png"}
+//                       alt={article.title || "Default News Image"}
+//                       className={styles.articleImage}
+//                     />
+//                   </div>
+//                   <div className={styles.articleInfo}>
+//                     <h4 className={styles.title}>{article.title}</h4>
+//                     <p className={styles.meta}>
+//                       {new Date(article.date).toLocaleDateString()} |{" "}
+//                       {article.publisher}
+//                     </p>
+//                     <p className={styles.content}>{article.content}</p>
+//                   </div>
+//                 </div>
+//               ))}
+//               <div
+//                 className={styles.loadMoreButton}
+//                 onClick={() =>
+//                   fetchArticlesById(selectedWordId!, currentPage + 1)
+//                 }
+//               >
+//                 <FaPlus size={20} />
+//               </div>
+//             </div>
+//             <div className={styles.scrollButtons}>
+//               <FaAnglesLeft size={30} onClick={handleMoveLeftEnd} />
+//               <FaAngleLeft size={30} onClick={handleMoveLeft} />
+//               <FaAngleRight size={30} onClick={handleMoveRight} />
+//               <FaAnglesRight size={30} onClick={handleMoveRightEnd} />
+//             </div>
+//           </>
+//         ) : (
+//           <div className={styles.noArticlesMessage}>No articles available.</div>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ArticleListKeyword;
+
+import React, { useEffect, useState, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import useArticleStore from "../../store/ArticleStore";
+import styles from "./ArticleListKeyword.module.scss";
+import useArticleApi from "../../apis/ArticleApi";
 import {
-  Button,
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  Box,
-  Menu,
-  MenuItem,
-  IconButton,
-  Tooltip,
-} from '@mui/material';
-import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
-import useArticleApi from '../../apis/ArticleApi';
-import noImage from '../../assets/NewSpeak.png';
+  FaAngleLeft,
+  FaAnglesLeft,
+  FaAngleRight,
+  FaAnglesRight,
+  FaPlus,
+  FaAngleDown,
+  FaAngleUp,
+} from "react-icons/fa6";
 
 interface Article {
   id: number;
   title: string;
   content: string;
   imageUrl: string;
-  publishedDate: string;
+  date: string;
   publisher: string;
 }
 
@@ -34,56 +214,66 @@ interface Word {
 
 const ArticleListKeyword: React.FC = () => {
   const navigate = useNavigate();
-  const { setArticleMeta } = useArticleStore();
   const location = useLocation();
+  const { setArticleMeta } = useArticleStore();
   const [articles, setArticles] = useState<Article[]>([]);
   const [words, setWords] = useState<Word[]>([]);
   const [selectedWordId, setSelectedWordId] = useState<number | null>(null);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const isMenuOpen = Boolean(anchorEl);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [width, setWidth] = useState<number>(window.innerWidth);
+  const articleRef = useRef<HTMLDivElement>(null);
+  const keywordRef = useRef<HTMLDivElement>(null);
 
-  // 단어 데이터를 가져오는 함수
+  useEffect(() => {
+    fetchWordData();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    // 페이지가 처음 마운트될 때 location.state 값을 selectedWordId로 설정
+    if (location.state && typeof location.state === "number") {
+      setSelectedWordId(location.state); // 전달받은 state 값으로 초기 상태 설정
+    }
+    fetchWordData();
+  }, [location.state]); // location.state가 바뀔 때마다 실행
+
+  const handleResize = () => setWidth(window.innerWidth);
+
   const fetchWordData = async () => {
     try {
       const wordData = await useArticleApi.getWordCloud();
       const formattedData = Array.isArray(wordData) ? wordData : wordData?.data;
       setWords(formattedData || []);
     } catch (error) {
-      console.error('Error fetching word data:', error);
+      console.error("Error fetching word data:", error);
     }
   };
-
-  // 선택된 단어 ID에 맞는 기사 데이터를 가져오는 함수
-  const fetchArticlesById = async (wordId: number) => {
-    try {
-      const result = await useArticleApi.getArticleWordCloud(wordId, 0);
-      setArticles(result);
-    } catch (error) {
-      console.error('Error fetching articles:', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchWordData();
-    if (location.state) {
-      setSelectedWordId(location.state);
-    }
-  }, []);
 
   useEffect(() => {
     if (selectedWordId !== null) {
-      fetchArticlesById(selectedWordId);
+      setArticles([]);
+      fetchArticlesById(selectedWordId, 0);
     }
   }, [selectedWordId]);
 
-  // 드롭다운 메뉴 열기
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  // 드롭다운 메뉴 닫기
-  const handleMenuClose = () => {
-    setAnchorEl(null);
+  const fetchArticlesById = async (wordId: number, page: number = 0) => {
+    try {
+      const result = await useArticleApi.getArticleWordCloud(wordId, page);
+      if (result && Array.isArray(result)) {
+        const formattedArticles = result.map((article) => ({
+          id: article.id,
+          title: article.title,
+          content: article.content || "",
+          imageUrl: article.imageUrl,
+          date: article.publishedDate,
+          publisher: article.publisher,
+        }));
+        setArticles((prev) => [...prev, ...formattedArticles]);
+      }
+    } catch (error) {
+      console.error("Error fetching articles:", error);
+    }
   };
 
   const loadArticleDetail = (article: Article) => {
@@ -92,123 +282,116 @@ const ArticleListKeyword: React.FC = () => {
       title: article.title,
       imageUrl: article.imageUrl,
     });
-    navigate('/article');
+    navigate("/article");
   };
 
-  const formatDate = (dateString: string) => {
-    try {
-      const dateObject = new Date(dateString);
-      return dateObject.toLocaleDateString();
-    } catch (error) {
-      console.error('Date format error:', error);
-      return '';
+  // 키워드 스크롤 관련 핸들러
+  const handleMoveUp = () => {
+    if (keywordRef.current) keywordRef.current.scrollTop -= 50;
+  };
+
+  const handleMoveDown = () => {
+    if (keywordRef.current) keywordRef.current.scrollTop += 50;
+  };
+  // 스크롤 관련 핸들러
+  const handleMoveLeft = () => {
+    if (articleRef.current) {
+      articleRef.current.scrollLeft -= 575;
     }
   };
 
-  return (
-    <Box sx={{ padding: '20px', margin: '20px', textAlign: 'center' }}>
-      <Typography variant="h4" gutterBottom>
-        핫 키워드 뉴스
-      </Typography>
+  const handleMoveLeftEnd = () => {
+    if (articleRef.current) {
+      articleRef.current.scrollLeft = 0;
+    }
+  };
 
-      <Box sx={{ marginBottom: 3 }}>
-        {words.length > 10 ? (
-          <>
-            <Tooltip title="단어 선택">
-              <IconButton
-                onClick={handleMenuOpen}
-                sx={{
-                  border: '1px solid #ddd',
-                  borderRadius: '50%',
-                  padding: '10px',
-                  backgroundColor: '#f5f5f5',
-                }}
+  const handleMoveRight = () => {
+    if (articleRef.current) {
+      articleRef.current.scrollLeft += 575;
+    }
+  };
+
+  const handleMoveRightEnd = () => {
+    if (articleRef.current) {
+      articleRef.current.scrollLeft = articleRef.current.scrollWidth;
+    }
+  };
+  return (
+    <div className={styles.articleListKeyword}>
+      {/* 카테고리와 동일한 키워드 나열 레이아웃 */}
+      <div className={styles.keywordNavbarContainer}>
+        <div className={styles.keywordNavbar} ref={keywordRef}>
+          {words.length > 0 ? (
+            words.map((word) => (
+              <button
+                key={word.id}
+                className={`${styles.keywordButton} ${word.id === selectedWordId ? styles.active : ""}`}
+                onClick={() => setSelectedWordId(word.id)}
               >
-                <ArrowDropDownCircleIcon fontSize="large" color="primary" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              anchorEl={anchorEl}
-              open={isMenuOpen}
-              onClose={handleMenuClose}
-              PaperProps={{
-                sx: { width: 200, backgroundColor: '#f7f7f7' },
-              }}
-            >
-              {words.map(word => (
-                <MenuItem
-                  key={word.id}
-                  onClick={() => {
-                    setSelectedWordId(word.id);
-                    handleMenuClose();
-                  }}
-                  sx={{
-                    fontSize: '1rem',
-                    color: 'black',
-                    '&:hover': { backgroundColor: '#eeeeee' },
-                  }}
+                {word.content}
+              </button>
+            ))
+          ) : (
+            <p>No words available</p>
+          )}
+        </div>
+        {width <= 1440 && (
+          <div className={styles.upDownButtons}>
+            <FaAngleUp size={30} onClick={handleMoveUp} />
+            <FaAngleDown size={30} onClick={handleMoveDown} />
+          </div>
+        )}
+      </div>
+
+      <div className={styles.articleListComponent}>
+        {articles.length > 0 ? (
+          <>
+            <div className={styles.articleListContent} ref={articleRef}>
+              {articles.map((article, index) => (
+                <div
+                  key={index}
+                  className={styles.articleCard}
+                  onClick={() => loadArticleDetail(article)}
                 >
-                  {word.content}
-                </MenuItem>
+                  <div className={styles.imageContainer}>
+                    <img
+                      src={article.imageUrl || "default_image.png"}
+                      alt={article.title || "Default News Image"}
+                      className={styles.articleImage}
+                    />
+                  </div>
+                  <div className={styles.articleInfo}>
+                    <h4 className={styles.title}>{article.title}</h4>
+                    <p className={styles.meta}>
+                      {new Date(article.date).toLocaleDateString()} |{" "}
+                      {article.publisher}
+                    </p>
+                    <p className={styles.content}>{article.content}</p>
+                  </div>
+                </div>
               ))}
-            </Menu>
+              <div
+                className={styles.loadMoreButton}
+                onClick={() =>
+                  fetchArticlesById(selectedWordId!, currentPage + 1)
+                }
+              >
+                <FaPlus size={20} />
+              </div>
+            </div>
+            <div className={styles.scrollButtons}>
+              <FaAnglesLeft size={30} onClick={handleMoveLeftEnd} />
+              <FaAngleLeft size={30} onClick={handleMoveLeft} />
+              <FaAngleRight size={30} onClick={handleMoveRight} />
+              <FaAnglesRight size={30} onClick={handleMoveRightEnd} />
+            </div>
           </>
         ) : (
-          words.map(word => (
-            <Button
-              key={word.id}
-              variant={word.id === selectedWordId ? 'contained' : 'outlined'}
-              onClick={() => setSelectedWordId(word.id)}
-              sx={{ margin: 1, fontSize: `${word.size * 0.08 + 12}px` }}
-            >
-              {word.content}
-            </Button>
-          ))
+          <div className={styles.noArticlesMessage}>No articles available.</div>
         )}
-      </Box>
-
-      <Box sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
-        {selectedWordId === null && (
-          <Typography variant="body1" color="textSecondary">
-            Please select a word to view related articles.
-          </Typography>
-        )}
-
-        {selectedWordId !== null && articles.length > 0
-          ? articles.map(article => (
-              <Card
-                key={article.id}
-                onClick={() => loadArticleDetail(article)}
-                sx={{
-                  maxWidth: 600,
-                  margin: 2,
-                  cursor: 'pointer',
-                  border: '1px solid white',
-                }}
-              >
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image={article.imageUrl || noImage}
-                  alt={article.title}
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h6" component="div">
-                    {article.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {formatDate(article.publishedDate)} | {article.publisher}
-                  </Typography>
-                </CardContent>
-              </Card>
-            ))
-          : selectedWordId !== null && (
-              <Typography variant="body1" color="textSecondary">
-                No articles available
-              </Typography>
-            )}
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 };
 
