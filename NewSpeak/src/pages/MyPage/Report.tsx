@@ -14,6 +14,7 @@ import { useWordSelectorState } from '../../store/ModalStore';
 import { useLocation } from 'react-router-dom';
 import userApi from '../../apis/UserApi';
 import styles from './Report.module.scss';
+import LoadingModal from '../../components/Modal/LoadingModal';
 
 interface Report {
   id: number;
@@ -82,7 +83,8 @@ const Report = () => {
         score: report.feedback.vocabulary.score,
       },
     ];
-
+    // console.log(report);
+    console.log(data);
     let colors = ['#6A9FB5', '#F4A261', '#E76F51', '#2A9D8F', '#264653'];
 
     const shuffleArray = (array: string[]) => {
@@ -96,7 +98,8 @@ const Report = () => {
     colors = shuffleArray(colors);
 
     return (
-      <ResponsiveContainer width={`${100 / (2 - itemsPerPage)}%`} height="100%">
+      // <ResponsiveContainer width={`${100 / (2 - itemsPerPage)}%`} height="100%">
+      <ResponsiveContainer width="100%" height={480}>
         <BarChart
           data={data}
           margin={{ top: 20, right: 10, left: -20, bottom: 5 }}
@@ -136,8 +139,8 @@ const Report = () => {
   };
 
   const renderAPage = () => {
-    if (isLoading) return <div>Loading</div>;
-    if (!reportData) return <div>Loading</div>;
+    if (isLoading) return <LoadingModal />;
+    if (!reportData) return <LoadingModal />;
 
     return (
       <div className={`${styles.page} ${transitionClass}`}>
@@ -197,8 +200,8 @@ const Report = () => {
   };
 
   const renderBPage = () => {
-    if (isLoading) return <div>Loading</div>;
-    if (!reportData) return <div>Loading</div>;
+    if (isLoading) return <LoadingModal />;
+    if (!reportData) return <LoadingModal />;
     return (
       <div className={`${styles.page} ${transitionClass}`}>
         {renderBarChart(reportData.content)}
@@ -207,8 +210,8 @@ const Report = () => {
   };
 
   const renderCPage = () => {
-    if (isLoading) return <div>Loading</div>;
-    if (!reportData) return <div>Loading</div>;
+    if (isLoading) return <LoadingModal />;
+    if (!reportData) return <LoadingModal />;
     return (
       <div className={`${styles.page} ${transitionClass}`}>
         <div className={styles.conversation}>
@@ -264,7 +267,6 @@ const Report = () => {
           content: parsedContent.content,
         };
         setReportData(parsedData);
-        console.log(parsedData);
       })
       .catch(error => {
         console.error(error);
@@ -279,13 +281,15 @@ const Report = () => {
       } catch (error) {
         console.error('Failed to parse conversation data: ', error);
       }
-      setIsLoading(false);
+      // setIsLoading(false);
     }
   }, [reportData]);
 
   useEffect(() => {
-    console.log(conversationData);
-  }, [conversationData]);
+    if (reportData && conversationData.length > 0) {
+      setIsLoading(false);
+    }
+  }, [reportData, conversationData]);
 
   return (
     <div className={styles.reportContainer}>
@@ -297,7 +301,7 @@ const Report = () => {
           </div>
         </>
       ) : (
-        <div>Loading</div>
+        <LoadingModal />
       )}
     </div>
   );

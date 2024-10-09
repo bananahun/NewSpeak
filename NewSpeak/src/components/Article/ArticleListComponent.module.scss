@@ -3,7 +3,7 @@
   width: 100%;
   min-height: 450px;
   height: 80%;
-  overflow: scroll;
+  // overflow: scroll;
   padding-bottom: 60px;
   display: flex;
   justify-content: center;
@@ -112,7 +112,7 @@
 
   .scrollButtons {
     position: absolute;
-    bottom: 0px;
+    bottom: -30px;
     left: 50%;
     background-color: var(--background-color);
     border: 1px solid var(--border-color);

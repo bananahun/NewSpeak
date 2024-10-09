@@ -6,34 +6,49 @@ import { AppProvider } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import type { Router } from '@toolpad/core';
 import useThemeStore, { Theme } from '../../store/ThemeStore';
-import Home from '@mui/icons-material/Home';
-import LightbulbIcon from '@mui/icons-material/Lightbulb';
-import WhatshotIcon from '@mui/icons-material/Whatshot';
-import ArticleIcon from '@mui/icons-material/Article';
-import CategoryIcon from '@mui/icons-material/Category';
-import FindInPageIcon from '@mui/icons-material/FindInPage';
-import BookmarksIcon from '@mui/icons-material/Bookmarks';
+import {
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Collapse,
+} from '@mui/material';
+import {
+  ExpandLess,
+  ExpandMore,
+  Home,
+  Lightbulb,
+  Whatshot,
+  Article,
+  Category,
+  FindInPage,
+  MenuBook,
+  Bookmarks,
+  Description,
+} from '@mui/icons-material';
 
 const NAVIGATION = [
   { segment: '', title: 'Home', icon: <Home /> },
-  { segment: 'about', title: 'About Us', icon: <LightbulbIcon /> },
+  { segment: 'welcome', title: 'About Us', icon: <Lightbulb /> },
   {
     segment: 'articlelist/keyword',
     title: 'Hot Articles',
-    icon: <WhatshotIcon />,
+    icon: <Whatshot />,
   },
-  { segment: 'preferred', title: 'Favorite Articles', icon: <ArticleIcon /> },
+  { segment: 'preferred', title: 'Favorite Articles', icon: <Article /> },
   {
     segment: 'articlelist',
     title: 'Category Articles',
-    icon: <CategoryIcon />,
+    icon: <Category />,
   },
   {
     segment: 'articlesearch',
     title: 'Article Search',
-    icon: <FindInPageIcon />,
+    icon: <FindInPage />,
   },
-  { segment: 'scraplist', title: 'Scrap', icon: <BookmarksIcon /> },
+  { segment: 'scraplist', title: 'Scrap', icon: <Bookmarks /> },
+  { segment: 'word', title: 'My Voca', icon: <MenuBook /> },
+  { segment: 'reportlist', title: 'Conv. Report', icon: <Description /> },
 ];
 
 // 테마 설정 함수

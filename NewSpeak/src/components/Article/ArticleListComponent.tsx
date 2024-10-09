@@ -243,7 +243,8 @@ const ArticleListComponent = ({
         </>
       ) : (
         <div className={styles.noArticlesMessage}>
-          No articles available for this category.
+          No articles available for{' '}
+          {isScrap ? 'scraped articles' : 'this category'}.
         </div>
       )}
     </div>

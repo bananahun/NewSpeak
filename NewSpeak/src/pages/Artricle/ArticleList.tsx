@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { categories } from '../../utils/Categories';
-import CategoryArticlesList from '../../components/Article/ArticleListComponent';
+import ArticleListComponent from '../../components/Article/ArticleListComponent';
 import { FaAngleUp, FaAngleDown } from 'react-icons/fa6';
 import styles from './ArticleList.module.scss';
 
@@ -64,7 +64,7 @@ const ArticleList = () => {
   return (
     <div className={styles.container}>
       {renderCategoryNavbar()}
-      <CategoryArticlesList categoryId={selectedCategory} />
+      <ArticleListComponent categoryId={selectedCategory} />
     </div>
   );
 };
