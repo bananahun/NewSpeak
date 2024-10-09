@@ -35,12 +35,6 @@ const Home = () => {
   const [resetTrigger, setResetTrigger] = useState<number>(0);
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      navigate('/welcome');
-    }
-  }, [isLoggedIn]);
-
-  useEffect(() => {
     fullpageScroll();
 
     const fetchWordData = async () => {

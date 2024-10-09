@@ -6,8 +6,8 @@ import { loginWithOAuth } from '../../apis/AuthApi';
 import styles from './Login.module.scss';
 import logo from '../../assets/NewSpeak.png';
 import logoWhite from '../../assets/NewSpeakWhite.png';
-import googleLogo from '../../assets/google_login.png';
-import kakaoLogo from '../../assets/kakao_login_medium_narrow.png';
+import googleLogo from '../../assets/oauth/web_neutral_sq_ctn@2x.png';
+import kakaoLogo from '../../assets/oauth/kakao_login_medium_narrow.png';
 
 const Login = () => {
   const navigate = useNavigate();

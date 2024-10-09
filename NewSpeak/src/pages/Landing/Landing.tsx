@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './Landing.module.scss';
 import sectionStyles from '../../styles/section.module.scss';
 import { fullpageScroll } from '../../utils/ScrollUtils';
+import { loginWithOAuth } from '../../apis/AuthApi';
 import background1 from '../../assets/landing/timeSquare.jpg';
 import background2 from '../../assets/landing/newspaper.jpg';
 import background3 from '../../assets/landing/mic.jpg';
@@ -12,6 +13,8 @@ import { RiArrowDownWideFill } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import ThemeSwitcher from '../../components/ThemeSwitcher/ThemeSwitcher';
 import useAuthStore from '../../store/AuthStore';
+import googleLogo from '../../assets/oauth/web_neutral_sq_ctn@2x.png';
+import kakaoLogo from '../../assets/oauth/kakao_login_medium_narrow.png';
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -19,6 +22,8 @@ const Landing = () => {
   const [currentSection, setCurrentSection] = useState(0);
   const [background, setBackground] = useState<string>('');
   const [sectionChanging, setSectionChanging] = useState(false);
+  const [openOAuthButtonTop, setOpenOAuthButtonTop] = useState(false);
+  const [openOAuthButtonIn, setOpenOAuthButtonIn] = useState(false);
 
   // useEffect(() => {
   //   if (isLoggedIn) {
@@ -36,7 +41,7 @@ const Landing = () => {
       const timer = setTimeout(() => {
         setSectionChanging(false);
         document.body.style.overflow = 'auto';
-      }, 1200);
+      }, 800);
 
       return () => clearTimeout(timer);
     }
@@ -130,8 +135,35 @@ const Landing = () => {
     window.dispatchEvent(scrollEvent);
   };
 
-  const handleLogin = () => {
-    navigate('/login');
+  const handleClickHomeButton = () => {
+    navigate('/');
+  };
+
+  const handleClickLoginButton = (pos: string) => {
+    if (pos === 'top') {
+      setOpenOAuthButtonTop(prev => !prev);
+      return;
+    }
+    setOpenOAuthButtonIn(prev => !prev);
+  };
+
+  const loginWith = loginWithOAuth;
+
+  const oauthContainer = () => {
+    return (
+      <div className={styles.oAuthContainer}>
+        <div className={styles.google} onClick={() => loginWith('google')}>
+          <img src={googleLogo} alt="구글" />
+        </div>
+        <div className={styles.kakao}>
+          <img
+            src={kakaoLogo}
+            alt="카카오"
+            onClick={() => loginWith('kakao')}
+          />
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -139,9 +171,21 @@ const Landing = () => {
       <div className={styles.themeSwitcher}>
         <ThemeSwitcher />
       </div>
-      <button className={styles.loginButton} onClick={handleLogin}>
-        {isLoggedIn ? 'Home' : 'Login'}
-      </button>
+      {isLoggedIn ? (
+        <button className={styles.loginButton} onClick={handleClickHomeButton}>
+          Home
+        </button>
+      ) : (
+        <>
+          <button
+            className={styles.loginButton}
+            onClick={() => handleClickLoginButton('top')}
+          >
+            Login
+            {openOAuthButtonTop && oauthContainer()}
+          </button>
+        </>
+      )}
       <div className={`${styles.landingBackground}`}>
         <div className={styles.backgroundInner}>
           <div
@@ -163,9 +207,7 @@ const Landing = () => {
         </div>
         <div className={sectionStyles.section} onClick={handleSectionClick}>
           <div className={`${styles.landingSection} ${styles.fadeInSection}`}>
-            <h1 className={styles.landingText}>
-              영어를 배우세요 <span>자연스럽게</span>
-            </h1>
+            <h1 className={styles.landingText}>영어를 배우세요 자연스럽게</h1>
             <h2 className={styles.landingSubText}>
               세상을 읽고, 언어로 말하다
             </h2>
@@ -226,9 +268,24 @@ const Landing = () => {
             <h2 className={styles.landingSubText}>
               당신의 여정이 지금 시작됩니다
             </h2>
-            <button className={styles.startButton} onClick={handleLogin}>
-              NewSpeak 시작하기
-            </button>
+            {isLoggedIn ? (
+              <button
+                className={styles.loginButton}
+                onClick={handleClickHomeButton}
+              >
+                Home
+              </button>
+            ) : (
+              <>
+                <button
+                  className={styles.startButton}
+                  onClick={() => handleClickLoginButton('in')}
+                >
+                  NewSpeak 시작하기
+                  {openOAuthButtonIn && oauthContainer()}
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
