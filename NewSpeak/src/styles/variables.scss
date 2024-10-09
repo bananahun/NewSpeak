@@ -16,7 +16,7 @@
 }
 
 .light {
-  --main-color: #3f50b5; /* 라이트 테마의 메인 컬러 */
+  --main-color: #7f8af1; /* 라이트 테마의 메인 컬러 */
   --main-rgb: 63, 80, 181;
   --contrast-color: #6a1b9a; /* 라이트 테마의 대비 컬러 */
   --contrast-rgb: 106, 27, 154;
@@ -24,15 +24,16 @@
   --accent-rgb: 92, 107, 192;
   --sub-color: #7986cb; /* 서브 컬러: 파스텔 블루 */
   --sub-rgb: 121, 134, 203;
-  --background-color: #ffffff; /* 라이트 테마 배경 색상: 화이트 */
+  --background-color: #fefefe; /* 라이트 테마 배경 색상: 화이트 */
   --background-rgb: 255, 255, 255;
+  --border-color: #121212;
   --font-color: #1c1e21; /* 폰트 색상: 짙은 회색 */
   --font-rgb: 28, 30, 33;
   --sub-font-color: #9e9e9f;
 }
 
 .dark {
-  --main-color: #283593; /* 어두운 테마의 메인 컬러: 어두운 파란색 */
+  --main-color: #aeb5f1; /* 어두운 테마의 메인 컬러: 어두운 파란색 */
   --main-rgb: 40, 53, 147;
   --contrast-color: #512da8; /* 어두운 테마의 대비 컬러: 보라색 */
   --contrast-rgb: 81, 45, 168;
@@ -40,7 +41,8 @@
   --accent-rgb: 103, 58, 183;
   --sub-color: #9fa8da; /* 어두운 테마의 서브 컬러: 밝은 파스텔 블루 */
   --sub-rgb: 159, 168, 218;
-  --background-color: #1c1e21; /* 어두운 배경색: 짙은 블루 그레이 */
+  --border-color: #ffffff;
+  --background-color: #1e1e1e; /* 어두운 배경색: 짙은 블루 그레이 */
   --background-rgb: 28, 30, 33;
   --font-color: #e8eaf6; /* 폰트 색상: 밝은 회색 */
   --font-rgb: 232, 234, 246;

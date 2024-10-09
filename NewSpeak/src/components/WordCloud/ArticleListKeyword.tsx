@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import useArticleStore from "../../store/ArticleStore";
 import {
   Button,
   Card,
@@ -33,6 +34,8 @@ interface Word {
 
 const ArticleListKeyword: React.FC = () => {
   const navigate = useNavigate();
+  const { setArticleMeta } = useArticleStore();
+  const location = useLocation();
   const [articles, setArticles] = useState<Article[]>([]);
   const [words, setWords] = useState<Word[]>([]);
   const [selectedWordId, setSelectedWordId] = useState<number | null>(null);
@@ -62,6 +65,9 @@ const ArticleListKeyword: React.FC = () => {
 
   useEffect(() => {
     fetchWordData();
+    if (location.state) {
+      setSelectedWordId(location.state);
+    }
   }, []);
 
   useEffect(() => {
@@ -81,7 +87,12 @@ const ArticleListKeyword: React.FC = () => {
   };
 
   const loadArticleDetail = (article: Article) => {
-    navigate("/article", { state: { articleId: article.id } });
+    setArticleMeta({
+      id: article.id,
+      title: article.title,
+      imageUrl: article.imageUrl,
+    });
+    navigate("/article");
   };
 
   const formatDate = (dateString: string) => {
@@ -133,6 +144,7 @@ const ArticleListKeyword: React.FC = () => {
                   }}
                   sx={{
                     fontSize: "1rem",
+                    color: "black",
                     "&:hover": { backgroundColor: "#eeeeee" },
                   }}
                 >
@@ -167,7 +179,12 @@ const ArticleListKeyword: React.FC = () => {
               <Card
                 key={article.id}
                 onClick={() => loadArticleDetail(article)}
-                sx={{ maxWidth: 600, margin: 2, cursor: "pointer" }}
+                sx={{
+                  maxWidth: 600,
+                  margin: 2,
+                  cursor: "pointer",
+                  border: "1px solid white",
+                }}
               >
                 <CardMedia
                   component="img"

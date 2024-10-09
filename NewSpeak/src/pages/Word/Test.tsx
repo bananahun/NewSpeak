@@ -1,10 +1,9 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import WordTest from '../../components/Word/WordTest';
 import Result from '../../components/Word/Result';
 import userApi from '../../apis/UserApi';
 import { useVocaStore } from '../../store/VocaStore';
 const Test = () => {
-  
   interface Word {
     wordId: number;
     answer: string;
@@ -19,8 +18,8 @@ const Test = () => {
 
   const [score, setScore] = useState<number | null>(null);
   const [answers, setAnswers] = useState<string[]>([]);
-  const [words,setWords] = useState<Word[]>();
-  const {vocaId , setVocaId} = useVocaStore() // 임시
+  const [words, setWords] = useState<Word[]>();
+  const { vocaId, setVocaId } = useVocaStore(); // 임시
 
   useEffect(() => {
     const fetchTestWords = async () => {
@@ -34,31 +33,30 @@ const Test = () => {
               console.error('Error fetching vocaIds:', error);
             }
           };
-    
-          fetchVocaIds(); 
 
+          fetchVocaIds();
         }
-        if(vocaId !== null) {
-        const fetchedTestWords = await userApi.getMyVocasQuiz(vocaId);
-        setWords(fetchedTestWords || []); // 가져온 데이터를 상태에 저장
-        } 
+        if (vocaId !== null) {
+          const fetchedTestWords = await userApi.getMyVocasQuiz(vocaId);
+          setWords(fetchedTestWords || []); // 가져온 데이터를 상태에 저장
+        }
       } catch (error) {
         console.error('Error fetching streaks:', error);
       }
     };
 
     fetchTestWords(); // API 요청
-
-
   }, [vocaId]); // 의존성 배열에 추가
-  
 
-  const handleTestComplete = async (finalScore: number, userAnswers: string[]) => {
+  const handleTestComplete = async (
+    finalScore: number,
+    userAnswers: string[],
+  ) => {
     if (!vocaId) {
-      alert('단어장이 선택되지 않습니다.'); // vocaId가 없을 때 알�� 추가
+      alert('단어장이 선택되지 않습니다.');
       return;
     }
-    const result = await userApi.gradeMyVocasQuiz(finalScore,vocaId)
+    const result = await userApi.gradeMyVocasQuiz(finalScore, vocaId);
     console.log('API gradeMyVocasQuiz result:', result);
     setScore(finalScore);
     setAnswers(userAnswers); // 사용자의 답안을 상태에 저장
@@ -74,9 +72,8 @@ const Test = () => {
           correctAnswers={words.map(word => word.answer)}
         />
       ) : (
-        words && (
-          <WordTest words={words} onTestComplete={handleTestComplete} />
-        ))}
+        words && <WordTest words={words} onTestComplete={handleTestComplete} />
+      )}
     </div>
   );
 };

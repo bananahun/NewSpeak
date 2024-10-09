@@ -39,6 +39,9 @@
 .themeswitcher {
   z-index: 1300; /* 최상단에 표시되도록 z-index 설정 */
   position: fixed; /* 고정 위치로 설정 */
-  top: 15px; /* 화면 상단에서 16px 아래에 위치 */
+  top: 13px; /* 화면 상단에서 16px 아래에 위치 */
   right: 15px; /* 화면 우측에서 16px 떨어진 위치에 설정 */
+
+  display: flex;
+  align-items: center;
 }

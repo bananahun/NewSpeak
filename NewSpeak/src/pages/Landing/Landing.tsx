@@ -164,10 +164,10 @@ const Landing = () => {
         <div className={sectionStyles.section} onClick={handleSectionClick}>
           <div className={`${styles.landingSection} ${styles.fadeInSection}`}>
             <h1 className={styles.landingText}>
-              영어를 배우세요. <span>자연스럽게.</span>
+              영어를 배우세요 <span>자연스럽게</span>
             </h1>
             <h2 className={styles.landingSubText}>
-              세상을 읽고, 언어로 말하다.
+              세상을 읽고, 언어로 말하다
             </h2>
             {scrollDown(1)}
           </div>
@@ -176,9 +176,9 @@ const Landing = () => {
           <div
             className={`${styles.landingSection} ${styles.pageA} ${styles.fadeInSection}`}
           >
-            <h1 className={styles.landingText}>뉴스, 당신의 새로운 선생님.</h1>
+            <h1 className={styles.landingText}>뉴스, 당신의 새로운 선생님</h1>
             <h2 className={styles.landingSubText}>
-              실시간 뉴스로 배우는 진짜 영어.
+              실시간 뉴스로 배우는 진짜 영어
             </h2>
             {scrollDown(2)}
           </div>
@@ -187,9 +187,9 @@ const Landing = () => {
           <div
             className={`${styles.landingSection} ${styles.pageA} ${styles.fadeInSection}`}
           >
-            <h1 className={styles.landingText}>자연스럽게 말하세요.</h1>
+            <h1 className={styles.landingText}>자연스럽게 말하세요</h1>
             <h2 className={styles.landingSubText}>
-              듣고, 배우고, 대화를 이끌다.
+              듣고, 배우고, 대화를 이끌다
             </h2>
             {scrollDown(3)}
           </div>
@@ -199,10 +199,10 @@ const Landing = () => {
             className={`${styles.landingSection} ${styles.pageA} ${styles.fadeInSection}`}
           >
             <h1 className={styles.landingText}>
-              AI로 더 똑똑하게, 당신으로 완성되다.
+              AI로 더 똑똑하게, 당신으로 완성되다
             </h1>
             <h2 className={styles.landingSubText}>
-              최첨단 음성 인식과 맞춤형 피드백.
+              최첨단 음성 인식과 맞춤형 피드백
             </h2>
             {scrollDown(4)}
           </div>
@@ -211,9 +211,9 @@ const Landing = () => {
           <div
             className={`${styles.landingSection} ${styles.pageA} ${styles.fadeInSection}`}
           >
-            <h1 className={styles.landingText}>어디서든 영어를 정복하세요.</h1>
+            <h1 className={styles.landingText}>어디서든 영어를 정복하세요</h1>
             <h2 className={styles.landingSubText}>
-              당신만의 속도, 당신만의 방식으로.
+              당신만의 속도, 당신만의 방식으로
             </h2>
             {scrollDown(5)}
           </div>
@@ -224,7 +224,7 @@ const Landing = () => {
           >
             <h1 className={styles.landingText}>이제, 말할 준비가 되셨나요?</h1>
             <h2 className={styles.landingSubText}>
-              당신의 여정이 지금 시작됩니다.
+              당신의 여정이 지금 시작됩니다
             </h2>
             <button className={styles.startButton} onClick={handleLogin}>
               NewSpeak 시작하기
