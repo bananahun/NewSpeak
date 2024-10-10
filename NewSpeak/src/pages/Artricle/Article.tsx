@@ -67,7 +67,11 @@ const Article = () => {
   const [wordSelectorButtonAccent, setWordSelectorButtonAccent] =
     useState(true);
 
-  const getOrDefault = (value: any, defaultValue: string = 'Loading..') => {
+  const getOrDefault = (value: any, defaultValue: string = '') => {
+    return value || defaultValue;
+  };
+
+  const getOrDefaultDate = (value: any, defaultValue: string = '') => {
     if (typeof value === 'string' && !isNaN(Date.parse(value))) {
       return new Date(value).toDateString();
     }
@@ -225,7 +229,7 @@ const Article = () => {
               <div className={styles.publishDetail}>
                 <p>{getOrDefault(articleData?.writer)}</p>
                 <strong>|</strong>
-                <p>{getOrDefault(articleData?.publishedDate)}</p>
+                <p>{getOrDefaultDate(articleData?.publishedDate)}</p>
               </div>
               <p>
                 Lv <strong>|</strong> {getOrDefault(articleData?.level)}
@@ -292,7 +296,7 @@ const Article = () => {
       {wordSelectorMode && (
         <WordSelector closeWordSelector={closeWordSelector} />
       )}
-      <div id='modal-root'></div>
+      <div id="modal-root"></div>
     </>
   );
 };

@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { usePreferredCategoryStore } from '../../store/CategoryStore';
-import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import ArticleListComponent from './ArticleListComponent';
 import { categories } from '../../utils/Categories';
 import styles from './PreferredArticleList.module.scss';
@@ -47,9 +45,6 @@ const PreferredArticleList: React.FC = () => {
         ))}
       </div>
       {isLoading ? (
-        // <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-        //   <CircularProgress color="primary" />
-        // </Box>
         <LoadingModal />
       ) : (
         <ArticleListComponent categoryId={selectedCategory} />

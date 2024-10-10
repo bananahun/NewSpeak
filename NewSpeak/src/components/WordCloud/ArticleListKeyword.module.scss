@@ -1,6 +1,6 @@
 .articleListKeyword {
   width: 100%;
-  height: calc(100vh - 200px);
+  height: calc(100vh - 120px); // 화면 높이에 따라 전체 레이아웃 조정
   padding: 5px 20px;
   display: flex;
   flex-direction: column;
@@ -10,28 +10,21 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 110px;
+    height: 110px; // 두 줄의 키워드를 모두 표시할 수 있는 높이로 설정
+    min-height: 110px;
     width: 100%;
     margin-bottom: 20px;
     position: relative;
 
     .keywordNavbar {
       display: grid;
-      grid-template-columns: repeat(10, 1fr);
-      justify-content: center;
-      margin-bottom: 20px;
-      height: 100px;
-      position: relative;
-
-      @media (max-width: 1440px) {
-        grid-template-columns: repeat(5, 1fr);
-        overflow-y: scroll;
-        scroll-behavior: smooth;
-      }
-
-      @media (max-width: 1024px) {
-        grid-template-columns: repeat(4, 1fr);
-      }
+      grid-template-columns: repeat(5, 1fr); // 항상 5개의 열로 고정
+      grid-template-rows: repeat(2, auto); // 항상 2개의 행으로 고정
+      gap: 5px;
+      height: 120px; // 키워드 네비바의 고정 높이
+      overflow-y: auto; // 스크롤 가능하게 설정
+      scroll-behavior: smooth; // 부드러운 스크롤 동작 설정
+      padding: 10px;
 
       .keywordButton {
         width: 110px;
@@ -57,25 +50,24 @@
         }
       }
     }
+  }
+  .upDownButtons {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    transform: translateY(-10%);
+    right: -20px;
+    width: 50px;
+    gap: 10px;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
 
-    .upDownButtons {
-      display: flex;
-      flex-direction: column;
-      position: absolute;
-      transform: translateY(-10%);
-      right: -20px;
-      width: 50px;
-      gap: 10px;
-      border-radius: 5px;
-      justify-content: center;
-      align-items: center;
-
-      > svg {
-        cursor: pointer;
-        transition: transform 0.2s ease-in-out;
-        &:hover {
-          transform: scale(1.2);
-        }
+    > svg {
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out;
+      &:hover {
+        transform: scale(1.2);
       }
     }
   }
@@ -189,30 +181,4 @@
       }
     }
   }
-
-  .scrollButtons {
-    position: absolute;
-    bottom: -30px;
-    left: 50%;
-    background-color: var(--background-color);
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    padding: 2px;
-    transform: translateX(calc(-50%));
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    > svg {
-      cursor: pointer;
-      transition: transform 0.2s ease-in-out;
-      &:hover {
-        transform: scale(1.2);
-      }
-    }
-  }
-}
-
-.noArticlesMessage {
-  align-self: center;
 }
