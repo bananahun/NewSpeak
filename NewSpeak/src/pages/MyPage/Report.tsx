@@ -89,7 +89,7 @@ const Report = () => {
       },
     ];
     // console.log(report);
-    console.log(data);
+    // console.log(data);
     let colors = ['#6A9FB5', '#F4A261', '#E76F51', '#2A9D8F', '#264653'];
 
     const shuffleArray = (array: string[]) => {

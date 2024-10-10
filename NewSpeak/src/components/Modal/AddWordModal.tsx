@@ -47,7 +47,7 @@ const AddWordModal = ({
         '단어 추가에 실패했습니다. 다시 시도해주세요',
         'error',
       );
-      console.log('sentenceId 가져오기 실패');
+      // console.log('sentenceId 가져오기 실패');
       return;
     }
 
@@ -57,7 +57,7 @@ const AddWordModal = ({
         '단어 추가에 실패했습니다. 다시 시도해주세요',
         'error',
       );
-      console.log('vocaId 가져오기 실패');
+      // console.log('vocaId 가져오기 실패');
       return;
     }
 
@@ -68,7 +68,7 @@ const AddWordModal = ({
         word,
         selectedSentenceId,
       );
-      console.log(response);
+      // console.log(response);
       if (response && response.status === 200) {
         mySwalWithTimer(
           '단어장 등록 완료',

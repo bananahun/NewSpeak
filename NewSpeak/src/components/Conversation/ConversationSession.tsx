@@ -46,15 +46,15 @@ const ConversationSession = ({
     }
   }, [recommendedAnswers]);
 
-  // useEffect(() => {
-  //   if (isFirstRender) {
-  //     clearConversation();
-  //     createThread();
-  //     setIsFirstRender(false);
-  //     setIsFirstMessage(true);
-  //     return;
-  //   }
-  // }, [isFirstRender]);
+  useEffect(() => {
+    if (isFirstRender) {
+      clearConversation();
+      createThread();
+      setIsFirstRender(false);
+      setIsFirstMessage(true);
+      return;
+    }
+  }, [isFirstRender]);
 
   useEffect(() => {
     setActiveAnswer(currentAnswer);
@@ -62,11 +62,11 @@ const ConversationSession = ({
   }, [currentAnswer]);
 
   useEffect(() => {
-    console.log(recommendedAnswers);
+    // console.log(recommendedAnswers);
   }, [recommendedAnswers]);
 
   useEffect(() => {
-    console.log(isGeneratingResponse);
+    // console.log(isGeneratingResponse);
   }, [isGeneratingResponse]);
 
   const submitAnswer = () => {

@@ -59,7 +59,7 @@ const WordSelector = ({
 
         const startOfWord = beforeCursor.search(/\S+$/);
         const endOfWord = afterCursor.search(/\s/);
-        console.log(startOfWord, endOfWord);
+        // console.log(startOfWord, endOfWord);
 
         const word =
           (startOfWord === -1 ? '' : beforeCursor.slice(startOfWord)) +
@@ -84,7 +84,7 @@ const WordSelector = ({
 
       const selectedText = getWordAtCursor(e); // 클릭한 위치의 단어 가져오기
       if (!selectedSentenceId) {
-        console.log('id없음');
+        // console.log('id없음');
         return;
       }
 

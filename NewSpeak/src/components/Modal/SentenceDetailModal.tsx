@@ -33,12 +33,12 @@ const SentenceDetailModal = ({
       const speech = new SpeechSynthesisUtterance(text);
       speech.lang = 'en-US';
       speech.onstart = () => {
-        console.log('Speech started');
+        // console.log('Speech started');
         setIsSpeaking(true);
       };
 
       speech.onend = () => {
-        console.log('Speech ended');
+        // console.log('Speech ended');
         setIsSpeaking(false);
       };
 
@@ -49,7 +49,7 @@ const SentenceDetailModal = ({
 
       window.speechSynthesis.speak(speech);
     } else {
-      console.log('Browser does not support Text-to-Speech');
+      // console.log('Browser does not support Text-to-Speech');
     }
   };
 
@@ -63,26 +63,32 @@ const SentenceDetailModal = ({
   return ReactDOM.createPortal(
     <>
       <div className={styles.modalOverlay} onClick={handleOverlayClick}>
-      <div className={styles.sentenceDetailModal}>
-        <button className={styles.closeButton} onClick={onClose}>
-          x
-        </button>
-        <p>{text}</p>
-        <div className={styles.buttonContainer}>
-          <button className={styles.button} disabled={isSpeaking} onClick={handleSpeak}>
-            문장 듣기
+        <div className={styles.sentenceDetailModal}>
+          <button className={styles.closeButton} onClick={onClose}>
+            x
           </button>
-          <button className={styles.button} onClick={openPronounceModal}>발음 평가</button>
+          <p>{text}</p>
+          <div className={styles.buttonContainer}>
+            <button
+              className={styles.button}
+              disabled={isSpeaking}
+              onClick={handleSpeak}
+            >
+              문장 듣기
+            </button>
+            <button className={styles.button} onClick={openPronounceModal}>
+              발음 평가
+            </button>
+          </div>
         </div>
+        <PronounceModal
+          isOpen={isPronounceModalOpen}
+          onClose={closePronounceModal}
+          text={text}
+          sourcePage={'SentenceDetailModal'}
+        />
       </div>
-      <PronounceModal
-        isOpen={isPronounceModalOpen}
-        onClose={closePronounceModal}
-        text={text}
-        sourcePage={'SentenceDetailModal'}
-      />
-    </div>
-    <div className={styles.modalOverlayShadow}> </div>
+      <div className={styles.modalOverlayShadow}> </div>
     </>,
     document.getElementById('modal-root'),
   );

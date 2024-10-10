@@ -112,7 +112,7 @@ const Register = () => {
       };
 
       const register = await signUp(formdata);
-      console.log(register);
+      // console.log(register);
       if (register) {
         mySwal('회원가입 성공', '회원가입이 완료되었습니다!', 'success');
         navigate('/');

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { AppProvider } from '@toolpad/core/AppProvider';
@@ -88,7 +88,9 @@ function Layout() {
 
 export default function AppProviderTheme() {
   const navigate = useNavigate();
-  const [pathname, setPathname] = useState('/');
+  const location = useLocation();
+  const { pathname } = location;
+  // const [pathname, setPathname] = useState('/');
   const { theme } = useThemeStore(); // zustand에서 테마 상태 가져오기
   const muiMode = theme === Theme.Dark ? 'dark' : 'light';
 
@@ -104,7 +106,7 @@ export default function AppProviderTheme() {
       pathname,
       searchParams: new URLSearchParams(),
       navigate: path => {
-        setPathname(String(path));
+        // setPathname(String(path));
         navigate(path);
       },
     };
@@ -113,6 +115,7 @@ export default function AppProviderTheme() {
   const customizedNavigation = NAVIGATION.map(navItem => {
     return {
       ...navItem,
+      selected: pathname === `/${navItem.segment}`,
       onClick: () => navigate(navItem.segment ? `/${navItem.segment}` : '/'),
     };
   });
