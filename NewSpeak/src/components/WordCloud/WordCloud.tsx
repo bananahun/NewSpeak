@@ -47,7 +47,7 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, onWordClick }) => {
 
       const relativeData = data.map(d => ({
         ...d,
-        size: (d.size - minSize) / (maxSize - minSize) + 30,
+        size: ((d.size - minSize) / (maxSize - minSize)) * 45 + 20,
       }));
 
       d3.select(container).select('svg').remove();
