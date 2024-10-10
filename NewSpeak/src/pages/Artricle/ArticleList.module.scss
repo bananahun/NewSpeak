@@ -1,6 +1,6 @@
 .container {
   width: 100%;
-  height: calc(100vh - 200px);
+  height: calc(100vh - 120px);
   padding: 5px 20px;
   display: flex;
   flex-direction: column;
@@ -11,27 +11,20 @@
     align-items: center;
     justify-content: center;
     height: 110px;
+    min-height: 110px;
     width: 100%;
     margin-bottom: 20px;
     position: relative;
 
     .categoryNavbar {
       display: grid;
-      grid-template-columns: repeat(10, 1fr);
-      justify-content: center;
-      margin-bottom: 20px;
-      height: 100px;
-      position: relative;
-
-      @media (max-width: 1440px) {
-        grid-template-columns: repeat(5, 1fr);
-        overflow-y: scroll;
-        scroll-behavior: smooth;
-      }
-
-      @media (max-width: 1024px) {
-        grid-template-columns: repeat(4, 1fr);
-      }
+      grid-template-columns: repeat(5, 1fr); // 항상 5개의 열로 고정
+      grid-template-rows: repeat(2, auto); // 항상 2개의 행으로 고정
+      gap: 5px;
+      height: 120px; // 키워드 네비바의 고정 높이
+      overflow-y: auto; // 스크롤 가능하게 설정
+      scroll-behavior: smooth; // 부드러운 스크롤 동작 설정
+      padding: 10px;
 
       .categoryButton {
         width: 110px;
