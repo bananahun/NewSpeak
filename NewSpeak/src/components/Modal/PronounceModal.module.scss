@@ -31,6 +31,7 @@
   flex-direction: column;
   align-items: center;
   position: relative;
+  text-align: left;
 
   .closeButton {
     position: absolute;
@@ -82,18 +83,14 @@
   color: var(--font-color); // 버튼 텍스트 색상
   padding: 10px 20px;
   font-size: 16px;
-  font-weight:600;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.3s;
   text-decoration: none;
 
-
-
   &:hover {
     background: var(--contrast-color); // 호버 시 색상 변경
   }
-
-  
 }
 
 .downloadButton {
@@ -103,13 +100,11 @@
   color: var(--font-color); // 버튼 텍스트 색상
   padding: 10px 20px;
   font-size: 16px;
-  font-weight:600;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.3s;
   text-decoration: none;
   margin-bottom: 30px;
-
-
 
   &:hover {
     background: var(--contrast-color); // 호버 시 색상 변경
