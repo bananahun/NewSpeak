@@ -65,22 +65,27 @@ const Report = () => {
       {
         subject: '명료성',
         score: report.feedback.clarity.score,
+        fullMark: 20,
       },
       {
         subject: '이해력',
         score: report.feedback.comprehension.score,
+        fullMark: 20,
       },
       {
         subject: '표현력',
         score: report.feedback.expressiveness.score,
+        fullMark: 20,
       },
       {
         subject: '문법',
         score: report.feedback.grammar.score,
+        fullMark: 20,
       },
       {
         subject: '어휘',
         score: report.feedback.vocabulary.score,
+        fullMark: 20,
       },
     ];
     // console.log(report);
