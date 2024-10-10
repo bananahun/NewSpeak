@@ -28,7 +28,7 @@ const usePreferredCategoryStore = create(
             (cat: { categoryId: number; categoryName: string }) =>
               cat.categoryId,
           );
-          console.log(selectedCategories);
+          // console.log(selectedCategories);
           set({ preferredCategories: selectedCategories });
         } catch (error) {
           console.error('[API] getPreferredCategory 에러:', error);

@@ -129,7 +129,7 @@ const Dashboard = () => {
             content: parsedContent.content,
           };
         });
-        console.log(parsedData);
+        // console.log(parsedData);
         setReportData(parsedData);
         setIsLoading(false);
       } catch (error) {
@@ -174,7 +174,7 @@ const Dashboard = () => {
   }, [reportData]);
 
   useEffect(() => {
-    console.log(lastReport);
+    // console.log(lastReport);
   }, [lastReport]);
 
   const handleSearchArticle = () => {

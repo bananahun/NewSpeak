@@ -65,7 +65,7 @@ const ArticleListComponent = ({
       } else {
         result = await useArticleApi.getArticleCategory(categoryId, page);
       }
-      console.log(result);
+      // console.log(result);
       if (result && Array.isArray(result)) {
         const formattedArticles = result.map(article => ({
           id: article.id,

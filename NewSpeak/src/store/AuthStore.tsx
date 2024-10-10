@@ -31,7 +31,7 @@ const useAuthStore = create<AuthState>(set => ({
   },
 
   logout: navigate => {
-    console.log('로그아웃에 성공했어요');
+    // console.log('로그아웃에 성공했어요');
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('user');
     set({ isLoggedIn: false, user: null });
@@ -43,12 +43,12 @@ const useAuthStore = create<AuthState>(set => ({
       try {
         const userInfo = await getUserInfo();
         if (userInfo) {
-          console.log('로그인에 성공했어요!', userInfo);
+          // console.log('로그인에 성공했어요!', userInfo);
           set({ isLoggedIn: true, user: userInfo });
           localStorage.setItem('isLoggedIn', 'true');
           localStorage.setItem('user', JSON.stringify(userInfo));
         } else {
-          console.log('로그인에 실패!', userInfo);
+          // console.log('로그인에 실패!', userInfo);
           set({ isLoggedIn: false, user: null });
           localStorage.removeItem('isLoggedIn');
           localStorage.removeItem('user');

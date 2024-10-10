@@ -57,7 +57,7 @@ const Test = () => {
       return;
     }
     const result = await userApi.gradeMyVocasQuiz(finalScore, vocaId);
-    console.log('API gradeMyVocasQuiz result:', result);
+    // console.log('API gradeMyVocasQuiz result:', result);
     setScore(finalScore);
     setAnswers(userAnswers); // 사용자의 답안을 상태에 저장
   };

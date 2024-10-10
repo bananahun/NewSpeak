@@ -36,7 +36,7 @@ const WordList = () => {
         if (vocaId != null) {
           // vocaId가 null이 아닐 경우에만 호출
           const fetchedWords = await userApi.getMyVocasDetail(vocaId); // API 호출
-          console.log(fetchedWords);
+          // console.log(fetchedWords);
           setWords(fetchedWords); // 받아온 데이터를 상태로 저장
         } else {
           const fetchedVocaId = await userApi.getMyVocas();
@@ -66,7 +66,7 @@ const WordList = () => {
   };
 
   const handleTestButtonClick = () => {
-    console.log(words);
+    // console.log(words);
     if (words.length < 10) {
       alert('단어 수가 10개 이하입니다. 더 많은 단어를 추가하세요.');
     } else {
@@ -80,12 +80,12 @@ const WordList = () => {
       const speech = new SpeechSynthesisUtterance(word);
       speech.lang = 'en-US';
       speech.onstart = () => {
-        console.log('Speech started');
+        // console.log('Speech started');
         setIsSpeaking(true);
       };
 
       speech.onend = () => {
-        console.log('Speech ended');
+        // console.log('Speech ended');
         setIsSpeaking(false);
       };
 
@@ -96,7 +96,7 @@ const WordList = () => {
 
       window.speechSynthesis.speak(speech);
     } else {
-      console.log('Browser does not support Text-to-Speech');
+      // console.log('Browser does not support Text-to-Speech');
     }
   };
 
@@ -118,17 +118,17 @@ const WordList = () => {
   };
 
   return (
-    <div >
-      {(!words || words.length === 0) &&  (
-            <div>단어가 없습니다.</div>
-          )}
-      
+    <div>
+      {(!words || words.length === 0) && <div>단어가 없습니다.</div>}
+
       <div className={styles.container}>
         <div className={styles.wordlist2}>
-          {words && words.length !== 0 && words.map((word, index) => (
-            <div key={index} className={styles.card}>
-              <div className={styles.cardInner}>
-                <div className={styles.cardContent}>
+          {words &&
+            words.length !== 0 &&
+            words.map((word, index) => (
+              <div key={index} className={styles.card}>
+                <div className={styles.cardInner}>
+                  <div className={styles.cardContent}>
                     <div className={styles.cardContentTitle}>
                       <h3>{word.content}</h3>
                       <div
@@ -140,38 +140,42 @@ const WordList = () => {
                       </div>
                     </div>
                     <div className={styles.meaningsContainer}>
-                    {word.meaningDatas
-                      .slice(0, 2)
-                      .map((meaning, meaningIndex) => {
-                        // 글자 수 제한
-                        const maxLength = 8; // 제한할 글자 수 설정
-                        const displayMeaning = meaning.meaning.length > maxLength 
-                          ? meaning.meaning.slice(0, maxLength) + '...' 
-                          : meaning.meaning;
+                      {word.meaningDatas
+                        .slice(0, 2)
+                        .map((meaning, meaningIndex) => {
+                          // 글자 수 제한
+                          const maxLength = 8; // 제한할 글자 수 설정
+                          const displayMeaning =
+                            meaning.meaning.length > maxLength
+                              ? meaning.meaning.slice(0, maxLength) + '...'
+                              : meaning.meaning;
 
-                        return (
-                          <div key={meaningIndex} className={styles.meaningBox}>
-                            <p>{displayMeaning}</p> {/* 제한된 문자열 표시 */}
-                          </div>
-                        );
-                      })}
-                      </div>
-                      <div className={styles.buttonContainer}>
-                          <FaBook
-                          className={styles.iconButton}
-                          title="예문 확인"
-                          onClick={() => openWordModal(word)}/>
-                          <GiSpeaker
-                          className={styles.iconButton}
-                          title="발음 듣기"
-                          onClick={() => handleSpeak(word.content)}                          
-                           />
-                      </div>
+                          return (
+                            <div
+                              key={meaningIndex}
+                              className={styles.meaningBox}
+                            >
+                              <p>{displayMeaning}</p> {/* 제한된 문자열 표시 */}
+                            </div>
+                          );
+                        })}
+                    </div>
+                    <div className={styles.buttonContainer}>
+                      <FaBook
+                        className={styles.iconButton}
+                        title="예문 확인"
+                        onClick={() => openWordModal(word)}
+                      />
+                      <GiSpeaker
+                        className={styles.iconButton}
+                        title="발음 듣기"
+                        onClick={() => handleSpeak(word.content)}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-          
+            ))}
         </div>
       </div>
       <div className={styles.wordlist}>

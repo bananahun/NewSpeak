@@ -59,7 +59,7 @@ const useConversationApi = () => {
       const response = await axiosInstance.post('/conversation/dialog', {
         articleId,
       });
-      console.log('createThread:', response.data);
+      // console.log('createThread:', response.data);
       setConvThreadId(response.data.id);
       isFirstRender.current = true;
       return response.data;
@@ -124,7 +124,7 @@ const useConversationApi = () => {
           answer,
         },
       );
-      console.log('postSpeechToThread:', response.data);
+      // console.log('postSpeechToThread:', response.data);
       if (answer === initMessage) {
         isFirstRecommend.current = true;
       }
@@ -152,7 +152,7 @@ const useConversationApi = () => {
       const response = await axiosInstance.get(
         `/conversation/dialog/${convThreadId}/${convRunId}`,
       );
-      console.log('getResponseAudio:', response.data);
+      // console.log('getResponseAudio:', response.data);
       setIsGeneratingResponse(false);
       if (response && response.data && response.data.dialog) {
         const recommendedSentences = response.data.dialog.recommend.map(
@@ -183,7 +183,7 @@ const useConversationApi = () => {
     setIsGeneratingReport(true);
     try {
       const response = await axiosInstance.post('/conversation/report', {});
-      console.log('createReportThread:', response.data);
+      // console.log('createReportThread:', response.data);
       setReportThreadId(response.data.id);
       reportThreadCreated.current = true;
       return response.data;
@@ -220,14 +220,14 @@ const useConversationApi = () => {
       })
       .filter(msg => msg !== null);
 
-    console.log(conversations);
+    // console.log(conversations);
 
     try {
       const response = await axiosInstance.post(
         `/conversation/report/${reportThreadId}`,
         { conversations },
       );
-      console.log('Report Run Id generated:', response.data);
+      // console.log('Report Run Id generated:', response.data);
       setReportRunId(response.data.id);
       reportRunCreated.current = true;
       return response.data;
@@ -263,7 +263,7 @@ const useConversationApi = () => {
         const response = await axiosInstance.get(
           `/conversation/report/${reportThreadId}/${reportRunId}`,
         );
-        console.log('generateReport:', response.data);
+        // console.log('generateReport:', response.data);
         clearConvData();
         clearConversation();
         setReportCreated(true);
@@ -279,7 +279,7 @@ const useConversationApi = () => {
         console.error('generateReport: 모든 시도 실패');
         setIsGeneratingReport(false);
       } else {
-        console.log(`재시도 ${i + 2}/${count} 대기 중... ${delay / 1000}초`);
+        // console.log(`재시도 ${i + 2}/${count} 대기 중... ${delay / 1000}초`);
         await new Promise(resolve => setTimeout(resolve, delay));
       }
     }
@@ -287,7 +287,7 @@ const useConversationApi = () => {
 
   useEffect(() => {
     if (reportCreated) {
-      console.log('완료');
+      // console.log('완료');
       setIsGeneratingReport(false);
       setReportCreated(false);
       return;

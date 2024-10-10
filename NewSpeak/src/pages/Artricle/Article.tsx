@@ -205,7 +205,7 @@ const Article = () => {
 
   useEffect(() => {
     clearConvData();
-    console.log(tutorialActive);
+    // console.log(tutorialActive);
     setHelpButtonAccent(tutorialActive);
     setWordSelectorButtonAccent(tutorialActive);
   }, []);

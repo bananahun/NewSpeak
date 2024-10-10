@@ -62,11 +62,11 @@ const ConversationSession = ({
   }, [currentAnswer]);
 
   useEffect(() => {
-    console.log(recommendedAnswers);
+    // console.log(recommendedAnswers);
   }, [recommendedAnswers]);
 
   useEffect(() => {
-    console.log(isGeneratingResponse);
+    // console.log(isGeneratingResponse);
   }, [isGeneratingResponse]);
 
   const submitAnswer = () => {
