@@ -12,13 +12,13 @@ const ArticleList = () => {
 
   const handleMoveUp = () => {
     if (categoryRef.current) {
-      categoryRef.current.scrollTop -= 50;
+      categoryRef.current.scrollTop -= 56;
     }
   };
 
   const handleMoveDown = () => {
     if (categoryRef.current) {
-      categoryRef.current.scrollTop += 50;
+      categoryRef.current.scrollTop += 56;
     }
   };
 
@@ -51,12 +51,12 @@ const ArticleList = () => {
             </button>
           ))}
         </div>
-        {width <= 1440 && (
+        {
           <div className={styles.upDownButtons}>
             <FaAngleUp size={30} onClick={handleMoveUp} />
             <FaAngleDown size={30} onClick={handleMoveDown} />
           </div>
-        )}
+        }
       </div>
     );
   };

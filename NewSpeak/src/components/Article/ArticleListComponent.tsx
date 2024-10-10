@@ -7,13 +7,7 @@ import useThemeStore from '../../store/ThemeStore';
 import logo from '../../assets/NewSpeak.png';
 import logoWhite from '../../assets/NewSpeakWhite.png';
 import styles from './ArticleListComponent.module.scss';
-import {
-  FaAngleLeft,
-  FaAnglesLeft,
-  FaAngleRight,
-  FaAnglesRight,
-  FaPlus,
-} from 'react-icons/fa6';
+import { FaPlus } from 'react-icons/fa6';
 import LoadingModal from '../Modal/LoadingModal';
 
 interface Article {
@@ -233,12 +227,6 @@ const ArticleListComponent = ({
                 <FaPlus size={20} />
               </div>
             )}
-          </div>
-          <div className={styles.scrollButtons}>
-            <FaAnglesLeft size={30} onClick={handleMoveLeftEnd} />
-            <FaAngleLeft size={30} onClick={handleMoveLeft} />
-            <FaAngleRight size={30} onClick={handleMoveRight} />
-            <FaAnglesRight size={30} onClick={handleMoveRightEnd} />
           </div>
         </>
       ) : (
