@@ -28,6 +28,7 @@ const PronounceModal = ({
   const recorderRef = useRef<MicRecorder | null>(null);
   const { transcript, resetTranscript } = useSpeechRecognition();
   const [showScore, setShowScore] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const toggleView = () => {
     setShowScore(prev => !prev);
@@ -65,6 +66,7 @@ const PronounceModal = ({
           setIsRecording(false);
           const response = await userApi.fetchPronounce(file);
           setProScore(response.proScore);
+          setIsLoading(false);
           // console.log('발음 점수:', response.proScore); // proScore 응답 처리
         } catch (error) {
           console.error('녹음 중지 중 오류 발생:', error);
@@ -114,7 +116,7 @@ const PronounceModal = ({
                     className={styles.point}
                     style={{ color: getScoreColor(proScore) }}
                   >
-                    {proScore ? proScore : <LoadingModal />}/5
+                    {isLoading ? <LoadingModal /> : proScore}/5
                   </p>
                 </div>
               ) : (
