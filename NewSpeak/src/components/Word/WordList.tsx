@@ -140,13 +140,21 @@ const WordList = () => {
                       </div>
                     </div>
                     <div className={styles.meaningsContainer}>
-                      {word.meaningDatas
-                        .slice(0, 2)
-                        .map((meaning, meaningIndex) => (
+                    {word.meaningDatas
+                      .slice(0, 2)
+                      .map((meaning, meaningIndex) => {
+                        // 글자 수 제한
+                        const maxLength = 8; // 제한할 글자 수 설정
+                        const displayMeaning = meaning.meaning.length > maxLength 
+                          ? meaning.meaning.slice(0, maxLength) + '...' 
+                          : meaning.meaning;
+
+                        return (
                           <div key={meaningIndex} className={styles.meaningBox}>
-                            <p>{meaning.meaning}</p>
+                            <p>{displayMeaning}</p> {/* 제한된 문자열 표시 */}
                           </div>
-                        ))}
+                        );
+                      })}
                       </div>
                       <div className={styles.buttonContainer}>
                           <FaBook

@@ -53,9 +53,16 @@ const SentenceDetailModal = ({
     }
   };
 
+  const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    // 클릭한 요소가 modalContent가 아닐 경우에만 onClose 호출
+    if (event.target === event.currentTarget) {
+      onClose();
+    }
+  };
+
   return ReactDOM.createPortal(
     <>
-    <div className={styles.modalOverlay}>
+      <div className={styles.modalOverlay} onClick={handleOverlayClick}>
       <div className={styles.sentenceDetailModal}>
         <button className={styles.closeButton} onClick={onClose}>
           x

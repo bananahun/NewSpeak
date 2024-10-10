@@ -1,7 +1,7 @@
 .resultContainer {
 
   padding: 30px;
-  height: 70vh;
+  height: fit-content;
   width: 50vw;
   border: 1px solid var(--border-color);
   border-radius: 10px;
@@ -37,11 +37,18 @@
     justify-content: space-between;
     margin-top: 30px;
     margin-bottom: auto;
+    height:50%;
+    min-height: 200px;
+    overflow-y: auto;
   }
 
   .leftColumn,
   .rightColumn {
     width: 48%; // 열의 너비를 조정
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 20px;
   }
 
   .answer {
@@ -76,11 +83,9 @@
     display: flex;
     justify-content: center; /* 중앙 정렬 */
     padding: 20px 0; /* 여백 추가 */
-    position: absolute; /* 수정된 부분 */
-    bottom: 20px; /* 부모 요소의 아래쪽에 위치 */
-    left: 0;
+    bottom: 0px; /* 부모 요소의 아래쪽에 위치 */
+    background-color: var(--background-color);
     width: 100%;
-    z-index: 1000;
   }
 
   

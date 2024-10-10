@@ -8,6 +8,7 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition';
 
+
 interface PronounceModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -16,15 +17,19 @@ interface PronounceModalProps {
 }
 
 const PronounceModal = ({ isOpen, onClose, text, sourcePage }: PronounceModalProps) => {
-  const [isRecording, setIsRecording] = useState(false);
+  const [isRecording, setIsRecording] = useState<boolean>(false);
   const [mp3Url, setMp3Url] = useState<string | null>(null); // MP3 URL 상태
   const [proScore, setProScore] = useState<number | null>(null); // 발음 점수 상태
   const recorderRef = useRef<MicRecorder | null>(null);
   const { transcript, resetTranscript } = useSpeechRecognition();
-  
+  const [showScore, setShowScore] = useState(true); 
 
+  const toggleView = () => {
+    setShowScore((prev) => !prev);
+  };
 
   const startRecording = async () => {
+    setMp3Url(null);
     if (sourcePage !== 'WordList') {
     const mp3Recorder = new MicRecorder({ bitRate: 128 });
     try {
@@ -68,45 +73,73 @@ const PronounceModal = ({ isOpen, onClose, text, sourcePage }: PronounceModalPro
 
   if (!isOpen) return null;
 
-  return ReactDOM.createPortal(<>
-    <div className={styles.modalOverlay}>
-      <div className={styles.modalContent}>
-        <button className={styles.closeButton} onClick={onClose}>
+  const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    // 클릭한 요소가 modalContent가 아닐 경우에만 onClose 호출
+    if (event.target === event.currentTarget) {
+      onClose();
+    }
+  };
+  const getScoreColor = (score: number | null) => {
+    if (score === null) return;
+    if (score <= 2) return '#909090'; // 기본 색상
+    if (score <= 3) return '#f44336'; // 빨간색
+    if (score <= 4) return '#ff9800'; // 주황색
+    return '#4caf50'; // 초록색
+  };
+
+  return ReactDOM.createPortal(
+    <>
+      <div className={styles.modalOverlay} onClick={handleOverlayClick}>
+        <div className={styles.modalContent}>
+          <h2 className={styles.header}>발음 테스트</h2>
+          <button className={styles.closeButton} onClick={onClose}>
           x
         </button>
-        <p>{text}</p>
-
-        {isRecording ? (
-          <button className={styles.pronounceButton} onClick={stopRecording}>발음테스트 중지</button>
-        ) : (
-          <button className={styles.pronounceButton} onClick={startRecording}>발음테스트 시작</button>
-        )}
-
-        {mp3Url && (
-          <div>
-            <a href={mp3Url} download="recording.mp3">
-              MP3 파일 다운로드
-            </a>
-            <audio controls src={mp3Url}></audio>
+        
+          {!mp3Url ?<>
+          <p>{text}</p>
+          {isRecording &&
+          <p style={{ marginTop: '10px' }}>녹음중...</p>
+          }
+          </>
+           :<>
+          {showScore ? (
+            <div>
+              <p className={styles.point} style={{ color: getScoreColor(proScore) }}>{proScore}/5</p>
+            </div>
+          ) : <>
+            <div className={styles.audioContainer}>
+              {mp3Url && <audio controls src={mp3Url}></audio>}
+            </div>
+            
+            
+          </>}
+          </>
+          }
+          <div className={styles.buttonContainer}>
+            {mp3Url && !showScore && (
+              <a className={styles.pronounceButton} href={mp3Url} download="recording.mp3">
+                다운로드
+              </a>
+              
+            )}
+            {mp3Url &&
+            <button className={styles.pronounceButton} onClick={toggleView}>
+              {showScore ? '오디오 듣기' : '점수 보기'}
+            </button>
+}
+            {isRecording ? (
+              <button className={styles.pronounceButton} onClick={stopRecording}>발음테스트 중지</button>
+            ) : (
+              <button className={styles.pronounceButton} onClick={startRecording}>발음테스트 시작</button>
+            )}
           </div>
-        )}
-
-        {proScore !== null && (
-          <div>
-            <p>발음 점수: {proScore}</p>
-          </div>
-        )}
-        {transcript !== '' && (
-          <div>
-            <p>발음 text: {transcript}</p>
-          </div>
-        )}
+        </div>
       </div>
-    </div>
-    <div className={styles.modalOverlayShadow}></div>
+      <div className={styles.modalOverlayShadow}></div>
     </>,
     document.getElementById('modal-root'),
-  );
+  );  
 };
 
 export default PronounceModal;

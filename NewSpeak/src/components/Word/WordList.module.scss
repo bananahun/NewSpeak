@@ -1,8 +1,9 @@
 .wordlist {
   justify-content: right;
   display: flex;
-  gap: 40px; /* 카드 간 간격 */
-  padding: 30px;
+  // gap: 40px; /* 카드 간 간격 */
+  padding-top: 20px;
+  padding: 10px;
   position: absolute; /* 하단에 고정 */
   bottom: 0; /* 하단에서의 위치를 0으로 설정 */
   left: 0; /* 왼쪽으로부터 0 */
@@ -171,10 +172,12 @@
 
 .meaningBox {
   max-height: 50px;
+  width:100%;
   background-color: var(--main-color);
   border-radius: 5px;
   padding: 10px;
   flex: 1; /* 가로로 확장 */
+  white-space: nowrap; /* 텍스트를 한 줄로 표시 */
 }
 
 .cardFront {
