@@ -7,6 +7,7 @@ import 'regenerator-runtime';
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition';
+import LoadingModal from './LoadingModal';
 
 interface PronounceModalProps {
   isOpen: boolean;
@@ -113,7 +114,7 @@ const PronounceModal = ({
                     className={styles.point}
                     style={{ color: getScoreColor(proScore) }}
                   >
-                    {proScore}/5
+                    {proScore ? proScore : <LoadingModal />}/5
                   </p>
                 </div>
               ) : (
