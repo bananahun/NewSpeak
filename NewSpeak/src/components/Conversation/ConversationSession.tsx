@@ -46,15 +46,15 @@ const ConversationSession = ({
     }
   }, [recommendedAnswers]);
 
-  // useEffect(() => {
-  //   if (isFirstRender) {
-  //     clearConversation();
-  //     createThread();
-  //     setIsFirstRender(false);
-  //     setIsFirstMessage(true);
-  //     return;
-  //   }
-  // }, [isFirstRender]);
+  useEffect(() => {
+    if (isFirstRender) {
+      clearConversation();
+      createThread();
+      setIsFirstRender(false);
+      setIsFirstMessage(true);
+      return;
+    }
+  }, [isFirstRender]);
 
   useEffect(() => {
     setActiveAnswer(currentAnswer);
