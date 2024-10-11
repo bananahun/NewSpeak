@@ -1,0 +1,121 @@
+.register {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+
+  h1 {
+    font-size: 36px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+}
+
+.logo {
+  margin: 32px;
+  height: 150px;
+}
+
+.registerFormContainer {
+  width: 50vw;
+  min-width: 500px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.registerForm {
+  width: 100%;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  height: 240px;
+  border: 10px var(--main-color) dotted;
+  margin: 10px;
+  border-radius: 20px;
+  position: relative;
+
+  input {
+    border-radius: 8px;
+    font-size: 16px;
+    padding: 6px 12px;
+    background-color: var(--font-color);
+    color: var(--background-color);
+
+    &:disabled {
+      background-color: black;
+    }
+  }
+}
+
+.buttonGroup {
+  display: flex;
+  width: 100%;
+  gap: 40px;
+  justify-content: center;
+
+  button {
+    padding: 5px 24px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: normal;
+    width: 25%;
+  }
+
+  button:disabled {
+    opacity: 0.6;
+    color: #f2f2f2;
+  }
+}
+
+.modal {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 500px;
+  margin: auto;
+}
+
+.categoryButton {
+  padding: 10px 15px;
+  margin: 5px;
+  border: 2px solid #ccc;
+  background-color: #f5f5f5;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+
+  &:hover {
+    background-color: #ddd;
+  }
+}
+
+.selectedCategories {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.selected {
+  background-color: var(--contrast-color);
+  border-color: var(--contrast-color);
+  color: black;
+
+  .selectedCategory {
+    background-color: var(--contrast-color); /* 선택된 카테고리 태그 배경색 */
+    color: white;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 20px;
+    font-size: 14px;
+    display: inline-block;
+  }
+}

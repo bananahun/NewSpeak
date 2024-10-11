@@ -1,0 +1,184 @@
+.articleListKeyword {
+  width: 100%;
+  height: calc(100vh - 120px); // 화면 높이에 따라 전체 레이아웃 조정
+  padding: 5px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .keywordNavbarContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 110px; // 두 줄의 키워드를 모두 표시할 수 있는 높이로 설정
+    min-height: 110px;
+    width: 100%;
+    margin-bottom: 20px;
+    position: relative;
+
+    .keywordNavbar {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr); // 항상 5개의 열로 고정
+      grid-template-rows: repeat(2, auto); // 항상 2개의 행으로 고정
+      gap: 5px;
+      height: 120px; // 키워드 네비바의 고정 높이
+      overflow-y: auto; // 스크롤 가능하게 설정
+      scroll-behavior: smooth; // 부드러운 스크롤 동작 설정
+      padding: 10px;
+
+      .keywordButton {
+        width: 110px;
+        height: 40px;
+        padding: 10px 15px;
+        margin: 5px;
+        border: 1px solid var(--background-color);
+        background-color: var(--main-color);
+        border-radius: 5px;
+        overflow: hidden;
+        font-size: 14px;
+        cursor: pointer;
+
+        &.active {
+          border-bottom: 4px solid var(--contrast-color);
+          background-color: var(--main-color);
+          color: var(--contrast-color);
+        }
+
+        &:hover {
+          background-color: var(--contrast-color);
+          color: var(--main-color);
+        }
+      }
+    }
+  }
+  .upDownButtons {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    transform: translateY(-10%);
+    right: -20px;
+    width: 50px;
+    gap: 10px;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+
+    > svg {
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out;
+      &:hover {
+        transform: scale(1.2);
+      }
+    }
+  }
+
+  .articleListComponent {
+    position: relative;
+    width: 100%;
+    min-height: 450px;
+    height: 80%;
+    padding-bottom: 60px;
+    display: flex;
+    justify-content: center;
+
+    .articleListContent {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      width: fit-content;
+      height: 460px;
+      gap: 15px;
+      padding: 15px;
+      overflow: scroll;
+      scroll-behavior: smooth;
+
+      .articleCard {
+        display: flex;
+        flex-direction: column;
+        min-width: 260px;
+        width: 260px;
+        height: 420px;
+        padding: 15px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        align-items: center;
+        justify-content: flex-start;
+        position: relative;
+        transition: transform 0.2s ease-in-out;
+        cursor: pointer;
+
+        &:hover {
+          transform: scale(1.05);
+        }
+
+        .imageContainer {
+          width: 100%;
+          height: 250px;
+          margin-bottom: 15px;
+        }
+
+        .articleImage {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-bottom: 1px solid #ddd;
+          border-radius: 5px;
+        }
+
+        .articleInfo {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 5px;
+          width: 100%;
+          background-color: var(--background-color);
+
+          .title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            height: auto;
+            text-align: left;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.3em;
+            max-height: calc(1.3em * 4);
+          }
+        }
+
+        .meta {
+          display: flex;
+          justify-content: end;
+          gap: 5px;
+          position: absolute;
+          bottom: 0;
+          right: 15px;
+          height: 30px;
+          width: 100%;
+          color: var(--font-color);
+          font-size: 14px;
+        }
+      }
+
+      .loadMoreButton {
+        background-color: var(--font-color);
+        color: var(--background-color);
+        margin-left: 10px;
+        padding: 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        border: var(--background-color) 2px solid;
+        border-radius: 50px;
+        transition: transform 0.2s ease-in-out;
+        &:hover {
+          transform: scale(1.2);
+        }
+      }
+    }
+  }
+}

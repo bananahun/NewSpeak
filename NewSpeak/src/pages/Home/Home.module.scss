@@ -1,0 +1,79 @@
+.home {
+  box-sizing: border-box;
+  background-color: var(--background-color);
+  color: var(--font-color);
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.wordCloud {
+  display: flex;
+  width: 250px;
+  height: 100%;
+  flex-direction: column;
+
+  .wordCloudSlider {
+    width: 250px;
+    height: 10vh;
+    display: flex;
+    position: relative;
+  }
+
+  .wordCloudContainer {
+    width: 30vh;
+    height: 60vh;
+  }
+}
+
+@media (max-width: 1024px) {
+  .wordCloud {
+    width: 100%;
+    align-items: center;
+    display: flex;
+    height: 10vh;
+    .wordCloudSlider {
+      width: fit-content;
+      height: 10vh;
+    }
+  }
+  .wordCloudContainer {
+    display: none;
+  }
+}
+
+.articleListContainer {
+  flex-grow: 1;
+  height: 100%;
+  width: 100%;
+}
+
+.showArticle {
+  top: 0;
+}
+
+.articleListKeywordContainer {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  overflow-y: hidden;
+  padding-left: 20px;
+}
+
+.slideText {
+  font-size: 2rem; /* 텍스트 크기 조절 */
+  animation: fade 1s ease-in-out;
+}
+
+/* 페이드 인/아웃 애니메이션 */
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

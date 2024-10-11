@@ -1,0 +1,142 @@
+@keyframes accent {
+  0% {
+    transform: translateY(0%);
+  }
+  30%,
+  80% {
+    transform: translateY(10%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+.conversationModal {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-self: center;
+  align-items: center;
+  position: relative;
+  width: 300px;
+  height: 300px;
+  padding: 20px;
+
+  // button {
+  //   width: fit-content;
+  // }
+
+  .modalHeader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+
+    .title {
+      width: 100%;
+      font-weight: 500;
+      p,
+      span {
+        font-size: 24px;
+      }
+    }
+
+    .spacebar {
+      display: inline-block;
+      width: 150px;
+      animation: accent 2s linear infinite;
+      > img {
+        width: 100%;
+      }
+    }
+
+    button {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      width: 20px;
+      height: 20px;
+      border: none;
+      text-align: center;
+      padding: 0;
+      background-color: inherit;
+      transition: all 0.2s ease;
+      border-radius: 12px;
+
+      &:hover {
+        transform: scale(1.15);
+        background-color: var(--main-color);
+      }
+    }
+  }
+
+  .modalContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap;
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+
+    > button {
+      font-size: 14px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+
+      &:hover {
+        background-color: var(--main-color);
+        transform: scale(1.05);
+      }
+
+      &:disabled:hover {
+        box-shadow: none;
+        color: gray;
+      }
+    }
+  }
+}
+
+.sttButton {
+  position: relative;
+}
+
+.isRecording::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -6.5px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: var(--font-color);
+  animation: ping 2s ease infinite;
+}
+
+@keyframes ping {
+  0% {
+    -webkit-transform: scale(0.2);
+    transform: scale(0.2);
+    opacity: 0.8;
+  }
+  80% {
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: scale(2.2);
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}

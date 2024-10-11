@@ -1,0 +1,60 @@
+.articleListContent {
+  display: flex;
+  padding: 20px;
+  height: calc(100vh - 88px);
+  overflow-y: auto;
+}
+
+.articleCard {
+  display: flex;
+  align-items: center; /* 이미지와 텍스트를 수직으로 가운데 정렬 */
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid var(--font-color);
+  background-color: var(--background-color);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.imageContainer {
+  width: 120px;
+  height: 120px;
+  margin-right: 15px;
+}
+
+.articleImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.articleInfo {
+  display: flex;
+  flex-direction: column; /* 제목과 날짜를 가로로 정렬 */
+  justify-content: space-between; /* 텍스트 간 간격 조정 */
+  width: 100%;
+}
+
+.title {
+  font-size: 1.5em;
+  margin-bottom: 0;
+}
+
+.publishedDate {
+  font-size: 1em;
+  color: #666;
+  align-self: flex-end; /* 우측 정렬 */
+  margin-top: auto; /* 하단으로 배치 */
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+
+  svg {
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,108 @@
+/* 마이페이지 스타일 */
+.mypage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 프로필 컨테이너 스타일 */
+.profileContainer {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  margin-top: 30px;
+  margin-bottom: 60px;
+  width: 100%;
+  max-width: 900px;
+}
+
+/* 프로필 정보 스타일 */
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+/* 사용자 이름 스타일 */
+.username {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* 정보 변경 버튼 스타일 */
+.changeInfoButton {
+  text-align: center; /* 버튼 내부 텍스트를 가운데 정렬 */
+}
+
+/* 카테고리 컨테이너 스타일 */
+.categoryContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 900px;
+}
+
+/* 카테고리 박스 스타일 */
+.categoryBox {
+  background-color: #e0e0e0;
+  padding: 15px;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 카테고리 박스 호버 시 스타일 */
+.categoryBox:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 스트릭 섹션 스타일 */
+.streakSection {
+  width: 100%;
+  max-width: 900px;
+  overflow-x: auto;
+  ::-webkit-scrollbar {
+    display: block;
+    width: 12px;
+    height: 8px;
+    background-color: white;
+  }
+}
+
+/* 버튼 행 스타일 */
+.buttonRow {
+  display: flex;
+  justify-content: space-between;
+  width: 50%;
+  max-width: 900px;
+  margin-top: 30px;
+  gap: 10px;
+}
+
+/* 고스트 버튼 스타일 */
+.btn-ghost {
+  background: transparent;
+  color: rgb(249, 110, 50);
+  border: 2px solid rgb(249, 110, 50);
+  border-radius: 3ch;
+  position: relative;
+  overflow: hidden;
+  transition: 0.3s;
+  cursor: pointer;
+  padding: 10px 20px; /* 버튼의 패딩을 조절하여 크기를 늘림 */
+  font-size: 16px; /* 버튼 텍스트 크기 조절 */
+  width: 100%;
+  max-width: 200px; /* 버튼의 최대 너비 설정 */
+
+  &:hover {
+    box-shadow: inset 0 0 0 36px rgb(249, 110, 50);
+    color: rgb(255, 255, 255);
+  }
+}

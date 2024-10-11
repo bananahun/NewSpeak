@@ -1,0 +1,106 @@
+.login {
+  display: flex;
+  flex-direction: column;
+  justify-self: center;
+  align-items: center;
+  gap: 10px;
+  width: 100vw;
+
+  h1 {
+    font-size: 36px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+}
+
+.logo {
+  margin: 32px;
+  height: 150px;
+}
+
+.loginFormContainer {
+  justify-self: center;
+  width: 50vw;
+  min-width: 500px;
+  border: 10px var(--main-color) dotted;
+  border-radius: 20px;
+}
+
+.loginForm {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 200px;
+  margin: 10px;
+  position: relative;
+
+  article {
+    display: flex;
+    flex-direction: column;
+
+    input {
+      border-radius: 8px;
+      font-size: 16px;
+      padding: 6px 12px;
+      background-color: var(--font-color);
+      color: var(--background-color);
+    }
+  }
+
+  button {
+    background-color: var(--main-color);
+    border-radius: 20px;
+    padding: 5px 24px;
+    width: 30%;
+    font-size: 15px;
+    cursor: pointer;
+  }
+}
+
+.oAuthContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 54px;
+  border: var(--main-color) 10px dotted;
+  padding: 40px 20px;
+  border-radius: 20px;
+  width: 50vw;
+  min-width: 500px;
+
+  button {
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+  }
+
+  img {
+    cursor: pointer;
+  }
+}
+
+.google {
+  width: 183px;
+  min-width: 183px;
+  height: 45px;
+  background-color: #f2f2f2;
+  color: black;
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  justify-content: center;
+  padding-left: 5px;
+
+  img {
+    position: absolute;
+    left: 0;
+  }
+}
